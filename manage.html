@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Emperor Burger — Menu Manager 🍳🖤</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Prompt:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #09090b;
+      --card-glass: rgba(24, 24, 27, 0.85);
+      --border-glass: rgba(255, 255, 255, 0.1);
+      --accent-red: #ef4444;
+      --text-light: #fafaf9;
+      --text-muted: #a1a1aa;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Outfit', 'Prompt', sans-serif; }
+
+    body {
+      background: var(--bg-primary);
+      color: var(--text-light);
+      min-height: 100vh;
+      padding: 40px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .grid-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background-image:
+        radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1px);
+      background-size: 28px 28px;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .lang-container {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-bottom: 20px;
+      width: 100%;
+      max-width: 680px;
+    }
+    .lang-toggle-btn {
+      background: rgba(39, 39, 42, 0.8);
+      border: 1px solid var(--border-glass);
+      color: var(--text-muted);
+      padding: 8px 16px;
+      border-radius: 99px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+    .lang-toggle-btn.active {
+      border-color: var(--accent-red);
+      color: var(--text-light);
+      background: rgba(239, 68, 68, 0.2);
+      box-shadow: 0 0 15px rgba(239, 68, 68, 0.3);
+    }
+
+    .container {
+      width: 100%;
+      max-width: 680px;
+      background: var(--card-glass);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--border-glass);
+      border-radius: 28px;
+      padding: 36px 28px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6), 0 0 30px rgba(239, 68, 68, 0.15);
+      position: relative;
+    }
+
+    .header-logo {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .header-logo h1 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--accent-red);
+      text-shadow: 0 0 20px rgba(239, 68, 68, 0.4);
+      letter-spacing: -0.02em;
+    }
+    .header-logo p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 5px;
+      letter-spacing: 0.1em;
+      font-family: 'Space Mono', monospace;
+    }
+
+    .section-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      border-bottom: 1px solid var(--border-glass);
+      padding-bottom: 8px;
+      margin-top: 24px;
+      margin-bottom: 16px;
+      color: var(--text-light);
+    }
+
+    .menu-list { display: flex; flex-direction: column; gap: 12px; }
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 20px;
+      background: rgba(39, 39, 42, 0.5);
+      border: 1px solid var(--border-glass);
+      border-radius: 20px;
+      transition: all 0.25s ease;
+    }
+    .menu-item:hover { border-color: rgba(239, 68, 68, 0.4); transform: translateY(-2px); }
+    .menu-item.sold-out { border-color: rgba(239, 68, 68, 0.3); background: rgba(24, 24, 27, 0.8); }
+
+    .item-info { display: flex; align-items: center; gap: 14px; }
+    .item-emoji {
+      font-size: 2rem;
+      padding: 10px;
+      background: rgba(9, 9, 11, 0.6);
+      border: 1px solid var(--border-glass);
+      border-radius: 14px;
+    }
+    .menu-item.sold-out .item-emoji { border-color: rgba(239, 68, 68, 0.4); }
+    .item-text-title { font-weight: 700; font-size: 1.05rem; color: var(--text-light); }
+    .item-text-status { font-size: 0.78rem; font-weight: 600; margin-top: 2px; color: #10b981; }
+    .menu-item.sold-out .item-text-status { color: #ef4444; }
+
+    .toggle-btn {
+      padding: 10px 20px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      white-space: nowrap;
+    }
+    .btn-avail { background: #10b981; color: #0c0a09; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3); }
+    .btn-avail:hover { background: #059669; transform: translateY(-2px); box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4); }
+    .btn-soldout { background: #ef4444; color: #fafaf9; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3); }
+    .btn-soldout:hover { background: #dc2626; transform: translateY(-2px); box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4); }
+
+    /* Lock screen */
+    .lock-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(12,10,9,0.97);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .lock-overlay.visible { opacity: 1; pointer-events: auto; }
+
+    .lock-box {
+      background: #1c1917;
+      border: 3px solid #e11d48;
+      padding: 40px 36px;
+      border-radius: 24px;
+      text-align: center;
+      width: 90%;
+      max-width: 380px;
+      box-shadow: 0 0 30px rgba(225,29,72,0.2), 6px 6px 0 #fff;
+    }
+    .lock-emoji { font-size: 3rem; margin-bottom: 12px; }
+    .lock-box h2 { font-size: 1.4rem; margin-bottom: 8px; color: #fafaf9; }
+    .lock-box p { font-size: 0.85rem; color: #a8a29e; margin-bottom: 24px; }
+
+    .passcode-input {
+      width: 100%;
+      padding: 14px;
+      border-radius: 12px;
+      border: 2px solid #44403c;
+      background: #0c0a09;
+      color: #fafaf9;
+      font-size: 1.2rem;
+      text-align: center;
+      letter-spacing: 0.3em;
+      outline: none;
+      margin-bottom: 16px;
+      font-family: 'Space Mono', monospace;
+      transition: border-color 0.2s;
+    }
+    .passcode-input:focus { border-color: #e11d48; box-shadow: 0 0 10px rgba(225,29,72,0.2); }
+
+    .lock-btn {
+      width: 100%;
+      padding: 14px;
+      background: #e11d48;
+      color: #fafaf9;
+      border: 2px solid #fff;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 3px 3px 0 #fff;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+    .lock-btn:hover { background: #be123c; transform: translate(-1px,-1px); box-shadow: 4px 4px 0 #fff; }
+    .lock-btn:active { transform: translate(2px,2px); box-shadow: 1px 1px 0 #fff; }
+
+    .lock-error {
+      color: #ef4444;
+      font-size: 0.82rem;
+      margin-top: 12px;
+      font-weight: 600;
+      min-height: 20px;
+      transition: opacity 0.3s;
+    }
+
+    /* Loading */
+    .loading-overlay {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(28,25,23,0.75);
+      border-radius: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+      z-index: 10;
+    }
+    .loading-overlay.visible { opacity: 1; pointer-events: auto; }
+    .spinner {
+      width: 40px; height: 40px;
+      border: 4px solid rgba(225,29,72,0.1);
+      border-top-color: #e11d48;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #10b981;
+      color: #0c0a09;
+      padding: 12px 24px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.88rem;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3), 3px 3px 0 #fff;
+      border: 2px solid #fff;
+      z-index: 200;
+      transition: transform 0.3s cubic-bezier(0.175,0.885,0.32,1.275);
+      pointer-events: none;
+    }
+    .toast.visible { transform: translateX(-50%) translateY(0); }
+    .toast.error { background: #ef4444; color: #fff; }
+  </style>
+</head>
+<body>
+  <div class="grid-overlay"></div>
+
+  <div class="lang-container">
+    <button id="lang-th" class="lang-toggle-btn active" onclick="switchLang('th')">🇹🇭 ไทย</button>
+    <button id="lang-en" class="lang-toggle-btn" onclick="switchLang('en')">🇺🇸 English</button>
+  </div>
+
+  <div class="container">
+    <div class="loading-overlay" id="loading-indicator"><div class="spinner"></div></div>
+
+    <div class="header-logo">
+      <h1>Emperor Burger!</h1>
+      <p id="page-subtitle">✦ KITCHEN MENU MANAGER ✦</p>
+    </div>
+
+    <h3 class="section-title" id="title-burgers">สถานะเบอร์เกอร์</h3>
+    <div id="burgers-list" class="menu-list"></div>
+
+    <h3 class="section-title" id="title-meats">สถานะประเภทเนื้อ</h3>
+    <div id="meats-list" class="menu-list"></div>
+  </div>
+
+  <!-- Lock Screen -->
+  <div id="lock-screen" class="lock-overlay visible">
+    <div class="lock-box">
+      <div class="w-14 h-14 mx-auto mb-3 rounded-2xl bg-red-500/10 border border-red-500/30 flex items-center justify-center text-red-400">
+        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+      </div>
+      <h2 id="lock-title">เฉพาะเชฟและทีมงาน</h2>
+      <p id="lock-desc">กรุณากรอกรหัสผ่านเพื่อเข้าใช้งาน</p>
+      <input type="password" id="passcode-input" class="passcode-input"
+        placeholder="••••••••"
+        onkeydown="if(event.key==='Enter') verifyPasscode()">
+      <button class="lock-btn" id="lock-submit-btn" onclick="verifyPasscode()">ยืนยัน / Confirm</button>
+      <div class="lock-error" id="lock-error"></div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast"><span id="toast-text">บันทึกสำเร็จ!</span></div>
+
+  <script>
+    // ─── CONFIG ────────────────────────────────────────────────────────────────
+    const FIREBASE_URL = 'https://food-34707-default-rtdb.asia-southeast1.firebasedatabase.app';
+
+    // Password stored as char codes so it's not plain text in source.
+    // Decodes to: chef123
+    const PASSCODE = String.fromCharCode(99,104,101,102,49,50,51);
+
+    // ─── MENU DATA ─────────────────────────────────────────────────────────────
+    const BURGERS = [
+      { key: 'Classic Emperor',       emoji: '👑' },
+      { key: 'Double Emperor',        emoji: '🔥' },
+      { key: 'Emperor Cheese',        emoji: '🧀' }
+    ];
+    const MEATS = [
+      { key: 'Chicken', emoji: '🐔' },
+      { key: 'Pork',    emoji: '🐖' }
+    ];
+
+    // ─── STATE ─────────────────────────────────────────────────────────────────
+    let currentLang = 'th';
+    let availability = {};
+
+    // ─── TRANSLATIONS ──────────────────────────────────────────────────────────
+    const T = {
+      th: {
+        subtitle:     '✦ หน้าจัดการเมนูสำหรับเชฟ ✦',
+        titleBurgers: 'สถานะเบอร์เกอร์',
+        titleMeats:   'สถานะประเภทเนื้อ',
+        avail:        'พร้อมขาย',
+        soldOut:      'สินค้าหมด',
+        markSoldOut:  'ตั้งเป็นสินค้าหมด',
+        markAvail:    'ตั้งเป็นพร้อมขาย',
+        lockTitle:    'เฉพาะเชฟและทีมงาน',
+        lockDesc:     'กรุณากรอกรหัสผ่านเพื่อเข้าใช้งาน',
+        lockBtn:      'ยืนยัน / Confirm',
+        lockErr:      'รหัสผ่านไม่ถูกต้อง!',
+        toastOk:      'บันทึกสำเร็จแล้ว!',
+        toastErr:     'บันทึกไม่สำเร็จ กรุณาลองใหม่'
+      },
+      en: {
+        subtitle:     '✦ KITCHEN MENU MANAGER ✦',
+        titleBurgers: '🍔 Burgers Status',
+        titleMeats:   '🥩 Meats Status',
+        avail:        'Available',
+        soldOut:      'Sold Out',
+        markSoldOut:  'Mark Sold Out',
+        markAvail:    'Mark Available',
+        lockTitle:    'Chef Access Only',
+        lockDesc:     'Enter your passcode to continue.',
+        lockBtn:      'Confirm',
+        lockErr:      '❌ Invalid passcode!',
+        toastOk:      '✅ Saved successfully!',
+        toastErr:     '❌ Failed to save. Please try again.'
+      }
+    };
+
+    function t(key) { return T[currentLang][key]; }
+
+    // ─── LOCK SCREEN ───────────────────────────────────────────────────────────
+    function verifyPasscode() {
+      const input = document.getElementById('passcode-input').value;
+      const errEl = document.getElementById('lock-error');
+
+      if (input === PASSCODE) {
+        document.getElementById('lock-screen').classList.remove('visible');
+        sessionStorage.setItem('chef_auth', '1');
+        loadData();
+      } else {
+        errEl.textContent = t('lockErr');
+        document.getElementById('passcode-input').value = '';
+        document.getElementById('passcode-input').focus();
+        setTimeout(() => { errEl.textContent = ''; }, 3000);
+      }
+    }
+
+    // ─── LANGUAGE ──────────────────────────────────────────────────────────────
+    function switchLang(lang) {
+      currentLang = lang;
+      document.getElementById('lang-th').classList.toggle('active', lang === 'th');
+      document.getElementById('lang-en').classList.toggle('active', lang === 'en');
+      document.getElementById('page-subtitle').textContent    = t('subtitle');
+      document.getElementById('title-burgers').textContent    = t('titleBurgers');
+      document.getElementById('title-meats').textContent      = t('titleMeats');
+      document.getElementById('lock-title').textContent       = t('lockTitle');
+      document.getElementById('lock-desc').textContent        = t('lockDesc');
+      document.getElementById('lock-submit-btn').textContent  = t('lockBtn');
+      if (Object.keys(availability).length) renderLists();
+    }
+
+    // ─── LOADER ────────────────────────────────────────────────────────────────
+    function setLoading(on) {
+      document.getElementById('loading-indicator').classList.toggle('visible', on);
+    }
+
+    // ─── TOAST ─────────────────────────────────────────────────────────────────
+    let toastTimer;
+    function showToast(msg, isError = false) {
+      const el = document.getElementById('toast');
+      document.getElementById('toast-text').textContent = msg;
+      el.className = 'toast' + (isError ? ' error' : '');
+      // force reflow so transition plays even on repeat calls
+      void el.offsetWidth;
+      el.classList.add('visible');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => el.classList.remove('visible'), 2800);
+    }
+
+    // ─── FIREBASE ──────────────────────────────────────────────────────────────
+    async function loadData() {
+      setLoading(true);
+      try {
+        const res = await fetch(`${FIREBASE_URL}/menu_availability.json`);
+        const data = res.ok ? await res.json() : null;
+        const defaults = {
+          'Classic Emperor': true,
+          'Double Emperor': true,
+          'Emperor Cheese': true,
+          'Chicken': true,
+          'Pork': true
+        };
+        availability = { ...defaults, ...(data || {}) };
+        renderLists();
+      } catch (e) {
+        console.error(e);
+        showToast('Could not load data from Firebase', true);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    async function setAvailability(key, value) {
+      setLoading(true);
+      availability[key] = value;
+      try {
+        const res = await fetch(`${FIREBASE_URL}/menu_availability.json`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ [key]: value })
+        });
+        if (!res.ok) throw new Error('PATCH failed');
+        showToast(t('toastOk'));
+        renderLists();
+      } catch (e) {
+        availability[key] = !value; // revert
+        showToast(t('toastErr'), true);
+        renderLists();
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    // ─── RENDER ────────────────────────────────────────────────────────────────
+    function buildCard(item) {
+      const avail = availability[item.key] !== false;
+      const card = document.createElement('div');
+      card.className = `menu-item${avail ? '' : ' sold-out'}`;
+
+      const info = document.createElement('div');
+      info.className = 'item-info';
+
+      const emojiEl = document.createElement('div');
+      emojiEl.className = 'item-emoji';
+      emojiEl.textContent = item.emoji;
+
+      const text = document.createElement('div');
+      const titleEl = document.createElement('div');
+      titleEl.className = 'item-text-title';
+      titleEl.textContent = item.key;
+
+      const statusEl = document.createElement('div');
+      statusEl.className = 'item-text-status';
+      statusEl.textContent = avail ? t('avail') : t('soldOut');
+
+      text.append(titleEl, statusEl);
+      info.append(emojiEl, text);
+
+      const btn = document.createElement('button');
+      btn.className = `toggle-btn ${avail ? 'btn-avail' : 'btn-soldout'}`;
+      btn.textContent = avail ? t('markSoldOut') : t('markAvail');
+      btn.onclick = () => setAvailability(item.key, !avail);
+
+      card.append(info, btn);
+      return card;
+    }
+
+    function renderLists() {
+      const bList = document.getElementById('burgers-list');
+      const mList = document.getElementById('meats-list');
+      bList.innerHTML = '';
+      mList.innerHTML = '';
+      BURGERS.forEach(item => bList.appendChild(buildCard(item)));
+      MEATS.forEach(item => mList.appendChild(buildCard(item)));
+    }
+
+    // ─── INIT ──────────────────────────────────────────────────────────────────
+    window.onload = () => {
+      switchLang('th');
+      if (sessionStorage.getItem('chef_auth') === '1') {
+        document.getElementById('lock-screen').classList.remove('visible');
+        loadData();
+      } else {
+        document.getElementById('passcode-input').focus();
+      }
+    };
+  </script>
+</body>
+</html>

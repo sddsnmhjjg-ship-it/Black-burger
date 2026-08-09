@@ -1,0 +1,1303 @@
+<!DOCTYPE html>
+<html lang="th" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Emperor Burger — Queue Dashboard 🍔🖤</title>
+  <meta name="description" content="Live order queue dashboard for Emperor Burger kitchen staff.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Space+Mono:wght@400;700&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ─── RESET & ROOT ─────────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:          #09090b;
+      --bg2:         #111113;
+      --glass:       rgba(20, 20, 24, 0.82);
+      --border:      rgba(255,255,255,0.08);
+      --border-h:    rgba(255,255,255,0.16);
+      --accent:      #ef4444;
+      --accent-glow: rgba(239,68,68,0.35);
+      --amber:       #f59e0b;
+      --amber-glow:  rgba(245,158,11,0.3);
+      --green:       #10b981;
+      --green-glow:  rgba(16,185,129,0.3);
+      --blue:        #3b82f6;
+      --text:        #fafaf9;
+      --muted:       #a1a1aa;
+      --dim:         #52525b;
+      --radius:      20px;
+    }
+
+    body {
+      font-family: 'Outfit', 'Prompt', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ─── ANIMATED BACKGROUND ─────────────────────────────────────────────── */
+    #bg-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.55;
+    }
+
+    /* ─── LOCK SCREEN ─────────────────────────────────────────────────────── */
+    #lock-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      background: rgba(9,9,11,0.97);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.4s ease;
+    }
+    #lock-screen.hidden { opacity: 0; pointer-events: none; }
+
+    .lock-card {
+      background: linear-gradient(145deg, rgba(24,24,27,0.98), rgba(15,15,18,0.98));
+      border: 1.5px solid rgba(239,68,68,0.4);
+      border-radius: 28px;
+      padding: 44px 36px;
+      width: 90%;
+      max-width: 380px;
+      text-align: center;
+      box-shadow: 0 0 60px rgba(239,68,68,0.15), 0 40px 80px rgba(0,0,0,0.7);
+    }
+    .lock-icon {
+      width: 64px; height: 64px;
+      background: rgba(239,68,68,0.1);
+      border: 1px solid rgba(239,68,68,0.3);
+      border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 28px;
+    }
+    .lock-card h2 { font-size: 1.5rem; font-weight: 800; margin-bottom: 6px; }
+    .lock-card p  { color: var(--muted); font-size: 0.85rem; margin-bottom: 28px; }
+
+    .lock-input {
+      width: 100%;
+      padding: 14px 18px;
+      background: rgba(0,0,0,0.4);
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      color: var(--text);
+      font-size: 1.1rem;
+      font-family: 'Space Mono', monospace;
+      text-align: center;
+      letter-spacing: 0.25em;
+      outline: none;
+      margin-bottom: 14px;
+      transition: border-color 0.2s;
+    }
+    .lock-input:focus { border-color: var(--accent); box-shadow: 0 0 12px var(--accent-glow); }
+
+    .lock-btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--accent);
+      border: none;
+      border-radius: 12px;
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Outfit', sans-serif;
+      transition: all 0.2s;
+    }
+    .lock-btn:hover { background: #dc2626; transform: translateY(-1px); box-shadow: 0 8px 20px var(--accent-glow); }
+
+    /* ─── CONFIRM POPUP ────────────────────────────────────────────────────── */
+    #confirm-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(6px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+    #confirm-overlay.visible { opacity: 1; pointer-events: auto; }
+
+    .confirm-card {
+      background: linear-gradient(145deg, rgba(24,24,27,0.98), rgba(12,10,9,0.98));
+      border: 1.5px solid rgba(239,68,68,0.5);
+      border-radius: 24px;
+      padding: 36px 32px 28px;
+      width: 90%;
+      max-width: 380px;
+      text-align: center;
+      box-shadow: 0 0 60px rgba(239,68,68,0.2), 0 40px 80px rgba(0,0,0,0.8);
+      animation: popIn 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    @keyframes popIn {
+      from { transform: scale(0.85); opacity: 0; }
+      to   { transform: scale(1);    opacity: 1; }
+    }
+
+    .confirm-icon {
+      font-size: 3rem;
+      margin-bottom: 14px;
+      display: block;
+    }
+    .confirm-title {
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: -0.01em;
+      margin-bottom: 8px;
+    }
+    .confirm-title span { color: var(--accent); }
+    .confirm-sub {
+      color: var(--muted);
+      font-size: 0.84rem;
+      margin-bottom: 26px;
+      line-height: 1.5;
+    }
+    .confirm-sub strong { color: var(--text); }
+
+    .confirm-btns {
+      display: flex;
+      gap: 10px;
+    }
+    .confirm-btn {
+      flex: 1;
+      padding: 13px;
+      border-radius: 12px;
+      border: none;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Outfit', sans-serif;
+      transition: all 0.2s;
+    }
+    .confirm-btn.cancel-btn {
+      background: rgba(255,255,255,0.07);
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+    .confirm-btn.cancel-btn:hover { background: rgba(255,255,255,0.12); color: var(--text); }
+    .confirm-btn.confirm-yes {
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      color: #fff;
+      box-shadow: 0 4px 20px rgba(239,68,68,0.4);
+    }
+    .confirm-btn.confirm-yes:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(239,68,68,0.55); }
+    .confirm-btn.confirm-yes:active { transform: translateY(0); }
+
+    .lock-error {
+      color: var(--accent);
+      font-size: 0.82rem;
+      font-weight: 600;
+      min-height: 22px;
+      margin-top: 10px;
+    }
+
+    /* ─── LAYOUT ───────────────────────────────────────────────────────────── */
+    #app {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      padding: 0 16px 60px;
+    }
+
+    /* ─── HEADER ───────────────────────────────────────────────────────────── */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 14px;
+      padding: 28px 0 22px;
+      border-bottom: 1px solid var(--border);
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .header-left { display: flex; align-items: center; gap: 14px; }
+
+    .logo-badge {
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      border-radius: 14px;
+      padding: 10px 14px;
+      font-size: 1.6rem;
+      box-shadow: 0 4px 20px var(--accent-glow);
+    }
+
+    .header-title h1 {
+      font-size: 1.5rem;
+      font-weight: 900;
+      background: linear-gradient(90deg, #fff 60%, #ef4444);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -0.02em;
+    }
+    .header-title p {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--muted);
+      letter-spacing: 0.15em;
+      margin-top: 2px;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .live-dot {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(16,185,129,0.12);
+      border: 1px solid rgba(16,185,129,0.3);
+      border-radius: 99px;
+      padding: 6px 14px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--green);
+    }
+    .live-dot::before {
+      content: '';
+      width: 8px; height: 8px;
+      background: var(--green);
+      border-radius: 50%;
+      animation: pulse-green 1.5s infinite;
+    }
+    @keyframes pulse-green {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.5; transform: scale(0.7); }
+    }
+
+    .icon-btn {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 8px 14px;
+      color: var(--muted);
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'Outfit', sans-serif;
+    }
+    .icon-btn:hover { background: rgba(255,255,255,0.1); color: var(--text); border-color: var(--border-h); }
+    .icon-btn.danger:hover { background: rgba(239,68,68,0.1); color: var(--accent); border-color: rgba(239,68,68,0.3); }
+
+    /* ─── STATS BAR ────────────────────────────────────────────────────────── */
+    .stats-bar {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      max-width: 1200px;
+      margin: 20px auto 0;
+    }
+
+    .stat-chip {
+      flex: 1;
+      min-width: 120px;
+      background: var(--glass);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: all 0.25s;
+    }
+    .stat-chip:hover { border-color: var(--border-h); transform: translateY(-2px); }
+    .stat-icon {
+      font-size: 1.4rem;
+      width: 40px; height: 40px;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(255,255,255,0.05);
+      border-radius: 10px;
+    }
+    .stat-val { font-size: 1.6rem; font-weight: 800; line-height: 1; }
+    .stat-lbl { font-size: 0.72rem; color: var(--muted); font-weight: 600; margin-top: 2px; }
+
+    /* ─── FILTER BAR ───────────────────────────────────────────────────────── */
+    .filter-bar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+      max-width: 1200px;
+      margin: 20px auto 0;
+    }
+
+    .filter-chip {
+      padding: 7px 16px;
+      border-radius: 99px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.04);
+      color: var(--muted);
+      transition: all 0.2s;
+      font-family: 'Outfit', sans-serif;
+    }
+    .filter-chip:hover { border-color: var(--border-h); color: var(--text); background: rgba(255,255,255,0.08); }
+    .filter-chip.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+      box-shadow: 0 0 16px var(--accent-glow);
+    }
+
+    .search-box {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 7px 14px;
+    }
+    .search-box input {
+      background: none;
+      border: none;
+      outline: none;
+      color: var(--text);
+      font-size: 0.82rem;
+      font-family: 'Outfit', sans-serif;
+      width: 160px;
+    }
+    .search-box input::placeholder { color: var(--dim); }
+
+    /* ─── QUEUE GRID ───────────────────────────────────────────────────────── */
+    #queue-grid {
+      max-width: 1200px;
+      margin: 20px auto 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 14px;
+    }
+
+    /* ─── ORDER CARD ───────────────────────────────────────────────────────── */
+    .order-card {
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      animation: cardIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+      position: relative;
+    }
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(20px) scale(0.96); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .order-card:hover { transform: translateY(-4px); border-color: var(--border-h); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+
+    /* Status stripe on left edge */
+    .order-card::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 4px;
+      border-radius: 4px 0 0 4px;
+      background: var(--accent);
+      transition: background 0.3s;
+    }
+    .order-card[data-status="cooking"]::before  { background: var(--amber); }
+    .order-card[data-status="done"]::before     { background: var(--green); }
+    .order-card[data-status="cancelled"]::before { background: var(--dim); }
+    .order-card[data-status="payment"]::before  { background: var(--blue); }
+
+    /* Card header */
+    .card-head {
+      padding: 16px 18px 12px 22px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .queue-num {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-bottom: 3px;
+    }
+    .customer-name {
+      font-size: 1.15rem;
+      font-weight: 800;
+      line-height: 1.2;
+      color: var(--text);
+    }
+    .order-id-tag {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 3px 8px;
+      color: var(--muted);
+      margin-top: 4px;
+      display: inline-block;
+    }
+
+    .status-badge {
+      flex-shrink: 0;
+      padding: 5px 12px;
+      border-radius: 99px;
+      font-size: 0.7rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .status-pending   { background: rgba(239,68,68,0.15); color: #ef4444; border: 1px solid rgba(239,68,68,0.3); }
+    .status-cooking   { background: rgba(245,158,11,0.15); color: #f59e0b; border: 1px solid rgba(245,158,11,0.3); animation: glow-amber 2s ease-in-out infinite; }
+    .status-done      { background: rgba(16,185,129,0.15); color: #10b981; border: 1px solid rgba(16,185,129,0.3); }
+    .status-cancelled { background: rgba(82,82,91,0.15); color: #71717a; border: 1px solid rgba(82,82,91,0.3); }
+    .status-payment   { background: rgba(59,130,246,0.15); color: #60a5fa; border: 1px solid rgba(59,130,246,0.3); }
+
+    @keyframes glow-amber {
+      0%, 100% { box-shadow: none; }
+      50%       { box-shadow: 0 0 12px rgba(245,158,11,0.4); }
+    }
+
+    /* Card body */
+    .card-body {
+      padding: 14px 18px 14px 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+
+    .info-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.84rem;
+    }
+    .info-icon {
+      font-size: 1rem;
+      width: 20px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .info-lbl {
+      color: var(--muted);
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      width: 70px;
+      flex-shrink: 0;
+      padding-top: 1px;
+    }
+    .info-val {
+      color: var(--text);
+      font-weight: 600;
+      flex: 1;
+      word-break: break-word;
+    }
+    .info-val.note {
+      color: var(--amber);
+      background: rgba(245,158,11,0.08);
+      border: 1px solid rgba(245,158,11,0.2);
+      border-radius: 8px;
+      padding: 5px 10px;
+      font-size: 0.82rem;
+      font-style: italic;
+    }
+    .info-val.none { color: var(--dim); font-style: italic; }
+
+    /* Meat badge */
+    .meat-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 10px;
+      border-radius: 99px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+    .meat-chicken { background: rgba(251,191,36,0.12); color: #fbbf24; border: 1px solid rgba(251,191,36,0.3); }
+    .meat-pork    { background: rgba(244,114,182,0.12); color: #f472b6; border: 1px solid rgba(244,114,182,0.3); }
+    .meat-other   { background: rgba(255,255,255,0.06); color: var(--muted); border: 1px solid var(--border); }
+
+    /* Payment badge */
+    .pay-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 10px;
+      border-radius: 99px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+    .pay-qr   { background: rgba(59,130,246,0.12); color: #60a5fa; border: 1px solid rgba(59,130,246,0.3); }
+    .pay-cash { background: rgba(16,185,129,0.12); color: #34d399; border: 1px solid rgba(16,185,129,0.3); }
+    .pay-other { background: rgba(255,255,255,0.06); color: var(--muted); border: 1px solid var(--border); }
+
+    /* Card footer / actions */
+    .card-foot {
+      padding: 10px 18px 14px 22px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      border-top: 1px solid var(--border);
+    }
+
+    .action-btn {
+      flex: 1;
+      min-width: 80px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.04);
+      color: var(--muted);
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'Outfit', sans-serif;
+      text-align: center;
+    }
+    .action-btn:hover { background: rgba(255,255,255,0.08); color: var(--text); border-color: var(--border-h); }
+    .action-btn.cooking { color: var(--amber); border-color: rgba(245,158,11,0.3); }
+    .action-btn.cooking:hover { background: rgba(245,158,11,0.1); }
+    .action-btn.done { color: var(--green); border-color: rgba(16,185,129,0.3); }
+    .action-btn.done:hover { background: rgba(16,185,129,0.1); }
+    .action-btn.cancel { color: var(--accent); border-color: rgba(239,68,68,0.3); }
+    .action-btn.cancel:hover { background: rgba(239,68,68,0.1); }
+    .action-btn.delete { color: var(--dim); border-color: rgba(82,82,91,0.3); }
+    .action-btn.delete:hover { background: rgba(239,68,68,0.08); color: var(--accent); border-color: rgba(239,68,68,0.3); }
+
+    /* ─── EMPTY STATE ─────────────────────────────────────────────────────── */
+    #empty-state {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 20px;
+      text-align: center;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+    .empty-emoji { font-size: 4rem; margin-bottom: 16px; }
+    .empty-title { font-size: 1.4rem; font-weight: 800; margin-bottom: 8px; }
+    .empty-sub { color: var(--muted); font-size: 0.9rem; }
+
+    /* ─── LOADING ─────────────────────────────────────────────────────────── */
+    #loading-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 20px;
+      gap: 16px;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+    .spinner-ring {
+      width: 44px; height: 44px;
+      border: 3px solid rgba(239,68,68,0.15);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ─── TOAST ───────────────────────────────────────────────────────────── */
+    #toast {
+      position: fixed;
+      bottom: 28px; left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--green);
+      color: #0c0a09;
+      padding: 11px 22px;
+      border-radius: 99px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      z-index: 500;
+      transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+      pointer-events: none;
+      white-space: nowrap;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    }
+    #toast.visible { transform: translateX(-50%) translateY(0); }
+    #toast.error { background: var(--accent); color: #fff; }
+
+    /* ─── TIME TAG ─────────────────────────────────────────────────────────── */
+    .time-tag {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+    .time-tag.recent { color: var(--green); }
+    .time-tag.old    { color: var(--dim); }
+
+    /* ─── TOTAL BADGE ─────────────────────────────────────────────────────── */
+    .total-tag {
+      font-family: 'Space Mono', monospace;
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: var(--amber);
+    }
+
+    /* ─── RESPONSIVE ───────────────────────────────────────────────────────── */
+    @media (max-width: 640px) {
+      .stats-bar { gap: 8px; }
+      .stat-chip { min-width: 100px; padding: 10px 12px; }
+      .stat-val  { font-size: 1.3rem; }
+      .search-box { margin-left: 0; width: 100%; }
+      .search-box input { width: 100%; }
+      #queue-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Particle BG -->
+  <canvas id="bg-canvas"></canvas>
+
+  <!-- Confirm Popup -->
+  <div id="confirm-overlay">
+    <div class="confirm-card">
+      <span class="confirm-icon" id="confirm-icon">⚠️</span>
+      <div class="confirm-title">ARE YOU <span>SURE?</span></div>
+      <div class="confirm-sub" id="confirm-sub">การกระทำนี้ไม่สามารถย้อนกลับได้</div>
+      <div class="confirm-btns">
+        <button class="confirm-btn cancel-btn" onclick="closeConfirm()">ยกเลิก / Cancel</button>
+        <button class="confirm-btn confirm-yes" id="confirm-yes-btn" onclick="executeConfirm()">ลบเลย!</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lock Screen -->
+  <div id="lock-screen">
+    <div class="lock-card">
+      <div class="lock-icon">🔐</div>
+      <h2>Kitchen Access Only</h2>
+      <p>กรุณากรอกรหัสผ่านเพื่อดูคิวออเดอร์</p>
+      <input type="password" id="lock-input" class="lock-input"
+        placeholder="••••••••"
+        onkeydown="if(event.key==='Enter') verifyLock()"
+        autocomplete="current-password">
+      <button class="lock-btn" onclick="verifyLock()">ยืนยัน / Confirm</button>
+      <div class="lock-error" id="lock-error"></div>
+    </div>
+  </div>
+
+  <!-- Main App -->
+  <div id="app" style="display:none">
+
+    <!-- Header -->
+    <div class="header">
+      <div class="header-left">
+        <div class="logo-badge">🍔</div>
+        <div class="header-title">
+          <h1>Queue Dashboard</h1>
+          <p>✦ EMPEROR BURGER — LIVE ORDER MONITOR ✦</p>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="live-dot" id="live-indicator">LIVE</div>
+        <div class="time-tag" id="last-updated-time">อัพเดทล่าสุด: —</div>
+        <a href="Casheir order page.html" class="icon-btn" style="text-decoration:none">🛒 หน้าร้าน Cashier</a>
+        <a href="index.html" class="icon-btn" style="text-decoration:none">📱 หน้าลูกค้า Order</a>
+        <button class="icon-btn" onclick="loadOrders()">
+          <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+          รีเฟรช
+        </button>
+        <button class="icon-btn danger" onclick="promptClearDone()" title="ลบออเดอร์ที่สำเร็จแล้ว">
+          <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+          ล้างที่เสร็จ
+        </button>
+        <button class="icon-btn danger" onclick="promptClearAll()" title="ลบออเดอร์ทั้งหมด">
+          <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+          ล้างทั้งหมด
+        </button>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-bar">
+      <div class="stat-chip">
+        <div class="stat-icon">🍔</div>
+        <div>
+          <div class="stat-val" id="stat-total">0</div>
+          <div class="stat-lbl">ออเดอร์ทั้งหมด</div>
+        </div>
+      </div>
+      <div class="stat-chip">
+        <div class="stat-icon">⏳</div>
+        <div>
+          <div class="stat-val" id="stat-pending" style="color:var(--accent)">0</div>
+          <div class="stat-lbl">รอทำ</div>
+        </div>
+      </div>
+      <div class="stat-chip">
+        <div class="stat-icon">🍳</div>
+        <div>
+          <div class="stat-val" id="stat-cooking" style="color:var(--amber)">0</div>
+          <div class="stat-lbl">กำลังทำ</div>
+        </div>
+      </div>
+      <div class="stat-chip">
+        <div class="stat-icon">✅</div>
+        <div>
+          <div class="stat-val" id="stat-done" style="color:var(--green)">0</div>
+          <div class="stat-lbl">เสร็จแล้ว</div>
+        </div>
+      </div>
+      <div class="stat-chip">
+        <div class="stat-icon">💰</div>
+        <div>
+          <div class="stat-val" id="stat-revenue" style="color:var(--amber); font-size:1.1rem">฿0</div>
+          <div class="stat-lbl">รายได้วันนี้</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filter & Search -->
+    <div class="filter-bar">
+      <button class="filter-chip active" onclick="setFilter('all', this)" id="filter-all">ทั้งหมด</button>
+      <button class="filter-chip" onclick="setFilter('pending', this)">⏳ รอทำ</button>
+      <button class="filter-chip" onclick="setFilter('payment', this)">💳 รอชำระ</button>
+      <button class="filter-chip" onclick="setFilter('cooking', this)">🍳 กำลังทำ</button>
+      <button class="filter-chip" onclick="setFilter('done', this)">✅ เสร็จแล้ว</button>
+      <button class="filter-chip" onclick="setFilter('cancelled', this)">❌ ยกเลิก</button>
+      <div class="search-box">
+        <svg width="14" height="14" fill="none" stroke="#71717a" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35"/></svg>
+        <input type="text" id="search-input" placeholder="ค้นหาชื่อ / Order ID..." oninput="renderOrders()">
+      </div>
+    </div>
+
+    <!-- Loading -->
+    <div id="loading-state">
+      <div class="spinner-ring"></div>
+      <div style="color:var(--muted); font-size:0.88rem;">กำลังโหลดคิว...</div>
+    </div>
+
+    <!-- Empty State -->
+    <div id="empty-state">
+      <div class="empty-emoji">🫙</div>
+      <div class="empty-title">ไม่มีออเดอร์ในคิว</div>
+      <div class="empty-sub">ยังไม่มีออเดอร์ที่ตรงกับตัวกรองนี้</div>
+    </div>
+
+    <!-- Queue Grid -->
+    <div id="queue-grid"></div>
+
+  </div>
+
+  <!-- Toast -->
+  <div id="toast"></div>
+
+  <script>
+    // ─── CONFIG ──────────────────────────────────────────────────────────────
+    const FIREBASE_URL = 'https://food-34707-default-rtdb.asia-southeast1.firebasedatabase.app';
+    // Password stored as char codes. Decodes to: chef123
+    const PASSCODE = String.fromCharCode(99,104,101,102,49,50,51);
+    const AUTO_REFRESH_INTERVAL = 15_000; // 15 seconds
+
+    // ─── STATE ───────────────────────────────────────────────────────────────
+    let allOrders = {};
+    let currentFilter = 'all';
+    let autoRefreshTimer = null;
+
+    // ─── LOCK ────────────────────────────────────────────────────────────────
+    function verifyLock() {
+      const input = document.getElementById('lock-input').value;
+      const errEl = document.getElementById('lock-error');
+
+      if (input === PASSCODE) {
+        document.getElementById('lock-screen').classList.add('hidden');
+        document.getElementById('app').style.display = 'block';
+        sessionStorage.setItem('queue_auth', '1');
+        initApp();
+      } else {
+        errEl.textContent = '❌ รหัสผ่านไม่ถูกต้อง / Wrong passcode';
+        document.getElementById('lock-input').value = '';
+        document.getElementById('lock-input').focus();
+        setTimeout(() => errEl.textContent = '', 3000);
+      }
+    }
+
+    window.onload = () => {
+      initParticleCanvas();
+      if (sessionStorage.getItem('queue_auth') === '1') {
+        document.getElementById('lock-screen').classList.add('hidden');
+        document.getElementById('app').style.display = 'block';
+        initApp();
+      } else {
+        document.getElementById('lock-input').focus();
+      }
+    };
+
+    // ─── INIT ────────────────────────────────────────────────────────────────
+    function initApp() {
+      loadOrders();
+      startAutoRefresh();
+    }
+
+    function startAutoRefresh() {
+      if (autoRefreshTimer) clearInterval(autoRefreshTimer);
+      autoRefreshTimer = setInterval(loadOrders, AUTO_REFRESH_INTERVAL);
+    }
+
+    // ─── FIREBASE ────────────────────────────────────────────────────────────
+    async function loadOrders() {
+      try {
+        const res = await fetch(`${FIREBASE_URL}/orders.json`, { cache: 'no-store' });
+        if (!res.ok) throw new Error('Firebase fetch failed');
+        const data = await res.json();
+        allOrders = data || {};
+        renderOrders();
+        updateStats();
+        updateLastUpdatedTime();
+      } catch (e) {
+        console.error(e);
+        showToast('ไม่สามารถโหลดข้อมูลได้', true);
+      }
+    }
+
+    async function updateOrderStatus(fbKey, status) {
+      try {
+        const url = `${FIREBASE_URL}/orders/${encodeURIComponent(fbKey)}.json`;
+        await fetch(url, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status, updatedAt: new Date().toISOString() })
+        });
+        if (allOrders[fbKey]) allOrders[fbKey].status = status;
+        renderOrders();
+        updateStats();
+        showToast(statusLabel(status) + ' ✓');
+      } catch (e) {
+        showToast('อัพเดตสถานะไม่สำเร็จ', true);
+      }
+    }
+
+    async function deleteFirebaseNode(path) {
+      const url = `${FIREBASE_URL}/${path}.json`;
+      try {
+        const res = await fetch(url, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: 'null'
+        });
+        if (res.ok) return true;
+      } catch (e) {}
+
+      try {
+        const res = await fetch(url, { method: 'DELETE' });
+        if (res.ok) return true;
+      } catch (e) {}
+
+      return false;
+    }
+
+    function deleteOrder(fbKey) {
+      showConfirm(
+        '🗑️',
+        `ลบ <strong>ออเดอร์ #${allOrders[fbKey]?.orderId || fbKey}</strong> ออกจากคิวถาวร?`,
+        'ลบออก',
+        async () => {
+          await deleteFirebaseNode(`orders/${encodeURIComponent(fbKey)}`);
+          delete allOrders[fbKey];
+          await loadOrders();
+          showToast('ลบออเดอร์เรียบร้อย ✓');
+        }
+      );
+    }
+
+    // ─── CONFIRM POPUP ────────────────────────────────────────────────────────
+    let _pendingConfirmAction = null;
+
+    function showConfirm(icon, subText, yesLabel, action) {
+      document.getElementById('confirm-icon').textContent = icon;
+      document.getElementById('confirm-sub').innerHTML = subText;
+      document.getElementById('confirm-yes-btn').textContent = yesLabel;
+      _pendingConfirmAction = action;
+      document.getElementById('confirm-overlay').classList.add('visible');
+    }
+
+    function closeConfirm() {
+      document.getElementById('confirm-overlay').classList.remove('visible');
+      _pendingConfirmAction = null;
+    }
+
+    function executeConfirm() {
+      closeConfirm();
+      if (typeof _pendingConfirmAction === 'function') _pendingConfirmAction();
+    }
+
+    // Close on backdrop click
+    document.getElementById('confirm-overlay').addEventListener('click', e => {
+      if (e.target === document.getElementById('confirm-overlay')) closeConfirm();
+    });
+
+    function promptClearDone() {
+      const doneKeys = Object.entries(allOrders)
+        .filter(([, o]) => o && o.status === 'done')
+        .map(([key]) => key);
+
+      if (doneKeys.length === 0) { showToast('ไม่มีออเดอร์ที่เสร็จแล้ว'); return; }
+
+      showConfirm(
+        '✅',
+        `ลบ <strong>${doneKeys.length} ออเดอร์ที่เสร็จแล้ว</strong> ออกจากคิวถาวร?<br><small style="color:var(--dim)">ไม่สามารถย้อนกลับได้</small>`,
+        `ลบ ${doneKeys.length} รายการ`,
+        async () => {
+          await Promise.all(doneKeys.map(k => deleteFirebaseNode(`orders/${encodeURIComponent(k)}`)));
+          doneKeys.forEach(k => delete allOrders[k]);
+          await loadOrders();
+          showToast(`ลบ ${doneKeys.length} ออเดอร์แล้ว ✓`);
+        }
+      );
+    }
+
+    function promptClearAll() {
+      const allKeys = Object.keys(allOrders).filter(k => allOrders[k]);
+      const countText = allKeys.length > 0 ? `${allKeys.length} รายการ` : '';
+
+      showConfirm(
+        '🗑️',
+        `ลบ <strong style="color:var(--accent)">ออเดอร์ทั้งหมด ${countText}</strong> ออกจากคิวถาวร?<br><small style="color:var(--dim)">รวมถึงออเดอร์ที่ยังรออยู่ด้วย!</small>`,
+        '🗑️ ลบทั้งหมดเลย!',
+        async () => {
+          await Promise.all([
+            deleteFirebaseNode('orders'),
+            ...allKeys.map(k => deleteFirebaseNode(`orders/${encodeURIComponent(k)}`))
+          ]);
+          allOrders = {};
+          await loadOrders();
+          showToast('ล้างคิวทั้งหมดเรียบร้อยแล้ว ✓');
+        }
+      );
+    }
+
+    // ─── FILTER ──────────────────────────────────────────────────────────────
+    function setFilter(filter, btn) {
+      currentFilter = filter;
+      document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      renderOrders();
+    }
+
+    // ─── RENDER ──────────────────────────────────────────────────────────────
+    function renderOrders() {
+      const grid = document.getElementById('queue-grid');
+      const loading = document.getElementById('loading-state');
+      const empty = document.getElementById('empty-state');
+      const searchVal = (document.getElementById('search-input')?.value || '').toLowerCase();
+
+      loading.style.display = 'none';
+
+      // Flatten & filter using Firebase key
+      let orders = Object.entries(allOrders)
+        .map(([fbKey, o]) => ({ fbKey, ...o }))
+        .filter(o => o && (o.orderId || o.fbKey));
+
+      // Exclude expired
+      const now = Date.now();
+      orders = orders.filter(o => !o.expiresAt || new Date(o.expiresAt).getTime() > now);
+
+      // Status filter
+      if (currentFilter !== 'all') {
+        orders = orders.filter(o => (o.status || 'pending') === currentFilter);
+      }
+
+      // Search filter
+      if (searchVal) {
+        orders = orders.filter(o =>
+          (o.customerName || '').toLowerCase().includes(searchVal) ||
+          String(o.orderId || o.fbKey || '').includes(searchVal) ||
+          (o.burger || '').toLowerCase().includes(searchVal)
+        );
+      }
+
+      // Sort: newest first (by createdAt desc), but pending & cooking come first
+      const statusOrder = { cooking: 0, pending: 1, payment: 2, done: 3, cancelled: 4 };
+      orders.sort((a, b) => {
+        const sa = statusOrder[a.status || 'pending'] ?? 5;
+        const sb = statusOrder[b.status || 'pending'] ?? 5;
+        if (sa !== sb) return sa - sb;
+        const ta = new Date(a.createdAt || 0).getTime();
+        const tb = new Date(b.createdAt || 0).getTime();
+        return tb - ta; // newest first
+      });
+
+      if (orders.length === 0) {
+        grid.style.display = 'none';
+        empty.style.display = 'flex';
+      } else {
+        empty.style.display = 'none';
+        grid.style.display = 'grid';
+        grid.innerHTML = orders.map(buildCard).join('');
+      }
+    }
+
+    function buildCard(o) {
+      const status = o.status || 'pending';
+      const statusClass = 'status-' + status;
+      const statusTxt = statusLabel(status);
+
+      // Parse burger & meat
+      const burgerDisplay = o.burger || o.patty || '—';
+      const meatRaw = (o.meat || '').toLowerCase();
+      let meatBadge;
+      if (meatRaw.includes('chicken') || meatRaw.includes('ไก่')) {
+        meatBadge = `<span class="meat-badge meat-chicken">🐔 Chicken / ไก่</span>`;
+      } else if (meatRaw.includes('pork') || meatRaw.includes('หมู')) {
+        meatBadge = `<span class="meat-badge meat-pork">🐷 Pork / หมู (+10฿)</span>`;
+      } else {
+        meatBadge = `<span class="meat-badge meat-other">${o.meat || '—'}</span>`;
+      }
+
+      // Payment badge
+      const payRaw = (o.paymentMethod || '').toLowerCase();
+      let payBadge;
+      if (payRaw.includes('qr') || payRaw.includes('promptpay') || payRaw.includes('พร้อมเพย์')) {
+        payBadge = `<span class="pay-badge pay-qr">📱 QR พร้อมเพย์</span>`;
+      } else if (payRaw.includes('cash') || payRaw.includes('เงินสด')) {
+        payBadge = `<span class="pay-badge pay-cash">💵 เงินสด</span>`;
+      } else {
+        payBadge = `<span class="pay-badge pay-other">${o.paymentMethod || '—'}</span>`;
+      }
+
+      // Time display
+      const timeDisplay = formatTime(o.createdAt || o.time);
+      const timeClass = isRecent(o.createdAt) ? 'recent' : (isOld(o.createdAt) ? 'old' : '');
+
+      // Special note
+      const noteHtml = o.specialNote
+        ? `<div class="info-row">
+            <span class="info-icon">📝</span>
+            <span class="info-lbl">หมายเหตุ</span>
+            <span class="info-val note">${escHtml(o.specialNote)}</span>
+           </div>`
+        : '';
+
+      // Queue number
+      const orderNum = o.orderId || o.fbKey;
+      const queueDisplay = o.queueNumber ? `คิว #${o.queueNumber}` : `#${orderNum}`;
+
+      // Total
+      const totalDisplay = o.total ? `<span class="total-tag">฿${Number(o.total).toFixed(2)}</span>` : '';
+
+      // Action buttons (vary by status) using fbKey
+      let actions = '';
+      const fbKey = escHtml(String(o.fbKey || o.id));
+
+      if (status !== 'done' && status !== 'cancelled') {
+        if (status !== 'cooking') {
+          actions += `<button class="action-btn cooking" onclick="updateOrderStatus('${fbKey}', 'cooking')">🍳 กำลังทำ</button>`;
+        }
+        actions += `<button class="action-btn done" onclick="updateOrderStatus('${fbKey}', 'done')">✅ เสร็จ</button>`;
+        if (status !== 'cancelled') {
+          actions += `<button class="action-btn cancel" onclick="updateOrderStatus('${fbKey}', 'cancelled')">❌ ยกเลิก</button>`;
+        }
+      }
+      actions += `<button class="action-btn delete" onclick="deleteOrder('${fbKey}')" title="ลบออกจากคิว">🗑</button>`;
+
+      return `
+        <div class="order-card" data-status="${status}" data-id="${fbKey}">
+          <div class="card-head">
+            <div>
+              <div class="queue-num">${queueDisplay}</div>
+              <div class="customer-name">${escHtml(o.customerName || 'Guest')}</div>
+              <span class="order-id-tag">Order #${escHtml(String(orderNum))}</span>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+              <span class="status-badge ${statusClass}">${statusTxt}</span>
+              ${totalDisplay}
+            </div>
+          </div>
+
+          <div class="card-body">
+            <div class="info-row">
+              <span class="info-icon">🍔</span>
+              <span class="info-lbl">เบอร์เกอร์</span>
+              <span class="info-val">${escHtml(burgerDisplay)}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-icon">🥩</span>
+              <span class="info-lbl">เนื้อ</span>
+              <span class="info-val">${meatBadge}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-icon">💳</span>
+              <span class="info-lbl">ชำระ</span>
+              <span class="info-val">${payBadge}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-icon">🕐</span>
+              <span class="info-lbl">สั่งเมื่อ</span>
+              <span class="info-val time-tag ${timeClass}">${timeDisplay}</span>
+            </div>
+            ${noteHtml}
+          </div>
+
+          <div class="card-foot">
+            ${actions}
+          </div>
+        </div>
+      `;
+    }
+
+    // ─── STATS ───────────────────────────────────────────────────────────────
+    function updateStats() {
+      const orders = Object.values(allOrders).filter(o => o && o.orderId);
+      const now = Date.now();
+      const valid = orders.filter(o => !o.expiresAt || new Date(o.expiresAt).getTime() > now);
+
+      document.getElementById('stat-total').textContent   = valid.length;
+      document.getElementById('stat-pending').textContent = valid.filter(o => (o.status || 'pending') === 'pending').length;
+      document.getElementById('stat-cooking').textContent = valid.filter(o => o.status === 'cooking').length;
+      document.getElementById('stat-done').textContent    = valid.filter(o => o.status === 'done').length;
+
+      // Revenue from done orders today
+      const todayStart = new Date(); todayStart.setHours(0,0,0,0);
+      const revenue = valid
+        .filter(o => o.status === 'done' && new Date(o.createdAt || 0) >= todayStart)
+        .reduce((sum, o) => sum + (Number(o.total) || 0), 0);
+      document.getElementById('stat-revenue').textContent = `฿${revenue.toFixed(0)}`;
+    }
+
+    // ─── HELPERS ─────────────────────────────────────────────────────────────
+    function statusLabel(s) {
+      const map = { pending: '⏳ รอทำ', cooking: '🍳 กำลังทำ', done: '✅ เสร็จแล้ว', cancelled: '❌ ยกเลิก', payment: '💳 รอชำระ' };
+      return map[s] || s;
+    }
+
+    function escHtml(str) {
+      return String(str || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    function formatTime(raw) {
+      if (!raw) return '—';
+      const d = new Date(raw);
+      if (isNaN(d.getTime())) return String(raw);
+      const now = new Date();
+      const diffMs = now - d;
+      const diffMin = Math.floor(diffMs / 60000);
+      if (diffMin < 1)  return 'เมื่อกี้';
+      if (diffMin < 60) return `${diffMin} นาทีที่แล้ว`;
+      const h = d.getHours().toString().padStart(2, '0');
+      const m = d.getMinutes().toString().padStart(2, '0');
+      return `${h}:${m} น.`;
+    }
+
+    function isRecent(raw) {
+      if (!raw) return false;
+      return (Date.now() - new Date(raw).getTime()) < 5 * 60 * 1000;
+    }
+
+    function isOld(raw) {
+      if (!raw) return false;
+      return (Date.now() - new Date(raw).getTime()) > 60 * 60 * 1000;
+    }
+
+    function updateLastUpdatedTime() {
+      const now = new Date();
+      const h = now.getHours().toString().padStart(2, '0');
+      const m = now.getMinutes().toString().padStart(2, '0');
+      const s = now.getSeconds().toString().padStart(2, '0');
+      document.getElementById('last-updated-time').textContent = `อัพเดท ${h}:${m}:${s}`;
+    }
+
+    // ─── TOAST ───────────────────────────────────────────────────────────────
+    let toastTimer;
+    function showToast(msg, isError = false) {
+      const el = document.getElementById('toast');
+      el.textContent = msg;
+      el.className = isError ? 'error visible' : 'visible';
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => el.classList.remove('visible'), 2800);
+    }
+
+    // ─── PARTICLE BG ────────────────────────────────────────────────────────
+    function initParticleCanvas() {
+      const canvas = document.getElementById('bg-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+
+      function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+      resize();
+      window.addEventListener('resize', resize);
+
+      const GLOWS = ['rgba(239,68,68,', 'rgba(245,158,11,', 'rgba(220,38,38,', 'rgba(251,191,36,'];
+
+      class Ember {
+        constructor() { this.reset(true); }
+        reset(fromBottom = false) {
+          this.x = Math.random() * canvas.width;
+          this.y = fromBottom ? canvas.height + 20 : Math.random() * canvas.height;
+          this.size = Math.random() * 2.8 + 0.8;
+          this.speedY = -(Math.random() * 0.4 + 0.15);
+          this.speedX = (Math.random() - 0.5) * 0.25;
+          this.alpha = Math.random() * 0.4 + 0.1;
+          this.alphaDir = (Math.random() < 0.5 ? 1 : -1) * 0.002;
+          this.glow = GLOWS[Math.floor(Math.random() * GLOWS.length)];
+          this.pulse = Math.random() * Math.PI * 2;
+        }
+        update() {
+          this.x += this.speedX + Math.sin(this.pulse) * 0.12;
+          this.y += this.speedY;
+          this.pulse += 0.018;
+          this.alpha += this.alphaDir;
+          if (this.alpha > 0.65) this.alphaDir = -Math.abs(this.alphaDir);
+          if (this.alpha < 0.04) this.alphaDir = Math.abs(this.alphaDir);
+          if (this.y < -20) this.reset(false);
+        }
+        draw() {
+          ctx.save();
+          ctx.beginPath();
+          const grd = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size * 3.5);
+          grd.addColorStop(0, this.glow + this.alpha + ')');
+          grd.addColorStop(1, this.glow + '0)');
+          ctx.fillStyle = grd;
+          ctx.arc(this.x, this.y, this.size * 3.5, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        }
+      }
+
+      const embers = Array.from({ length: 60 }, () => new Ember());
+
+      function loop() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        embers.forEach(e => { e.update(); e.draw(); });
+        requestAnimationFrame(loop);
+      }
+      loop();
+    }
+  </script>
+</body>
+</html>

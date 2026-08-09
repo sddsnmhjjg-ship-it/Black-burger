@@ -1,0 +1,3253 @@
+<!DOCTYPE html>
+<html lang="th" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-select=no">
+  <title>🖤 Emperor Burger — Luxury Gourmet Dining 🍔</title>
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Welcome to Emperor Burger! Flame-grilled gourmet burgers crafted with passion. Order on mobile or desktop.">
+  <meta name="theme-color" content="#ef4444">
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts (Outfit & Plus Jakarta Sans for English, Prompt & Mitr for Thai) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Prompt:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Mitr:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ══ LUXURY DESIGN TOKENS & RESPONSIVE THEME ══ */
+    :root {
+      --bg-primary: #09090b;
+      --bg-surface: #121215;
+      --card-glass: rgba(24, 24, 27, 0.75);
+      --card-glass-hover: rgba(39, 39, 42, 0.85);
+      --border-glass: rgba(255, 255, 255, 0.08);
+      --border-glow: rgba(239, 68, 68, 0.35);
+      --accent-flame: #ef4444;
+      --accent-flame-hover: #dc2626;
+      --accent-amber: #f59e0b;
+      --accent-amber-glow: rgba(245, 158, 11, 0.3);
+      --text-light: #fafaf9;
+      --text-muted: #a1a1aa;
+      --ease-silk: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      margin: 0; padding: 0;
+    }
+
+    html[lang="th"] * {
+      font-family: 'Prompt', 'Mitr', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-light);
+      overflow-x: hidden;
+      min-height: 100vh;
+      transition: background-color 0.4s ease;
+    }
+
+    /* Smooth custom scrollbar */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #09090b; }
+    ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 99px; }
+    ::-webkit-scrollbar-thumb:hover { background: #ef4444; }
+
+    /* Glassmorphism Surface Base */
+    .glass-panel {
+      background: var(--card-glass);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border-glass);
+      border-radius: 24px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      transition: transform 0.35s var(--ease-silk), box-shadow 0.35s var(--ease-silk), border-color 0.35s var(--ease-silk);
+    }
+
+    .glass-panel:hover {
+      border-color: rgba(239, 68, 68, 0.3);
+      box-shadow: 0 25px 60px rgba(239, 68, 68, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    /* Buttons */
+    .btn-flame {
+      background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+      color: #ffffff;
+      font-weight: 700;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 16px;
+      box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      transition: transform 0.25s var(--ease-spring), box-shadow 0.25s ease, filter 0.25s ease;
+      cursor: pointer;
+    }
+    .btn-flame:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 12px 35px rgba(239, 68, 68, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+      filter: brightness(1.1);
+    }
+    .btn-flame:active {
+      transform: translateY(1px) scale(0.98);
+      box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+    }
+
+    .btn-glass {
+      background: rgba(39, 39, 42, 0.7);
+      backdrop-filter: blur(8px);
+      color: var(--text-light);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      transition: transform 0.25s var(--ease-silk), background-color 0.25s ease, border-color 0.25s ease;
+      cursor: pointer;
+    }
+    .btn-glass:hover {
+      background: rgba(63, 63, 70, 0.9);
+      border-color: rgba(255, 255, 255, 0.25);
+      transform: translateY(-2px);
+    }
+    .btn-glass:active {
+      transform: translateY(1px);
+    }
+
+    /* Menu Option Card Button */
+    .menu-option-btn {
+      background: rgba(24, 24, 27, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      transition: all 0.35s var(--ease-silk);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+    .menu-option-btn:hover {
+      background: rgba(39, 39, 42, 0.8);
+      border-color: rgba(239, 68, 68, 0.4);
+      transform: translateY(-3px) scale(1.01);
+      box-shadow: 0 10px 30px rgba(239, 68, 68, 0.15);
+    }
+    .menu-option-btn:active {
+      transform: translateY(1px) scale(0.99);
+    }
+
+    /* Step Dots */
+    .step-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      background-color: rgba(39, 39, 42, 0.8);
+      transition: all 0.4s var(--ease-spring);
+    }
+    .step-dot.active {
+      background-color: #ef4444;
+      border-color: #f59e0b;
+      box-shadow: 0 0 15px rgba(239, 68, 68, 0.8);
+      transform: scale(1.2);
+    }
+
+    /* Background particles canvas */
+    #bg-canvas {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      z-index: -30; pointer-events: none;
+    }
+
+    .grid-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      z-index: -10;
+      background-image:
+        radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+        linear-gradient(rgba(239, 68, 68, 0.02) 1px, transparent 1px);
+      background-size: 32px 32px;
+      pointer-events: none;
+    }
+
+    .aurora-blob {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(120px);
+      z-index: -20;
+      pointer-events: none;
+      opacity: 0.45;
+    }
+    .aurora-1 {
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(239, 68, 68, 0.4) 0%, transparent 70%);
+      top: -200px; left: -150px;
+      animation: aurora-float 16s ease-in-out infinite alternate;
+    }
+    .aurora-2 {
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(245, 158, 11, 0.35) 0%, transparent 70%);
+      bottom: -200px; right: -150px;
+      animation: aurora-float 20s ease-in-out infinite alternate-reverse;
+    }
+    @keyframes aurora-float {
+      0% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(60px, 40px) scale(1.15); }
+      100% { transform: translate(-30px, 70px) scale(0.9); }
+    }
+
+    /* ══ POPUPS & OVERLAYS ══ */
+    #name-popup-overlay,
+    #warning-popup-overlay,
+    #site-dialog-overlay,
+    #payment-popup-overlay,
+    #cash-confirm-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(9, 9, 11, 0.82);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s var(--ease-silk);
+      padding: 20px;
+    }
+
+    #name-popup-overlay.visible,
+    #warning-popup-overlay.visible,
+    #site-dialog-overlay.visible,
+    #payment-popup-overlay.visible,
+    #cash-confirm-overlay.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    #name-popup-box,
+    #warning-popup-box,
+    #site-dialog-box,
+    #payment-popup-box,
+    #cash-confirm-box {
+      background: rgba(24, 24, 27, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 25px 70px rgba(0, 0, 0, 0.8), 0 0 40px rgba(239, 68, 68, 0.2);
+      border-radius: 28px;
+      padding: 32px;
+      max-width: 440px;
+      width: 100%;
+      text-align: center;
+      transform: scale(0.9) translateY(20px);
+      transition: transform 0.35s var(--ease-spring);
+    }
+
+    #name-popup-overlay.visible #name-popup-box,
+    #payment-popup-overlay.visible #payment-popup-box,
+    #cash-confirm-overlay.visible #cash-confirm-box {
+      transform: scale(1) translateY(0);
+    }
+
+    #name-popup-input {
+      width: 100%;
+      padding: 14px 18px;
+      margin: 18px 0;
+      background: rgba(9, 9, 11, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 14px;
+      color: #fafaf9;
+      font-size: 16px;
+      outline: none;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    #name-popup-input:focus {
+      border-color: #ef4444;
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.25);
+    }
+
+    #name-popup-btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+      color: white;
+      border: none;
+      border-radius: 14px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4);
+      transition: transform 0.25s var(--ease-spring);
+    }
+    #name-popup-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    /* Language Switcher Floating Pill */
+    .lang-container {
+      position: fixed;
+      top: 20px; right: 20px;
+      z-index: 9990;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    #lang-switcher {
+      background: rgba(24, 24, 27, 0.85);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 99px;
+      padding: 6px 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+      font-size: 12px;
+      color: #fafaf9;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+      transition: all 0.3s var(--ease-silk);
+    }
+    #lang-switcher:hover {
+      border-color: #ef4444;
+      box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
+      transform: translateY(-2px);
+    }
+
+    /* Payment modal styling */
+    #payment-countdown {
+      font-family: 'Space Mono', monospace;
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: #f59e0b;
+      margin: 14px 0;
+      text-shadow: 0 0 15px rgba(245, 158, 11, 0.4);
+    }
+    .payment-choice-row {
+      display: flex; gap: 12px; margin-top: 16px; width: 100%;
+    }
+    .payment-choice-row.hidden {
+      display: none !important;
+    }
+    .payment-choice-btn {
+      flex: 1; padding: 14px;
+      background: rgba(39, 39, 42, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 14px;
+      color: #fafaf9;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+    .payment-choice-btn:hover {
+      background: #ef4444; border-color: #ef4444;
+      box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4);
+    }
+    #promptpay-panel {
+      display: none; flex-direction: column; align-items: center; gap: 14px; margin-top: 16px; width: 100%;
+    }
+    #promptpay-panel.visible {
+      display: flex !important;
+    }
+    #promptpay-qr {
+      width: 220px; height: 220px; border-radius: 16px; border: 3px solid #ffffff; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    .payment-action-btn {
+      width: 100%; padding: 12px; border-radius: 12px; font-weight: 700; cursor: pointer; border: none;
+    }
+    .payment-action-btn.primary {
+      background: #ef4444; color: white; box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+    }
+    #payment-back-btn, #promptpay-back-btn {
+      background: transparent; color: #a1a1aa; border: none; font-size: 13px; cursor: pointer; transition: color 0.2s;
+    }
+    #payment-back-btn:hover, #promptpay-back-btn:hover { color: #fafaf9; }
+  </style>
+</head>
+
+<body class="p-4 sm:p-6 md:p-8 flex flex-col items-center min-h-screen">
+
+  <!-- POPUPS & MODALS Preserved DOM IDs -->
+  <div id="name-popup-overlay">
+    <div id="name-popup-box">
+      <div class="w-14 h-14 mx-auto mb-3 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400">
+        <svg class="w-8 h-8 filter drop-shadow-[0_0_10px_rgba(245,158,11,0.5)]" fill="currentColor" viewBox="0 0 24 24"><path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"/></svg>
+      </div>
+      <h2 id="name-popup-title" class="text-xl font-bold text-white">บอกชื่อเราหน่อย | What is your name?</h2>
+      <p id="name-popup-sub" class="text-xs text-zinc-400 mt-2">เวลาอาหารเสร็จเราจะเรียกชื่อของคุณ | When your food is ready we will tell you</p>
+      <input type="text" id="name-popup-input" placeholder="พิมพ์ชื่อของคุณ..." maxlength="30" autocomplete="off">
+      <button id="name-popup-btn" onclick="submitName()">Let's go!</button>
+    </div>
+  </div>
+
+  <div id="warning-popup-overlay">
+    <div id="warning-popup-box">
+      <h3></h3>
+      <p></p>
+      <button id="warning-popup-btn" onclick="closeWarning()"></button>
+    </div>
+  </div>
+
+  <div id="site-dialog-overlay" aria-hidden="true">
+    <div id="site-dialog-box" role="dialog" aria-modal="true">
+      <h3 id="site-dialog-title" class="text-lg font-bold text-white mb-2">Notice</h3>
+      <p id="site-dialog-message" class="text-sm text-zinc-300 mb-4"></p>
+      <textarea id="site-dialog-input" class="hidden w-full p-3 bg-zinc-900 border border-zinc-700 rounded-xl text-white text-sm" maxlength="240"></textarea>
+      <p id="site-dialog-error" class="text-xs text-red-400 mt-1"></p>
+      <div id="site-dialog-actions" class="flex gap-3 mt-4">
+        <button id="site-dialog-cancel" class="btn-glass flex-1 py-2 text-xs font-bold" type="button">Cancel</button>
+        <button id="site-dialog-ok" class="btn-flame flex-1 py-2 text-xs font-bold" type="button">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="payment-popup-overlay">
+    <div id="payment-popup-box">
+      <button id="payment-back-btn" onclick="cancelPayment()" class="mb-2">← ย้อนกลับ / Back</button>
+      <h2 data-i18n="payment-title" class="text-xl font-bold text-white">Select your payment method</h2>
+      <p id="payment-popup-sub" data-i18n="payment-sub" class="text-xs text-zinc-400 mt-1">Please pay within five minutes or the order will be cancelled.</p>
+      <div id="payment-countdown">05:00</div>
+      <div class="payment-choice-row" id="payment-choice-row">
+        <button class="payment-choice-btn" onclick="selectPaymentMethod('qr')" data-i18n="payment-qr-btn">QR PromptPay</button>
+        <button class="payment-choice-btn" onclick="selectPaymentMethod('cash')" data-i18n="payment-cash-btn">Cash</button>
+      </div>
+      <div id="promptpay-panel">
+        <img id="promptpay-qr" alt="PromptPay QR code">
+        <p data-i18n="payment-qr-instruction" class="text-xs text-zinc-300">Scan this PromptPay QR code. The chef is notified automatically.</p>
+        <button class="payment-action-btn primary" onclick="savePromptPayQr()" data-i18n="payment-save-qr-btn">Save QR code</button>
+        <button id="promptpay-back-btn" onclick="backToPaymentChoice()">← เปลี่ยนวิธีชำระเงิน / Change Method</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="cash-confirm-overlay">
+    <div id="cash-confirm-box">
+      <div id="cash-confirm-icon" class="w-16 h-16 mx-auto bg-amber-500/10 border border-amber-500/30 rounded-full flex items-center justify-center text-amber-400 animate-pulse">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+      </div>
+      <h2 id="cash-confirm-title" class="text-lg font-bold text-amber-400 mt-3">กำลังรอยืนยัน / Waiting for Confirmation</h2>
+      <p id="cash-confirm-message" class="text-xs text-zinc-400 mt-1">รอการยืนยันจากเชฟ / Waiting for chef to confirm payment...</p>
+    </div>
+  </div>
+
+  <!-- Ambient background graphics -->
+  <canvas id="bg-canvas"></canvas>
+  <div class="grid-overlay"></div>
+  <div class="aurora-blob aurora-1"></div>
+  <div class="aurora-blob aurora-2"></div>
+
+  <!-- LANGUAGE SWITCHER -->
+  <div class="lang-container">
+    <span id="lang-switcher" onclick="toggleLanguage()" data-tip="SWITCH LANGUAGE">
+      <span id="langText">TH</span>
+      <span class="flag-inside-holder">
+        <span class="flag-emoji" id="flagInside">🇺🇸</span>
+      </span>
+      <span class="flag-outside-holder hidden" onclick="toggleLanguage()">
+        <span class="flag-emoji" id="flagOutside">🇹🇭</span>
+      </span>
+    </span>
+  </div>
+
+  <!-- MAIN CONTAINER (Wider modern 1024px grid) -->
+  <main class="max-w-4xl w-full mx-auto flex flex-col gap-8 my-6 relative z-10">
+    
+    <!-- HEADER HERO BANNER -->
+    <header class="glass-panel p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden">
+      <div class="flex flex-col gap-3 text-center md:text-left z-10 max-w-xl">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-950/60 border border-red-500/30 w-fit mx-auto md:mx-0">
+          <span class="w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
+          <svg class="w-3.5 h-3.5 text-red-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M12.395 2.553a1 1 0 00-1.45-1.033c-1.39.467-2.6 1.48-3.414 2.607C6.717 5.257 6 6.84 6 8.5a6.5 6.5 0 0011.666 3.968c.386-.68.584-1.467.584-2.268 0-1.896-.867-3.666-2.355-4.847a1 1 0 00-1.5 1.2c.792.99 1.155 2.19 1.155 3.447 0 .426-.098.857-.294 1.258A4.5 4.5 0 018 8.5c0-1.07.457-2.106 1.229-2.9 1.05-1.08 2.37-1.874 3.166-3.047z" clip-rule="evenodd"/></svg>
+          <span class="text-[11px] font-mono font-bold text-red-400 tracking-wider uppercase">Welcome. Take a Seat</span>
+        </div>
+        <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight text-white leading-tight" data-i18n="diner-title">
+          Emperor Burger<span class="text-red-500">.</span>
+        </h1>
+        <p class="text-sm font-mono text-zinc-400 uppercase tracking-widest" data-i18n="diner-subtitle">
+          ✦ Lord of Gourmet Burgers ✦
+        </p>
+      </div>
+
+      <!-- Hero Visual Burger Container -->
+      <div class="relative w-48 sm:w-56 aspect-square rounded-2xl overflow-hidden border border-white/10 shadow-2xl group flex-shrink-0">
+        <img src="hero_burger.jpg" alt="Emperor Burger Hero" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+        <span class="absolute bottom-2 right-2 bg-red-600/90 backdrop-blur-md text-white text-[10px] font-mono font-bold px-3 py-1 rounded-full border border-white/20 flex items-center gap-1.5">
+          <svg class="w-3 h-3 text-amber-300" fill="currentColor" viewBox="0 0 24 24"><path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"/></svg>
+          Signature 100% Beef
+        </span>
+      </div>
+    </header>
+
+    <!-- PERSONAL GREETING CARD -->
+    <section id="customer-greeting-card" class="glass-panel p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-red-600 to-amber-500 flex items-center justify-center text-white shadow-lg">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+        </div>
+        <div>
+          <p class="text-[11px] font-mono uppercase tracking-wider text-zinc-400" data-i18n="greeting-label">Welcome back</p>
+          <h2 id="customer-greeting-text" class="text-xl font-bold text-white">Hi, burger friend!</h2>
+        </div>
+      </div>
+      <button type="button" onclick="changeName()" class="btn-glass px-4 py-2 text-xs font-bold uppercase tracking-wider" data-i18n="greeting-change-name">
+        Change name
+      </button>
+    </section>
+
+    <!-- DYNAMIC TIME-BASED GREETING CARD -->
+    <div id="time-greeting-card" class="glass-panel p-5 text-center flex flex-col items-center gap-2">
+      <span class="text-[11px] font-mono uppercase bg-red-950/80 text-red-300 py-1 px-3.5 border border-red-500/30 rounded-full flex items-center gap-1.5" data-i18n="chef-note-badge">
+        <svg class="w-3.5 h-3.5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>
+        บันทึกจากเชฟ 👨‍🍳
+      </span>
+      <h2 id="time-greeting-text" class="text-base font-bold text-white">กำลังตรวจสอบเวลาในห้องครัว... 🕒</h2>
+      <p id="time-greeting-sub" class="text-xs text-zinc-400 font-mono">ตัวกระตุ้นอารมณ์เบอร์เกอร์</p>
+    </div>
+
+    <!-- RECENT ORDER CARD -->
+    <section id="recent-order-card" class="glass-panel p-5 flex flex-col gap-3 hidden border-red-500/30">
+      <div class="flex items-start justify-between gap-3">
+        <div>
+          <p class="text-[11px] font-mono uppercase tracking-wider text-amber-400" data-i18n="recent-order-label">Last order</p>
+          <h3 id="recent-order-title" class="text-lg font-bold text-white">Your last combo</h3>
+        </div>
+        <button type="button" onclick="reorderLastOrder()" class="btn-flame px-4 py-2 text-xs font-bold uppercase tracking-wider" data-i18n="reorder-btn">
+          Reorder
+        </button>
+      </div>
+      <p id="recent-order-details" class="text-xs text-zinc-300 leading-relaxed"></p>
+    </section>
+
+    <!-- MAIN INTERACTIVE ORDER PAD (PACKAGE CUSTOMIZER) -->
+    <section class="glass-panel p-6 sm:p-8 flex flex-col gap-6 relative overflow-hidden" id="order-pad">
+      <!-- Header Badge -->
+      <div class="flex justify-between items-center border-b border-white/10 pb-4">
+        <div class="flex items-center gap-2">
+          <span class="text-xs font-mono font-bold tracking-wider text-red-400" data-i18n="order-slip-badge">ใบสั่งซื้อ #001</span>
+        </div>
+        <div class="flex gap-2">
+          <div class="step-dot active" id="dot-1"></div>
+          <div class="step-dot" id="dot-2"></div>
+          <div class="step-dot" id="dot-3"></div>
+        </div>
+      </div>
+
+      <!-- STEP 1: SELECT BURGER MENU ITEM -->
+      <div id="step-1" class="flex flex-col gap-5">
+        <div class="text-center sm:text-left">
+          <h3 class="text-2xl font-bold text-white" data-i18n="burger-title">1. เลือกเบอร์เกอร์! 🍔</h3>
+          <p class="text-xs text-zinc-400 mt-1" data-i18n="burger-desc">เลือกเบอร์เกอร์แบล็คเบอร์เกอร์สูตรพิเศษของเรา</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <!-- Option 1: Classic Emperor -->
+          <button data-menu="Classic Emperor" onclick="selectBurger('Classic Emperor', 30, '👑')" class="menu-option-btn p-5 text-left flex items-start gap-4 group">
+            <span class="w-12 h-12 rounded-2xl bg-red-950/60 border border-red-500/30 flex items-center justify-center text-amber-400 group-hover:scale-110 transition-transform flex-shrink-0">
+              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"/></svg>
+            </span>
+            <div class="flex flex-col flex-1">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-base text-white group-hover:text-red-400 transition-colors" data-i18n="burger-opt-1-title">1. Classic Emperor</span>
+                <span class="font-mono font-bold text-sm text-red-400">30 ฿</span>
+              </div>
+              <span class="text-xs text-zinc-400 mt-1 leading-relaxed" data-i18n="burger-opt-1-desc">เบอร์เกอร์สูตรดั้งเดิม รสชาติคลาสสิกที่ไม่เคยเบื่อ</span>
+            </div>
+            <span class="menu-status-tag"></span>
+          </button>
+
+          <!-- Option 2: Double Emperor -->
+          <button data-menu="Double Emperor" onclick="selectBurger('Double Emperor', 40, '🔥')" class="menu-option-btn p-5 text-left flex items-start gap-4 group">
+            <span class="w-12 h-12 rounded-2xl bg-red-950/60 border border-red-500/30 flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0 p-1">
+              <img src="extra_meat.png" alt="Extra Meat" class="w-10 h-10 object-contain drop-shadow">
+            </span>
+            <div class="flex flex-col flex-1">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-base text-white group-hover:text-red-400 transition-colors" data-i18n="burger-opt-2-title">2. Double Emperor</span>
+                <span class="font-mono font-bold text-sm text-red-400">40 ฿</span>
+              </div>
+              <span class="text-xs text-zinc-400 mt-1 leading-relaxed" data-i18n="burger-opt-2-desc">เนื้อคู่สองชั้น พลังสองเท่า อิ่มสองเท่า!</span>
+            </div>
+            <span class="menu-status-tag"></span>
+          </button>
+
+          <!-- Option 3: Emperor Cheese -->
+          <button data-menu="Emperor Cheese" onclick="selectBurger('Emperor Cheese', 35, '🧀')" class="menu-option-btn p-5 text-left flex items-start gap-4 group">
+            <span class="w-12 h-12 rounded-2xl bg-amber-950/60 border border-amber-500/30 flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0 p-1">
+              <img src="extra_cheese.png" alt="Extra Cheese" class="w-10 h-10 object-contain drop-shadow">
+            </span>
+            <div class="flex flex-col flex-1">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-base text-white group-hover:text-amber-400 transition-colors" data-i18n="burger-opt-3-title">3. Emperor Cheese</span>
+                <span class="font-mono font-bold text-sm text-amber-400">35 ฿</span>
+              </div>
+              <span class="text-xs text-zinc-400 mt-1 leading-relaxed" data-i18n="burger-opt-3-desc">ชีสละลายราดสุดเยิ้ม เข้มข้นทุกคำ</span>
+            </div>
+            <span class="menu-status-tag"></span>
+          </button>
+        </div>
+      </div>
+
+      <!-- STEP 2: SELECT MEAT TYPE (Hidden initially) -->
+      <div id="step-2" class="flex flex-col gap-5 hidden">
+        <button onclick="goBack(1)" class="text-xs font-mono text-left text-zinc-400 hover:text-red-400 flex items-center gap-1 w-fit" data-i18n="back-to-burger-btn">
+          ← ย้อนกลับเลือกเบอร์เกอร์
+        </button>
+        <div class="text-center sm:text-left">
+          <h3 class="text-2xl font-bold text-white" data-i18n="meat-title">
+            2. เลือกเนื้อที่ชอบ... 🥩
+          </h3>
+          <p class="text-xs text-zinc-400 mt-1" data-i18n="meat-desc">ชอบไก่หรือหมู? เลือกได้เลย!</p>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <!-- Chicken -->
+          <button data-menu="Chicken" onclick="selectMeat('Chicken', '🐔')" class="menu-option-btn p-6 flex flex-col items-center text-center gap-3 group">
+            <span class="w-16 h-16 bg-red-950/40 border border-red-500/20 rounded-2xl flex items-center justify-center text-red-400 group-hover:scale-110 transition-transform">
+              <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+            </span>
+            <span class="font-bold text-lg text-white group-hover:text-red-400" data-i18n="meat-opt-1-title">ไก่</span>
+            <span class="text-xs text-zinc-400" data-i18n="meat-opt-1-desc">ไก่ย่างชุ่มฉ่ำ รสเด็ด</span>
+            <span class="menu-status-tag"></span>
+          </button>
+          <!-- Pork -->
+          <button data-menu="Pork" onclick="selectMeat('Pork', '🐖')" class="menu-option-btn p-6 flex flex-col items-center text-center gap-3 group">
+            <span class="w-16 h-16 bg-red-950/40 border border-red-500/20 rounded-2xl flex items-center justify-center text-amber-400 group-hover:scale-110 transition-transform">
+              <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            </span>
+            <span class="font-bold text-lg text-white group-hover:text-red-400" data-i18n="meat-opt-2-title">หมู</span>
+            <span class="text-xs text-zinc-400" data-i18n="meat-opt-2-desc">หมูย่างหอม นุ่มลิ้น</span>
+            <span class="menu-status-tag"></span>
+          </button>
+        </div>
+      </div>
+
+      <!-- STEP 3: SUMMARY & ORDER TICKET (Hidden initially) -->
+      <div id="step-3" class="flex flex-col gap-5 hidden text-center">
+        <h3 class="text-2xl font-bold text-white" data-i18n="summary-title">🍔 คอมโบเบอร์เกอร์ของคุณ!</h3>
+        
+        <!-- Order Ticket Display -->
+        <div class="border border-white/10 p-5 rounded-2xl bg-zinc-950/80 flex flex-col gap-3 font-mono text-sm relative text-left">
+          <div class="flex justify-between items-center pb-2 border-b border-zinc-800">
+            <span class="text-zinc-400 text-xs" data-i18n="summary-burger-label">เบอร์เกอร์:</span>
+            <span class="font-bold text-white" id="summary-burger-item">Classic Emperor 👑</span>
+          </div>
+          <div class="flex justify-between items-center pb-2 border-b border-zinc-800">
+            <span class="text-zinc-400 text-xs" data-i18n="summary-meat-label">เนื้อ:</span>
+            <span class="font-bold text-white" id="summary-meat">ไก่ 🐔</span>
+          </div>
+          <div class="pt-2 flex justify-between font-bold text-base text-red-400">
+            <span data-i18n="summary-total-label">ราคารวมทั้งหมด:</span>
+            <span id="summary-total-val" class="font-mono">0.00 บาท</span>
+          </div>
+          <div class="pt-3 border-t border-zinc-800">
+            <label for="special-note-input" class="block text-xs uppercase tracking-wider text-zinc-400 mb-2" data-i18n="special-note-label">Special note</label>
+            <textarea id="special-note-input" maxlength="120" data-i18n-placeholder="special-note-placeholder" placeholder="No tomato, extra sauce, allergies..." class="w-full p-3 bg-zinc-900 border border-zinc-700 rounded-xl text-white text-xs outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all"></textarea>
+          </div>
+        </div>
+
+        <div class="flex gap-3">
+          <button onclick="resetOrder()" class="btn-glass flex-1 py-3 text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-1.5" data-i18n="reset-btn">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+            เลือกใหม่ 🔄
+          </button>
+          <button onclick="submitOrder()" class="btn-flame flex-[2] py-3 text-sm font-bold uppercase tracking-wide flex items-center justify-center gap-2" data-i18n="place-order-btn">
+            <span>สั่งอาหารเลย! ✨</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- CUSTOMER ORDER STATUS TRACKER -->
+    <section id="customer-status-card" class="glass-panel p-6 flex flex-col gap-5 hidden border-red-500/30">
+      <div class="flex items-center justify-between gap-3 border-b border-white/10 pb-4">
+        <div>
+          <p class="text-xs font-mono uppercase text-zinc-400">Live order status</p>
+          <h3 class="text-xl font-bold text-white">Order <span id="status-order-id" class="text-red-400">#----</span></h3>
+          <p class="text-xs font-semibold text-zinc-400 mt-1" id="status-queue-info" style="display: none;">Your queue is <span id="status-queue-val" class="text-amber-400">#--</span></p>
+          <p class="text-xs font-semibold text-zinc-400 mt-1" id="status-queue-ahead" style="display: none;"></p>
+        </div>
+        <span id="status-pill" class="text-xs font-mono font-bold uppercase px-3 py-1.5 rounded-full border border-white/20 bg-zinc-800 text-white">Pending</span>
+      </div>
+
+      <div class="grid grid-cols-3 gap-3 text-center font-mono text-xs">
+        <div id="status-step-pending" class="rounded-xl border border-zinc-800 p-4 bg-zinc-950/60 transition-all flex flex-col items-center justify-center gap-1.5">
+          <svg class="w-6 h-6 text-amber-400 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div class="font-bold text-zinc-300">Pending</div>
+        </div>
+        <div id="status-step-cooking" class="rounded-xl border border-zinc-800 p-4 bg-zinc-950/60 transition-all flex flex-col items-center justify-center gap-1.5">
+          <svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/></svg>
+          <div class="font-bold text-zinc-300">Cooking</div>
+        </div>
+        <div id="status-step-done" class="rounded-xl border border-zinc-800 p-4 bg-zinc-950/60 transition-all flex flex-col items-center justify-center gap-1.5">
+          <svg class="w-6 h-6 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div class="font-bold text-zinc-300">Ready</div>
+        </div>
+      </div>
+
+      <p id="status-message" class="text-sm text-zinc-300 leading-relaxed text-center">Waiting for the chef to accept your order...</p>
+      <p id="status-updated" class="text-[11px] font-mono text-zinc-500 text-center">Syncing with kitchen...</p>
+
+      <button id="customer-cancel-order-btn" type="button" onclick="cancelCustomerOrder()" class="btn-glass py-3 text-xs font-bold uppercase tracking-wider hidden" data-i18n="customer-cancel-btn">
+        Cancel order
+      </button>
+      <p id="order-cooldown-message" class="text-xs font-mono text-red-400 text-center hidden"></p>
+    </section>
+
+    <!-- POLAROID BENTO SHOWCASE GRID -->
+    <section class="flex flex-col gap-4">
+      <div class="text-center sm:text-left">
+        <h3 class="text-xl font-bold flex items-center justify-center sm:justify-start gap-2 text-white" data-i18n="bento-title">
+          <svg class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          โพลารอยด์เซ็ตเมนู
+        </h3>
+        <p class="text-xs text-zinc-400 mt-1" data-i18n="bento-desc">
+          รายการอาหารสุดน่ารักในร้านของเรา คุณสามารถใส่ภาพอาหารของตัวเองได้ในภายหลัง!
+        </p>
+      </div>
+
+      <!-- Bento Grid (2 columns on tablet/desktop) -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        
+        <!-- Card 1: Black Burger -->
+        <div class="glass-panel p-4 flex flex-col gap-3 group">
+          <div class="aspect-square w-full rounded-xl border border-white/10 overflow-hidden relative">
+            <img src="YOUR_SIDES_PHOTO.jpg" alt="Black Burger" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+            <span class="absolute bottom-3 left-3 text-xs font-mono font-bold text-white bg-black/70 backdrop-blur-md px-2.5 py-1 rounded-md border border-white/10">
+              black_burger.jpg
+            </span>
+          </div>
+          <div class="text-center font-mono py-1">
+            <h4 class="font-bold text-sm text-white" data-i18n="polaroid-1-title">แบล็คชาร์โคลเบอร์เกอร์</h4>
+            <div class="flex justify-center gap-1 mt-1.5 text-amber-400">
+              <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+              <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+              <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+              <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+              <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            </div>
+            <p class="text-[10px] text-zinc-400 mt-1" data-i18n="polaroid-1-footer">รอรูปถ่ายเบอร์เกอร์ของคุณอยู่นะ!</p>
+          </div>
+        </div>
+
+        <!-- Card 2: Gourmet Sides -->
+        <div class="glass-panel p-4 flex flex-col gap-3 group">
+          <div class="aspect-square w-full rounded-xl border border-white/10 overflow-hidden relative">
+            <img src="YOUR_SIDES_PHOTO.jpg" alt="Burger Sides" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+            <span class="absolute bottom-3 left-3 text-xs font-mono font-bold text-white bg-black/70 backdrop-blur-md px-2.5 py-1 rounded-md border border-white/10">
+              burger_sides.jpg
+            </span>
+          </div>
+          <!-- Polaroid label -->
+          <div class="px-1 text-center font-mono py-1">
+            <h4 class="font-bold text-sm text-white" data-i18n="polaroid-2-title">เฟรนช์ฟรายส์ร้อนๆ</h4>
+            <div class="flex justify-center gap-1 mt-1.5 text-amber-400">
+              <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+              <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+              <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+              <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+              <svg class="w-3.5 h-3.5 text-zinc-700 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            </div>
+            <p class="text-[10px] text-zinc-400 mt-1" data-i18n="polaroid-2-footer">รอรูปถ่ายของกินเล่นอยู่นะ!</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="text-center font-mono text-xs text-zinc-500 py-8 border-t border-white/10 flex flex-col gap-2">
+      <p data-i18n="footer-copyright">Crafted with passion • Emperor Burger</p>
+      <p class="text-[10px]" data-i18n="footer-inspired">Inspired by ssnmhjjg portfolio</p>
+    </footer>
+
+  </main>
+
+  <script>
+    // State Variables
+    let selectedPattyName = '';  // kept for legacy compat
+    let selectedPattyIcon = '';
+    let selectedBurgerName = '';
+    let selectedBurgerPrice = 0;
+    let selectedBurgerIcon = '';
+    let selectedMeatName = '';
+    let selectedMeatIcon = '';
+    let selectedExtraMeat = false;
+    let selectedExtraCheese = false;
+    let customerName = '';
+
+    function toggleAddon(addon) {
+      triggerClickSound();
+      if (addon === 'extraMeat') {
+        selectedExtraMeat = !selectedExtraMeat;
+        const btn = document.getElementById('addon-extra-meat-btn');
+        const badge = document.getElementById('addon-extra-meat-badge');
+        if (btn && badge) {
+          btn.classList.toggle('border-red-500', selectedExtraMeat);
+          btn.classList.toggle('bg-red-950/40', selectedExtraMeat);
+          badge.textContent = selectedExtraMeat ? 'ON (+15฿)' : 'OFF';
+          badge.className = selectedExtraMeat 
+            ? 'text-xs font-mono font-bold px-2.5 py-1 rounded-full bg-red-600 text-white border border-red-400' 
+            : 'text-xs font-mono font-bold px-2.5 py-1 rounded-full bg-zinc-800 text-zinc-400 border border-white/10';
+        }
+      } else if (addon === 'extraCheese') {
+        selectedExtraCheese = !selectedExtraCheese;
+        const btn = document.getElementById('addon-extra-cheese-btn');
+        const badge = document.getElementById('addon-extra-cheese-badge');
+        if (btn && badge) {
+          btn.classList.toggle('border-amber-500', selectedExtraCheese);
+          btn.classList.toggle('bg-amber-950/40', selectedExtraCheese);
+          badge.textContent = selectedExtraCheese ? 'ON (+10฿)' : 'OFF';
+          badge.className = selectedExtraCheese 
+            ? 'text-xs font-mono font-bold px-2.5 py-1 rounded-full bg-amber-500 text-black border border-amber-300' 
+            : 'text-xs font-mono font-bold px-2.5 py-1 rounded-full bg-zinc-800 text-zinc-400 border border-white/10';
+        }
+      }
+      updateReceiptSummaries();
+    }
+    const CURRENT_ORDER_STORAGE_KEY = 'bitty-burger-current-order';
+    const CUSTOMER_NAME_STORAGE_KEY = 'bitty-burger-customer-name';
+    const CUSTOMER_CLIENT_ID_STORAGE_KEY = 'bitty-burger-customer-client-id';
+    const CURRENT_ORDER_COOKIE_NAME = 'bb_current_order';
+    const CUSTOMER_CLIENT_ID_COOKIE_NAME = 'bb_customer_id';
+    const RECENT_ORDER_STORAGE_KEY = 'bitty-burger-recent-order';
+    const ORDER_COOLDOWN_STORAGE_KEY = 'bitty-burger-order-cooldown-until';
+    const ORDER_COOLDOWN_REASON_STORAGE_KEY = 'bitty-burger-order-cooldown-reason';
+    const CUSTOMER_CANCEL_TIMESTAMPS_STORAGE_KEY = 'bitty-burger-customer-cancel-timestamps';
+    const ORDER_COOLDOWN_MS = 5 * 60 * 1000;
+    const CUSTOMER_CANCEL_WINDOW_MS = 60 * 60 * 1000;
+    const CUSTOMER_CANCEL_COOLDOWN_MS = 10 * 60 * 1000;
+    const FIREBASE_DATABASE_URL = 'https://food-34707-default-rtdb.asia-southeast1.firebasedatabase.app';
+    const PROMPTPAY_ID = '0967293692';
+    const USE_STATIC_QR = false;
+    const STATIC_QR_PATH = 'qr.png';
+    const PAYMENT_TIMEOUT_MS = 5 * 60 * 1000;
+    let customerOrderPoller = null;
+    let customerOrderStream = null;
+    let pendingPaymentOrder = null;
+    let pendingSubmitButton = null;
+    let pendingSubmitButtonHtml = '';
+    let paymentTimer = null;
+    let paymentCountdownTimer = null;
+    let currentCustomerOrderId = null;
+    let currentCustomerOrder = null;
+    let orderCooldownTicker = null;
+
+    function getFirebaseOrderUrl(orderId) {
+      return `${FIREBASE_DATABASE_URL}/orders/${encodeURIComponent(orderId)}.json`;
+    }
+
+    function getCookieValue(name) {
+      const encodedName = `${encodeURIComponent(name)}=`;
+      return document.cookie
+        .split(';')
+        .map(cookie => cookie.trim())
+        .find(cookie => cookie.startsWith(encodedName))
+        ?.slice(encodedName.length) || '';
+    }
+
+    function setRememberCookie(name, value, maxAgeDays = 30) {
+      document.cookie = `${encodeURIComponent(name)}=${encodeURIComponent(value)}; max-age=${maxAgeDays * 24 * 60 * 60}; path=/; SameSite=Lax`;
+    }
+
+    function getOrCreateCustomerClientId() {
+      let customerClientId = localStorage.getItem(CUSTOMER_CLIENT_ID_STORAGE_KEY) || getCookieValue(CUSTOMER_CLIENT_ID_COOKIE_NAME);
+      if (!customerClientId) {
+        const randomPart = window.crypto && window.crypto.getRandomValues
+          ? Array.from(window.crypto.getRandomValues(new Uint32Array(2))).map(value => value.toString(36)).join('')
+          : Math.random().toString(36).slice(2);
+        customerClientId = `bb-${Date.now().toString(36)}-${randomPart}`;
+      }
+      localStorage.setItem(CUSTOMER_CLIENT_ID_STORAGE_KEY, customerClientId);
+      setRememberCookie(CUSTOMER_CLIENT_ID_COOKIE_NAME, customerClientId, 180);
+      return customerClientId;
+    }
+
+    function getSavedCurrentOrderId() {
+      return localStorage.getItem(CURRENT_ORDER_STORAGE_KEY) || getCookieValue(CURRENT_ORDER_COOKIE_NAME);
+    }
+
+    function rememberCurrentOrder(orderId) {
+      const normalizedOrderId = String(orderId);
+      localStorage.setItem(CURRENT_ORDER_STORAGE_KEY, normalizedOrderId);
+      setRememberCookie(CURRENT_ORDER_COOKIE_NAME, normalizedOrderId, 30);
+    }
+
+    function forgetCurrentOrder() {
+      localStorage.removeItem(CURRENT_ORDER_STORAGE_KEY);
+      setRememberCookie(CURRENT_ORDER_COOKIE_NAME, '', -1);
+    }
+
+    function getNewestFirebaseOrderForCustomer(customerClientId) {
+      if (!customerClientId) return Promise.resolve(null);
+      return fetch(`${FIREBASE_DATABASE_URL}/orders.json`, { cache: 'no-store' })
+        .then(res => {
+          if (!res.ok) throw new Error('Could not load orders');
+          return res.json();
+        })
+        .then(orders => {
+          if (!orders) return null;
+          return Object.entries(orders)
+            .map(([id, order]) => ({ id, order: order || {} }))
+            .filter(({ order }) => order.customerClientId === customerClientId)
+            .sort((a, b) => {
+              const aTime = Date.parse(a.order.updatedAt || a.order.createdAt || '') || Number(a.id) || 0;
+              const bTime = Date.parse(b.order.updatedAt || b.order.createdAt || '') || Number(b.id) || 0;
+              return bTime - aTime;
+            })[0] || null;
+        });
+    }
+
+    function saveOrderToFirebase(orderPayload, status = 'pending') {
+      const now = new Date().toISOString();
+      const expiresAt = new Date(Date.now() + 12 * 60 * 60 * 1000).toISOString(); // auto-expire after 12 hours
+      const firebasePayload = {
+        ...orderPayload,
+        customerClientId: orderPayload.customerClientId || getOrCreateCustomerClientId(),
+        status,
+        createdAt: now,
+        updatedAt: now,
+        expiresAt
+      };
+
+      return fetch(getFirebaseOrderUrl(orderPayload.orderId), {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(firebasePayload)
+      });
+    }
+
+    // Clean up expired orders from Firebase (runs silently on page load)
+    async function cleanExpiredFirebaseOrders() {
+      try {
+        const res = await fetch(`${FIREBASE_DATABASE_URL}/orders.json`, { cache: 'no-store' });
+        if (!res.ok) return;
+        const orders = await res.json();
+        if (!orders) return;
+        const now = Date.now();
+        const deletes = Object.entries(orders)
+          .filter(([, order]) => order && order.expiresAt && new Date(order.expiresAt).getTime() < now)
+          .map(([id]) =>
+            fetch(`${FIREBASE_DATABASE_URL}/orders/${encodeURIComponent(id)}.json`, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: 'null'
+            }).catch(() => {})
+          );
+        await Promise.all(deletes);
+      } catch (e) {
+        // silent — don't block the page
+      }
+    }
+
+    function getOrderCooldownRemainingMs() {
+      const cooldownUntil = Number(localStorage.getItem(ORDER_COOLDOWN_STORAGE_KEY) || 0);
+      return Math.max(0, cooldownUntil - Date.now());
+    }
+
+    function getOrderCooldownReason() {
+      return localStorage.getItem(ORDER_COOLDOWN_REASON_STORAGE_KEY) || '';
+    }
+
+    function formatCooldown(ms) {
+      const totalSeconds = Math.ceil(ms / 1000);
+      const minutes = Math.floor(totalSeconds / 60);
+      const seconds = totalSeconds % 60;
+      return `${minutes}:${String(seconds).padStart(2, '0')}`;
+    }
+
+    function setOrderCooldown(durationMs = ORDER_COOLDOWN_MS, reason = 'anti-spam') {
+      localStorage.setItem(ORDER_COOLDOWN_STORAGE_KEY, String(Date.now() + durationMs));
+      localStorage.setItem(ORDER_COOLDOWN_REASON_STORAGE_KEY, reason);
+      startOrderCooldownTicker();
+    }
+
+    function clearOrderCooldown(options = {}) {
+      if (options.preserveCancelPenalty && getOrderCooldownReason() === 'cancelled-twice') {
+        updateOrderCooldownUi();
+        return;
+      }
+      localStorage.removeItem(ORDER_COOLDOWN_STORAGE_KEY);
+      localStorage.removeItem(ORDER_COOLDOWN_REASON_STORAGE_KEY);
+      updateOrderCooldownUi();
+    }
+
+    function recordCustomerCancellation() {
+      const now = Date.now();
+      let timestamps = [];
+      try {
+        timestamps = JSON.parse(localStorage.getItem(CUSTOMER_CANCEL_TIMESTAMPS_STORAGE_KEY) || '[]');
+      } catch (err) {
+        timestamps = [];
+      }
+
+      timestamps = timestamps
+        .map(Number)
+        .filter(timestamp => Number.isFinite(timestamp) && now - timestamp <= CUSTOMER_CANCEL_WINDOW_MS);
+      timestamps.push(now);
+      localStorage.setItem(CUSTOMER_CANCEL_TIMESTAMPS_STORAGE_KEY, JSON.stringify(timestamps));
+
+      if (timestamps.length >= 2) {
+        setOrderCooldown(CUSTOMER_CANCEL_COOLDOWN_MS, 'cancelled-twice');
+        return true;
+      }
+
+      updateOrderCooldownUi();
+      return false;
+    }
+
+    function getOrderCooldownMessage(remaining, isThai) {
+      if (getOrderCooldownReason() === 'cancelled-twice') {
+        return isThai
+          ? `คุณยกเลิกครบ 2 ครั้ง กรุณารอ ${formatCooldown(remaining)} ก่อนสั่งอีกครั้ง หากต้องการสั่งอีกครั้งโปรดติดต่อหน้าร้าน`
+          : `You have cancelled 2 times. Please wait ${formatCooldown(remaining)} before ordering again. If you would like to order again please contact the chef`;
+      }
+
+      return isThai
+        ? `เพื่อกันสแปม สั่งใหม่ได้ใน ${formatCooldown(remaining)}`
+        : `Anti-spam cooldown: you can order again in ${formatCooldown(remaining)}.`;
+    }
+
+    function updateOrderCooldownUi() {
+      const remaining = getOrderCooldownRemainingMs();
+      const submitBtn = document.querySelector('button[onclick="submitOrder()"]');
+      const messageEl = document.getElementById('order-cooldown-message');
+      const isThai = currentLangIdx === 0;
+
+      if (remaining <= 0) {
+        localStorage.removeItem(ORDER_COOLDOWN_REASON_STORAGE_KEY);
+      }
+
+      if (submitBtn && !pendingPaymentOrder) {
+        submitBtn.disabled = remaining > 0;
+        if (remaining > 0) {
+          if (!submitBtn.dataset.cooldownText) submitBtn.dataset.cooldownText = submitBtn.innerHTML;
+          submitBtn.innerHTML = isThai
+            ? `รอสั่งอีกครั้ง ${formatCooldown(remaining)}`
+            : `Cooldown ${formatCooldown(remaining)}`;
+        } else if (submitBtn.dataset.cooldownText) {
+          submitBtn.innerHTML = submitBtn.dataset.cooldownText;
+          delete submitBtn.dataset.cooldownText;
+        }
+      }
+
+      if (messageEl) {
+        messageEl.classList.toggle('hidden', remaining <= 0);
+        messageEl.textContent = remaining > 0 ? getOrderCooldownMessage(remaining, isThai) : '';
+        return;
+        messageEl.textContent = remaining > 0
+          ? (isThai
+            ? `เพื่อกันสแปม สั่งใหม่ได้ใน ${formatCooldown(remaining)}`
+            : `Anti-spam cooldown: you can order again in ${formatCooldown(remaining)}.`)
+          : '';
+      }
+    }
+
+    function startOrderCooldownTicker() {
+      if (orderCooldownTicker) clearInterval(orderCooldownTicker);
+      updateOrderCooldownUi();
+      orderCooldownTicker = setInterval(updateOrderCooldownUi, 1000);
+    }
+
+    function updateCustomerStatusCard(orderId, order = {}) {
+      const status = order.status || 'pending';
+      const prevStatus = currentCustomerOrder ? currentCustomerOrder.status : '';
+
+      currentCustomerOrderId = orderId;
+      currentCustomerOrder = { ...order, status };
+
+      if (status === 'done' && prevStatus !== 'done') {
+        playOrderReadySounds();
+      }
+
+      const isThai = currentLangIdx === 0;
+
+      // Automatically close payment/QR code popup when payment is confirmed, order status progresses, or is cancelled
+      const paymentPopupOverlay = document.getElementById('payment-popup-overlay');
+      const cashConfirmOverlay = document.getElementById('cash-confirm-overlay');
+      const isPaymentPopupVisible = paymentPopupOverlay && paymentPopupOverlay.classList.contains('visible');
+      const isCashPopupVisible = cashConfirmOverlay && cashConfirmOverlay.classList.contains('visible');
+      
+      if (isPaymentPopupVisible || isCashPopupVisible) {
+        if (
+          order.paymentStatus === 'confirmed' ||
+          order.paymentStatus === 'paid' ||
+          status === 'cooking' ||
+          status === 'done'
+        ) {
+          closePaymentPopup();
+          closeCashConfirmationWaiting();
+          playCheckoutTink();
+          siteAlert(
+            isThai
+              ? `ได้รับยอดเงินชำระเรียบร้อยแล้ว! เชฟกำลังเตรียมอาหารของคุณ 🍔✨`
+              : `Payment received successfully! The chef is preparing your order. 🍔✨`,
+            isThai ? 'ชำระเงินสำเร็จ' : 'Payment Success'
+          );
+        } else if (status === 'cancel') {
+          closePaymentPopup();
+          closeCashConfirmationWaiting();
+          const reason = order.cancelReason || '';
+          siteAlert(
+            isThai
+              ? `ออเดอร์ของคุณถูกยกเลิกแล้ว ${reason ? `เนื่องจาก: ${reason}` : ''}`
+              : `Your order has been cancelled. ${reason ? `Reason: ${reason}` : ''}`,
+            isThai ? 'ออเดอร์ถูกยกเลิก' : 'Order Cancelled'
+          );
+        }
+      }
+      const statusCard = document.getElementById('customer-status-card');
+      const orderIdEl = document.getElementById('status-order-id');
+      const pillEl = document.getElementById('status-pill');
+      const messageEl = document.getElementById('status-message');
+      const updatedEl = document.getElementById('status-updated');
+      const cancelBtn = document.getElementById('customer-cancel-order-btn');
+      const statusCopy = {
+        pending: {
+          label: isThai ? 'รอคิว' : 'Pending',
+          message: isThai ? 'ออเดอร์ของคุณอยู่ในคิวครัว เชฟจะเริ่มทำเร็วๆ นี้' : 'Your order is in the kitchen queue. The chef will start soon.',
+          color: 'bg-zinc-800 text-white'
+        },
+        payment: {
+          label: isThai ? 'รอชำระเงิน' : 'Payment',
+          message: isThai ? 'กำลังรอการชำระเงิน กรุณาชำระภายใน 5 นาที' : 'Waiting for payment. Please complete payment within five minutes.',
+          color: 'bg-amber-400 text-black'
+        },
+        cooking: {
+          label: isThai ? 'กำลังทำ' : 'Cooking',
+          message: isThai ? 'เชฟกำลังทำแบล็คเบอร์เกอร์ของคุณอยู่' : 'The chef is cooking your black burger now.',
+          color: 'bg-orange-500 text-black'
+        },
+        done: {
+          label: isThai ? 'พร้อมรับ' : 'Ready',
+          message: isThai ? 'อาหารของคุณพร้อมรับแล้ว มารับตอนร้อนๆ ได้เลย' : 'Your food is ready for pickup. Come get it while it is hot.',
+          color: 'bg-emerald-400 text-black'
+        },
+        cancel: {
+          label: isThai ? 'ยกเลิกแล้ว' : 'Cancelled',
+          message: order.cancelReason === "You haven't pay in time"
+            ? (isThai ? 'คุณไม่ได้ชำระเงินภายในเวลาที่กำหนด' : "You haven't pay in time")
+            : (order.cancelReason
+              ? (isThai ? `ออเดอร์นี้ถูกยกเลิกแล้ว เหตุผลระบุว่า : ${order.cancelReason}` : `This order was cancelled. Reason : ${order.cancelReason}`)
+              : (isThai ? 'ออเดอร์นี้ถูกยกเลิกแล้ว หากต้องการความช่วยเหลือกรุณาคุยกับเชฟ' : 'This order was cancelled. Please talk to the chef if you need help.')),
+          color: 'bg-red-500 text-white'
+        }
+      };
+      const copy = statusCopy[status] || statusCopy.pending;
+
+      if (!statusCard || !orderIdEl || !pillEl || !messageEl || !updatedEl) return;
+
+      statusCard.classList.remove('hidden');
+      orderIdEl.textContent = `#${orderId}`;
+
+      const queueInfoEl = document.getElementById('status-queue-info');
+      const queueValEl = document.getElementById('status-queue-val');
+      const queueAheadEl = document.getElementById('status-queue-ahead');
+      if (queueInfoEl && queueValEl) {
+        if (order.queueNumber) {
+          queueInfoEl.style.display = 'block';
+          queueInfoEl.innerHTML = isThai 
+            ? `คิวของคุณคือ <span id="status-queue-val" class="text-amber-400 font-bold">#${order.queueNumber}</span>`
+            : `Your queue is <span id="status-queue-val" class="text-amber-400 font-bold">#${order.queueNumber}</span>`;
+          
+          if (queueAheadEl) {
+            if (status === 'pending' || status === 'cooking') {
+              fetch(`${FIREBASE_DATABASE_URL}/orders.json`)
+                .then(res => res.json())
+                .then(allOrders => {
+                  if (allOrders && order.createdAt) {
+                    const currentCreatedAt = new Date(order.createdAt);
+                    const aheadOrders = Object.values(allOrders).filter(o => {
+                      if (!o) return false;
+                      if (o.status !== 'pending' && o.status !== 'cooking') return false;
+                      if (o.createdAt) {
+                        const otherCreatedAt = new Date(o.createdAt);
+                        return otherCreatedAt < currentCreatedAt;
+                      }
+                      return false;
+                    });
+                    
+                    const count = aheadOrders.length;
+                    queueAheadEl.style.display = 'block';
+                    queueAheadEl.innerHTML = isThai
+                      ? `มีออเดอร์ก่อนหน้าคุณ: <span class="text-rose-400 font-bold">${count}</span> คิว`
+                      : `Orders ahead of you: <span class="text-rose-400 font-bold">${count}</span>`;
+                  } else {
+                    queueAheadEl.style.display = 'none';
+                  }
+                })
+                .catch(err => {
+                  console.warn('Could not fetch active queue count:', err);
+                  queueAheadEl.style.display = 'none';
+                });
+            } else {
+              queueAheadEl.style.display = 'none';
+            }
+          }
+        } else {
+          queueInfoEl.style.display = 'none';
+          if (queueAheadEl) queueAheadEl.style.display = 'none';
+        }
+      }
+
+      pillEl.textContent = copy.label;
+      pillEl.className = `text-xs font-mono font-bold uppercase px-3 py-2 rounded-full border-2 border-white shadow-[3px_3px_0px_#fff] ${copy.color}`;
+      messageEl.textContent = copy.message;
+      updatedEl.textContent = order.updatedAt
+        ? `${isThai ? 'อัปเดตล่าสุด' : 'Last updated'}: ${new Date(order.updatedAt).toLocaleString()}`
+        : (isThai ? 'กำลังรออัปเดตจากครัว...' : 'Waiting for kitchen update...');
+
+      if (cancelBtn) {
+        cancelBtn.classList.toggle('hidden', status === 'done' || status === 'cancel');
+      }
+
+      ['pending', 'cooking', 'done'].forEach(step => {
+        const stepEl = document.getElementById(`status-step-${step}`);
+        if (!stepEl) return;
+        const progress = { payment: 0, pending: 1, cooking: 2, done: 3 };
+        const isActive = (progress[status] || 0) >= progress[step];
+        stepEl.classList.toggle('border-[#ff4d6d]', isActive);
+        stepEl.classList.toggle('bg-rose-950', isActive);
+        stepEl.classList.toggle('text-white', isActive);
+        stepEl.classList.toggle('opacity-40', status === 'cancel');
+      });
+    }
+
+    function startCustomerOrderTracker(orderId) {
+      if (!orderId) return;
+      rememberCurrentOrder(orderId);
+      updateCustomerStatusCard(orderId);
+
+      if (customerOrderPoller) {
+        clearInterval(customerOrderPoller);
+      }
+      if (customerOrderStream) {
+        customerOrderStream.close();
+        customerOrderStream = null;
+      }
+
+      const fetchOrder = () => {
+        fetch(getFirebaseOrderUrl(orderId), { cache: 'no-store' })
+          .then(res => {
+            if (!res.ok) throw new Error('Could not load order status');
+            return res.json();
+          })
+          .then(order => {
+            if (order) {
+              updateCustomerStatusCard(orderId, order);
+            } else {
+              forgetCurrentOrder();
+            }
+          })
+          .catch(err => {
+            console.warn('Firebase order status unavailable:', err);
+          });
+      };
+
+      fetchOrder();
+      customerOrderPoller = setInterval(fetchOrder, 3000);
+
+      if ('EventSource' in window) {
+        customerOrderStream = new EventSource(getFirebaseOrderUrl(orderId));
+        customerOrderStream.addEventListener('put', event => {
+          const payload = JSON.parse(event.data || '{}');
+          if (payload.data) updateCustomerStatusCard(orderId, payload.data);
+        });
+        customerOrderStream.addEventListener('patch', event => {
+          const payload = JSON.parse(event.data || '{}');
+          fetchOrder();
+          if (payload.data && payload.data.status) {
+            updateCustomerStatusCard(orderId, {
+              ...currentCustomerOrder,
+              ...payload.data,
+              status: payload.data.status,
+              updatedAt: payload.data.updatedAt || new Date().toISOString()
+            });
+          }
+        });
+        customerOrderStream.onerror = () => {
+          console.warn('Realtime order stream paused; polling fallback is still running.');
+        };
+      }
+    }
+
+    function startInitialCustomerOrderTracker() {
+      const urlOrderId = new URLSearchParams(window.location.search).get('order');
+      const savedOrderId = getSavedCurrentOrderId();
+      const customerClientId = getOrCreateCustomerClientId();
+
+      if (urlOrderId || savedOrderId) {
+        startCustomerOrderTracker(urlOrderId || savedOrderId);
+        return;
+      }
+
+      getNewestFirebaseOrderForCustomer(customerClientId)
+        .then(latest => {
+          if (latest) startCustomerOrderTracker(latest.id);
+        })
+        .catch(err => {
+          console.warn('Could not recover customer order:', err);
+        });
+    }
+
+// ══ NAME POPUP ══
+function showSiteDialog({ title = 'Notice', message = '', mode = 'alert', placeholder = '', requiredMessage = '' } = {}) {
+  return new Promise(resolve => {
+    const overlay = document.getElementById('site-dialog-overlay');
+    const titleEl = document.getElementById('site-dialog-title');
+    const messageEl = document.getElementById('site-dialog-message');
+    const inputEl = document.getElementById('site-dialog-input');
+    const errorEl = document.getElementById('site-dialog-error');
+    const okBtn = document.getElementById('site-dialog-ok');
+    const cancelBtn = document.getElementById('site-dialog-cancel');
+    const isPrompt = mode === 'prompt';
+
+    if (!overlay || !titleEl || !messageEl || !inputEl || !errorEl || !okBtn || !cancelBtn) {
+      resolve(isPrompt ? null : undefined);
+      return;
+    }
+
+    titleEl.textContent = title;
+    messageEl.textContent = message;
+    inputEl.value = '';
+    inputEl.placeholder = placeholder;
+    inputEl.classList.toggle('hidden', !isPrompt);
+    errorEl.textContent = '';
+    cancelBtn.classList.toggle('hidden', !isPrompt);
+    overlay.setAttribute('aria-hidden', 'false');
+    overlay.classList.add('visible');
+
+    const cleanup = result => {
+      overlay.classList.remove('visible');
+      overlay.setAttribute('aria-hidden', 'true');
+      okBtn.removeEventListener('click', handleOk);
+      cancelBtn.removeEventListener('click', handleCancel);
+      inputEl.removeEventListener('keydown', handleInputKeydown);
+      resolve(result);
+    };
+    const handleOk = () => {
+      if (isPrompt) {
+        const value = inputEl.value.trim().slice(0, 240);
+        if (!value && requiredMessage) {
+          errorEl.textContent = requiredMessage;
+          inputEl.focus();
+          return;
+        }
+        cleanup(value);
+        return;
+      }
+      cleanup(undefined);
+    };
+    const handleCancel = () => cleanup(null);
+    const handleInputKeydown = event => {
+      if (event.key === 'Enter' && (event.ctrlKey || event.metaKey)) handleOk();
+      if (event.key === 'Escape') handleCancel();
+    };
+
+    okBtn.addEventListener('click', handleOk);
+    cancelBtn.addEventListener('click', handleCancel);
+    inputEl.addEventListener('keydown', handleInputKeydown);
+    setTimeout(() => (isPrompt ? inputEl : okBtn).focus(), 30);
+  });
+}
+
+function siteAlert(message, title) {
+  const isThai = typeof currentLangIdx !== 'undefined' && currentLangIdx === 0;
+  return showSiteDialog({
+    title: title || (isThai ? 'แจ้งเตือน' : 'Notice'),
+    message: String(message || '')
+  });
+}
+
+function sitePrompt(message, options = {}) {
+  const isThai = typeof currentLangIdx !== 'undefined' && currentLangIdx === 0;
+  return showSiteDialog({
+    title: options.title || (isThai ? 'กรอกข้อมูล' : 'Tell us'),
+    message,
+    mode: 'prompt',
+    placeholder: options.placeholder || '',
+    requiredMessage: options.requiredMessage || ''
+  });
+}
+
+window.alert = message => {
+  siteAlert(message);
+};
+
+async function cancelCustomerOrder() {
+  if (!currentCustomerOrderId || !currentCustomerOrder) return;
+  const isThai = currentLangIdx === 0;
+  if (currentCustomerOrder.status === 'done' || currentCustomerOrder.status === 'cancel') {
+    alert(isThai ? 'ออเดอร์นี้ปิดแล้ว ยกเลิกไม่ได้' : 'This order is already closed and cannot be cancelled.');
+    return;
+  }
+
+  const reason = await sitePrompt(
+    isThai ? 'เหตุผลที่ต้องการยกเลิกออเดอร์คืออะไร?' : 'Why do you want to cancel this order?',
+    {
+      title: isThai ? 'ยกเลิกออเดอร์' : 'Cancel order',
+      placeholder: isThai ? 'พิมพ์เหตุผล...' : 'Type the reason...',
+      requiredMessage: isThai ? 'กรุณาใส่เหตุผลก่อนยกเลิกออเดอร์' : 'Please enter a reason before cancelling the order.'
+    }
+  );
+  if (reason === null) return;
+  const cleanReason = reason.trim().slice(0, 240);
+  if (!cleanReason) {
+    alert(isThai ? 'กรุณาใส่เหตุผลก่อนยกเลิกออเดอร์' : 'Please enter a reason before cancelling the order.');
+    return;
+  }
+
+  const cancelBtn = document.getElementById('customer-cancel-order-btn');
+  if (cancelBtn) {
+    cancelBtn.disabled = true;
+    cancelBtn.textContent = isThai ? 'กำลังยกเลิก...' : 'Cancelling...';
+  }
+
+  const payload = {
+    status: 'cancel',
+    cancelReason: cleanReason,
+    cancelledBy: 'customer',
+    updatedAt: new Date().toISOString()
+  };
+
+  fetch(getFirebaseOrderUrl(currentCustomerOrderId), {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  })
+  .then(res => {
+    if (!res.ok) throw new Error('Could not cancel order');
+    currentCustomerOrder = { ...currentCustomerOrder, ...payload };
+    updateCustomerStatusCard(currentCustomerOrderId, currentCustomerOrder);
+    const reachedCancelLimit = recordCustomerCancellation();
+    clearOrderCooldown({ preserveCancelPenalty: true });
+    if (reachedCancelLimit) {
+      alert(isThai
+        ? 'คุณยกเลิกครบ 2 ครั้ง กรุณารอ 10 นาทีก่อนสั่งอีกครั้ง'
+        : 'You have cancelled 2 times. Cooldown 10 minutes.');
+    }
+    clearPaymentTimers();
+    closePaymentPopup();
+
+    // Update cancelled order status in Firebase
+    if (currentCustomerOrderId) {
+      fetch(`${FIREBASE_DATABASE_URL}/orders/${encodeURIComponent(currentCustomerOrderId)}.json`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'cancelled', cancelReason: cleanReason, updatedAt: new Date().toISOString() })
+      }).catch(err => console.warn('Could not update cancel status in Firebase:', err));
+    }
+  })
+  .catch(err => {
+    console.warn('Customer cancel failed:', err);
+    alert(isThai ? 'ยกเลิกออเดอร์ไม่สำเร็จ กรุณาลองอีกครั้ง' : 'Could not cancel the order. Please try again.');
+  })
+  .finally(() => {
+    if (cancelBtn) {
+      cancelBtn.disabled = false;
+      cancelBtn.textContent = tr('customer-cancel-btn');
+    }
+  });
+}
+
+function showNamePopup() {
+  const overlay = document.getElementById('name-popup-overlay');
+  const nameInput = document.getElementById('name-popup-input');
+  nameInput.value = customerName || localStorage.getItem(CUSTOMER_NAME_STORAGE_KEY) || '';
+  overlay.classList.add('visible');
+  setTimeout(() => {
+    nameInput.focus();
+    nameInput.select();
+  }, 200);
+}
+
+function changeName() {
+  triggerClickSound();
+  showNamePopup();
+}
+
+function updateCustomerGreeting() {
+  const greeting = document.getElementById('customer-greeting-text');
+  if (!greeting) return;
+  const displayName = customerName || localStorage.getItem(CUSTOMER_NAME_STORAGE_KEY) || '';
+  const fallback = currentLangIdx === 0 ? 'เพื่อนสายเบอร์เกอร์' : 'burger friend';
+  greeting.textContent = currentLangIdx === 0
+    ? `สวัสดี, ${displayName || fallback}!`
+    : `Hi, ${displayName || fallback}!`;
+}
+
+function getSpecialNote() {
+  const noteInput = document.getElementById('special-note-input');
+  return noteInput ? noteInput.value.trim() : '';
+}
+
+function getRecentOrder() {
+  try {
+    return JSON.parse(localStorage.getItem(RECENT_ORDER_STORAGE_KEY) || 'null');
+  } catch (err) {
+    return null;
+  }
+}
+
+function saveRecentOrder(orderPayload) {
+  const recentOrder = {
+    customerName: orderPayload.customerName || customerName,
+    pattyName: selectedPattyName,
+    pattyIcon: selectedPattyIcon,
+    meatName: selectedMeatName,
+    meatIcon: selectedMeatIcon,
+    specialNote: orderPayload.specialNote || '',
+    savedAt: new Date().toISOString()
+  };
+  localStorage.setItem(RECENT_ORDER_STORAGE_KEY, JSON.stringify(recentOrder));
+  renderRecentOrder();
+}
+
+function renderRecentOrder() {
+  const card = document.getElementById('recent-order-card');
+  const title = document.getElementById('recent-order-title');
+  const details = document.getElementById('recent-order-details');
+  if (!card || !title || !details) return;
+
+  const recentOrder = getRecentOrder();
+  if (!recentOrder || !recentOrder.pattyName || !recentOrder.meatName) {
+    card.classList.add('hidden');
+    return;
+  }
+
+  const note = recentOrder.specialNote
+    ? (currentLangIdx === 0 ? ` · โน้ต: ${recentOrder.specialNote}` : ` · Note: ${recentOrder.specialNote}`)
+    : '';
+  title.textContent = currentLangIdx === 0 ? 'คอมโบล่าสุดของคุณ' : 'Your last combo';
+  details.textContent = `${recentOrder.pattyName} ${recentOrder.pattyIcon} + ${recentOrder.meatName} ${recentOrder.meatIcon}${note}`;
+  card.classList.remove('hidden');
+}
+
+function reorderLastOrder() {
+  const recentOrder = getRecentOrder();
+  if (!recentOrder) return;
+  triggerClickSound();
+  selectedPattyName = recentOrder.pattyName || '';
+  selectedPattyIcon = recentOrder.pattyIcon || '';
+  selectedMeatName = recentOrder.meatName || '';
+  selectedMeatIcon = recentOrder.meatIcon || '';
+
+  document.getElementById('dot-1').classList.remove('active');
+  document.getElementById('dot-2').classList.remove('active');
+  document.getElementById('dot-3').classList.add('active');
+  document.getElementById('step-1').classList.add('hidden');
+  document.getElementById('step-2').classList.add('hidden');
+  document.getElementById('step-3').classList.remove('hidden');
+
+  updateReceiptSummaries();
+  const noteInput = document.getElementById('special-note-input');
+  if (noteInput) noteInput.value = recentOrder.specialNote || '';
+  document.getElementById('order-pad').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// รวมพลังเป็นฟังก์ชันเดียว ไม่ซ้อน ไม่มั่ว!
+function submitName() {
+  const nameInput = document.getElementById('name-popup-input');
+  const val = nameInput.value.trim();
+
+  // 1. ดักจับค่าว่าง/สเปซบาร์รัวๆ ก่อนเลย (ไม่ผ่านคือเด้งออก)
+  if (!/\S/.test(val)) {
+    alert("กรุณาใส่ชื่อก่อนนะตัวเธอ! / Please enter your name.");
+    nameInput.focus();
+    return; // บล็อก! ไม่ให้ไปต่อ
+  }
+
+  // 2. ถ้าพิมพ์ชื่อมาจริง ถึงจะบันทึกค่าแล้วปิดป็อปอัพ
+  customerName = val;
+  localStorage.setItem(CUSTOMER_NAME_STORAGE_KEY, customerName);
+  updateCustomerGreeting();
+  document.getElementById('name-popup-overlay').classList.remove('visible');
+  console.log("Name submitted:", customerName);
+}
+
+// ══ EVENT LISTENERS ══
+document.addEventListener('DOMContentLoaded', () => {
+  customerName = localStorage.getItem(CUSTOMER_NAME_STORAGE_KEY) || '';
+  updateCustomerGreeting();
+  renderRecentOrder();
+  startOrderCooldownTicker();
+  initMenuManagement();
+  if (!customerName) {
+    setTimeout(showNamePopup, 800);
+  }
+  
+  // กด Enter ก็ให้วิ่งไปเรียก submitName() ตัวหลักข้างบน
+  document.getElementById('name-popup-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      submitName();
+    }
+  });
+});
+
+    const DEFAULT_MENU_AVAILABILITY = {
+      'Classic Emperor': true,
+      'Double Emperor': true,
+      'Emperor Cheese': true,
+      'Chicken': true,
+      'Pork': true
+    };
+    let menuAvailability = {};
+
+    async function loadMenuAvailability() {
+      let availability = { ...DEFAULT_MENU_AVAILABILITY };
+      try {
+        const cached = localStorage.getItem('bb_menu_availability');
+        if (cached) {
+          availability = { ...availability, ...JSON.parse(cached) };
+        }
+        const res = await fetch(`${FIREBASE_DATABASE_URL}/menu_availability.json`);
+        if (res.ok) {
+          const liveData = await res.json();
+          if (liveData) {
+            availability = { ...DEFAULT_MENU_AVAILABILITY, ...liveData };
+            localStorage.setItem('bb_menu_availability', JSON.stringify(availability));
+          }
+        }
+      } catch (err) {
+        console.warn('Could not load menu availability from Firebase, using cache/defaults:', err);
+      }
+      menuAvailability = availability;
+      updateMenuButtons();
+    }
+
+    function isMenuAvailable(name) {
+      return menuAvailability[name] !== false;
+    }
+
+    function updateMenuButtons() {
+      document.querySelectorAll('[data-menu]').forEach(btn => {
+        const name = btn.dataset.menu;
+        const available = isMenuAvailable(name);
+        btn.disabled = !available;
+        btn.classList.toggle('menu-unavailable', !available);
+        const tag = btn.querySelector('.menu-status-tag');
+        if (tag) {
+          if (!available) {
+            tag.textContent = currentLangIdx === 0 ? 'สินค้าหมด' : 'SOLD OUT';
+            tag.style.display = 'inline-flex';
+          } else {
+            tag.textContent = '';
+            tag.style.display = 'none';
+          }
+        }
+      });
+    }
+
+    function initMenuManagement() {
+      loadMenuAvailability();
+      // Poll every 8 seconds to get live status from kitchen!
+      setInterval(loadMenuAvailability, 8000);
+    }
+    // ══ TRANSLATION ENGINE ══
+    const langCodes = ['th', 'en']; // TH is index 0 (Default!)
+    let currentLangIdx = 0;
+
+    const translations = {
+      th: {
+        "diner-title": "Emperor Burger!",
+        "diner-subtitle": "✦หิวกระหายเรายินดีต้อนรับ!✦",
+        "chef-note-badge": "บันทึกจากเชฟ",
+        "order-slip-badge": "ใบสั่งซื้อ #481",
+        "burger-title": "1. เลือกเบอร์เกอร์! 🍔",
+        "burger-desc": "เลือกเบอร์เกอร์แบล็คเบอร์เกอร์สูตรพิเศษของเรา",
+        "burger-opt-1-title": "1. Classic Emperor",
+        "burger-opt-1-desc": "เบอร์เกอร์สูตรดั้งเดิม รสชาติคลาสสิกที่ไม่เคยเบื่อ",
+        "burger-opt-2-title": "2. Double Emperor",
+        "burger-opt-2-desc": "เนื้อคู่สองชั้น พลังสองเท่า อิ่มสองเท่า!",
+        "burger-opt-3-title": "3. Emperor Cheese",
+        "burger-opt-3-desc": "ชีสละลายราดสุดเยิ้ม เข้มข้นทุกคำ",
+        "burger-opt-4-title": "4. Bacon & Eggs Emperor",
+        "burger-opt-4-desc": "เบคอนกรอบ + ไข่ดาวสด คู่สุดลงตัว",
+        "back-to-burger-btn": "← ย้อนกลับเลือกเบอร์เกอร์",
+        "meat-title": "2. เลือกเนื้อที่ชอบ! 🥩",
+        "meat-desc": "ชอบไก่หรือหมู? เลือกได้เลย!",
+        "meat-opt-1-title": "ไก่",
+        "meat-opt-1-desc": "ไก่ย่างชุ่มฉ่ำ รสเด็ด",
+        "meat-opt-2-title": "หมู",
+        "meat-opt-2-desc": "หมูย่างหอม นุ่มลิ้น (+10 บาท)",
+        "back-btn": "← ย้อนกลับเลือกเนื้อ",
+        "summary-title": "รายการทั้งหมด",
+        "summary-burger-label": "เบอร์เกอร์:",
+        "summary-meat-label": "เนื้อ:",
+        "summary-total-label": "ราคารวมทั้งหมด:",
+        "reset-btn": "เลือกใหม่ ",
+        "place-order-btn": "สั่งอาหารเลย! ",
+        "manage-menu-btn": "จัดการเมนู",
+        "manager-title": "จัดการสถานะเมนู",
+        "manager-desc": "ตั้งค่าเมนูที่หมดหรือยังไม่พร้อม เพื่อไม่ให้ลูกค้าสั่งได้",
+        "manager-available": "พร้อมขาย",
+        "manager-soldout": "สินค้าหมด",
+        "bento-title": "<span>📷</span> โพลารอยด์เซ็ตเมนู",
+        "bento-desc": "รายการอาหารสุดน่ารักในร้านของเรา คุณสามารถใส่ภาพอาหารของตัวเองได้ในภายหลัง!",
+        "polaroid-1-title": "เบอร์เกอร์ไก่ชาร์โคล",
+        "polaroid-1-footer": "รอรูปถ่ายเบอร์เกอร์ของคุณอยู่นะ!",
+        "polaroid-2-title": "เบอร์เกอร์หมู ชาร์โคล์",
+        "polaroid-2-footer": "รอรูปถ่ายของกินเล่นอยู่นะ!",
+        "polaroid-3-title": "เครื่องดื่มเย็นชื่นใจ",
+        "polaroid-3-footer": "รอรูปถ่ายเครื่องดื่มอยู่นะ!",
+        "payment-title": "เลือกวิธีชำระเงิน",
+        "payment-sub": "กรุณาชำระเงินภายใน 5 นาที ไม่อย่างนั้นออเดอร์จะถูกยกเลิก",
+        "payment-qr-btn": "QR พร้อมเพย์",
+        "payment-cash-btn": "เงินสด",
+        "payment-qr-instruction": "สแกน QR พร้อมเพย์นี้ ระบบจะแจ้งเชฟอัตโนมัติ",
+        "payment-save-qr-btn": "บันทึก QR",
+        "change-name-btn": "เปลี่ยนชื่อ",
+        "greeting-label": "ยินดีต้อนรับกลับ",
+        "greeting-change-name": "เปลี่ยนชื่อ",
+        "recent-order-label": "ออเดอร์ล่าสุด",
+        "reorder-btn": "สั่งอีกครั้ง",
+        "special-note-label": "โน้ตพิเศษ",
+        "special-note-placeholder": "ไม่ใส่มะเขือเทศ, เพิ่มซอส, แพ้อาหาร...",
+        "customer-cancel-btn": "ยกเลิกออเดอร์",
+        "footer-copyright": "ENJOY YOUR BURGER!",
+        "footer-inspired": "ssnmhjjg enjoy!"
+      },
+      en: {
+        "diner-title": "Emperor Burger!",
+        "diner-subtitle": "✦Hungry? Thirsty? We're here!✦",
+        "chef-note-badge": "Chef's Note",
+        "order-slip-badge": "ORDER SLIP #481",
+        "burger-title": "1. Pick your Burger! 🍔",
+        "burger-desc": "Choose from our Emperor Black Burger menu!",
+        "burger-opt-1-title": "1. Classic Emperor",
+        "burger-opt-1-desc": "The original recipe. A classic taste you'll never get tired of.",
+        "burger-opt-2-title": "2. Double Emperor",
+        "burger-opt-2-desc": "Double the patty, double the power, double the satisfaction!",
+        "burger-opt-3-title": "3. Emperor Cheese",
+        "burger-opt-3-desc": "Melted cheese dripping on every bite. Rich and intense.",
+        "burger-opt-4-title": "4. Bacon & Eggs Emperor",
+        "burger-opt-4-desc": "Crispy bacon + fresh fried egg. A match made in heaven.",
+        "back-to-burger-btn": "← Back to Burger",
+        "meat-title": "2. Choose your Meat! 🥩",
+        "meat-desc": "Chicken or Pork? Pick your favourite!",
+        "meat-opt-1-title": "Chicken",
+        "meat-opt-1-desc": "Juicy flame-grilled chicken",
+        "meat-opt-2-title": "Pork",
+        "meat-opt-2-desc": "Aromatic grilled pork (+10 Baht)",
+        "back-btn": "← Back to Meat",
+        "summary-title": "Your order",
+        "summary-burger-label": "BURGER:",
+        "summary-meat-label": "MEAT:",
+        "summary-total-label": "TOTAL PRICE:",
+        "reset-btn": "Reset Order",
+        "place-order-btn": "Place Order!",
+        "manage-menu-btn": "Manage Menu",
+        "manager-title": "Menu Manager",
+        "manager-desc": "Mark items that are sold out or not ready so customers can't order them.",
+        "manager-available": "Available",
+        "manager-soldout": "Sold Out",
+        "bento-title": "<span>📷</span> Polaroid Food Bento",
+        "bento-desc": "What will your food will look like?",
+        "polaroid-1-title": "Chicken Black burger",
+        "polaroid-1-footer": "Ready for your burger photo!",
+        "polaroid-2-title": "Pork Black burger",
+        "polaroid-2-footer": "Ready for your sides photo!",
+        "polaroid-3-title": "ICE COLD REFRESHMENTS",
+        "polaroid-3-footer": "Ready for your beverages photo!",
+        "payment-title": "Select your payment method",
+        "payment-sub": "Please pay within five minutes or the order will be cancelled.",
+        "payment-qr-btn": "QR PromptPay",
+        "payment-cash-btn": "Cash",
+        "payment-qr-instruction": "Scan this PromptPay QR code. The chef is notified automatically.",
+        "payment-save-qr-btn": "Save QR code",
+        "change-name-btn": "Change name",
+        "greeting-label": "Welcome back",
+        "greeting-change-name": "Change name",
+        "recent-order-label": "Last order",
+        "reorder-btn": "Reorder",
+        "special-note-label": "Special note",
+        "special-note-placeholder": "No tomato, extra sauce, allergies...",
+        "customer-cancel-btn": "Cancel order",
+        "footer-copyright": "ENJOY YOUR BURGER",
+        "footer-inspired": "Inspired by ssnmhjjg's gorgeous portfolio system..."
+      }
+    };
+
+    function tr(key) {
+      const lang = langCodes[currentLangIdx] || 'th';
+      return (translations[lang] && translations[lang][key]) || (translations.en && translations.en[key]) || key;
+    }
+
+    function initLanguage() {
+      // Check saved language or default to index 0 (Thai!)
+      const saved = localStorage.getItem('bitty-burger-lang');
+      if (saved !== null) {
+        currentLangIdx = parseInt(saved);
+      } else {
+        currentLangIdx = 0; // Default to THAI automaticly!
+      }
+      updateLanguageDisplay();
+    }
+
+    function updateLanguageDisplay() {
+      const langText = document.getElementById('langText');
+      const langCode = langCodes[currentLangIdx].toUpperCase();
+      langText.textContent = langCode;
+      
+      localStorage.setItem('bitty-burger-lang', currentLangIdx);
+      document.documentElement.setAttribute('lang', langCodes[currentLangIdx]);
+      
+      updatePageLanguage();
+      initTimeGreeting(); // refresh dynamic clock based on language!
+    }
+
+    function toggleLanguage() {
+      triggerClickSound();
+      currentLangIdx = (currentLangIdx + 1) % langCodes.length;
+      updateLanguageDisplay();
+    }
+
+    function updatePageLanguage() {
+      const lang = langCodes[currentLangIdx];
+      const t = translations[lang];
+      
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (t[key]) {
+          let text = t[key];
+          if (text.includes('<span>') || text.includes('</span>')) {
+            el.innerHTML = text;
+          } else {
+            el.textContent = text;
+          }
+        }
+      });
+      document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-i18n-placeholder');
+        if (t[key]) el.setAttribute('placeholder', t[key]);
+      });
+      
+      // Update placeholders on receipt if selected
+      updateCustomerGreeting();
+      renderRecentOrder();
+      updateReceiptSummaries();
+    }
+
+function updateReceiptSummaries() {
+  if (!selectedBurgerName) return;
+  
+  const isThai = currentLangIdx === 0;
+
+  // 1. Map internal burger names to display names per language
+  const burgerDisplayMap = {
+    'Classic Emperor':        { th: 'Classic Emperor',        en: 'Classic Emperor' },
+    'Double Emperor':         { th: 'Double Emperor',         en: 'Double Emperor' },
+    'Emperor Cheese':         { th: 'Emperor Cheese',         en: 'Emperor Cheese' },
+    'Bacon and Eggs Emperor': { th: 'Bacon & Eggs Emperor',   en: 'Bacon & Eggs Emperor' }
+  };
+  const meatDisplayMap = {
+    'Chicken': { th: 'ไก่', en: 'Chicken' },
+    'Pork':    { th: 'หมู', en: 'Pork' }
+  };
+
+  // 2. Update the summary ticket text
+  const burgerEl = document.getElementById('summary-burger-item');
+  const meatEl = document.getElementById('summary-meat');
+
+  if (burgerEl && selectedBurgerName && burgerDisplayMap[selectedBurgerName]) {
+    const lang = isThai ? 'th' : 'en';
+    burgerEl.textContent = `${burgerDisplayMap[selectedBurgerName][lang]} ${selectedBurgerIcon}`;
+  }
+  if (meatEl && selectedMeatName && meatDisplayMap[selectedMeatName]) {
+    const lang = isThai ? 'th' : 'en';
+    meatEl.textContent = `${meatDisplayMap[selectedMeatName][lang]} ${selectedMeatIcon}`;
+  }
+
+  // 3. Calculate total price (burger base price + meat price + add-ons)
+  let totalPrice = selectedBurgerPrice || 0;
+  if (selectedMeatName === 'Pork') totalPrice += 10;
+  if (selectedExtraMeat) totalPrice += 15;
+  if (selectedExtraCheese) totalPrice += 10;
+
+  // 4. Display total price
+  const totalValEl = document.getElementById('summary-total-val');
+  if (totalValEl) {
+    totalValEl.textContent = isThai
+      ? `${totalPrice.toFixed(2)} บาท (รวม)` 
+      : `${totalPrice.toFixed(2)} Baht (Total)`;
+  }
+}
+
+    function calculateOrderTotal() {
+      let totalPrice = selectedBurgerPrice || 0;
+      if (selectedMeatName === 'Pork') totalPrice += 10;
+      if (selectedExtraMeat) totalPrice += 15;
+      if (selectedExtraCheese) totalPrice += 10;
+      return totalPrice;
+    }
+
+    function getPromptPayIdDigits() {
+      return String(PROMPTPAY_ID || '').replace(/\D/g, '');
+    }
+
+    function isValidPromptPayId() {
+      const digits = getPromptPayIdDigits();
+      return /^0[689]\d{8}$/.test(digits) || /^\d{13}$/.test(digits) || /^\d{15}$/.test(digits);
+    }
+
+    function getPromptPayQrUrl(amount) {
+      if (USE_STATIC_QR || !isValidPromptPayId()) {
+        return STATIC_QR_PATH;
+      }
+      return `https://promptpay.io/${encodeURIComponent(getPromptPayIdDigits())}/${amount.toFixed(2)}.png`;
+    }
+
+    function setPromptPayInstruction(mode = 'dynamic', amount = calculateOrderTotal()) {
+      const instruction = document.querySelector('#promptpay-panel [data-i18n="payment-qr-instruction"]');
+      if (!instruction) return;
+      if (mode === 'invalid-id') {
+        instruction.textContent = currentLangIdx === 0
+          ? `PromptPay ID ยังไม่ถูกต้อง QR นี้เป็น QR สำรองและไม่ล็อคราคา กรุณาโอน ${amount.toFixed(2)} บาท`
+          : `PromptPay ID is not valid yet. This backup QR does not lock the price. Please pay ${amount.toFixed(2)} Baht.`;
+        return;
+      }
+      if (mode === 'static') {
+        instruction.textContent = currentLangIdx === 0
+          ? `QR สำรองนี้ไม่ล็อคราคา กรุณาโอน ${amount.toFixed(2)} บาท`
+          : `Backup QR does not lock the price. Please pay ${amount.toFixed(2)} Baht.`;
+        return;
+      }
+      instruction.textContent = currentLangIdx === 0
+        ? `QR นี้ล็อคราคา ${amount.toFixed(2)} บาท แล้วกดปุ่มด้านล่างเมื่อชำระแล้ว`
+        : `This QR is set to ${amount.toFixed(2)} Baht. The chef is notified automatically.`;
+    }
+
+    function setPaymentControlsEnabled(enabled) {
+      document.querySelectorAll('#payment-popup-box button').forEach(btn => {
+        btn.disabled = !enabled;
+        btn.style.opacity = enabled ? '1' : '0.55';
+      });
+    }
+
+    function clearPaymentTimers() {
+      if (paymentTimer) clearTimeout(paymentTimer);
+      if (paymentCountdownTimer) clearInterval(paymentCountdownTimer);
+      paymentTimer = null;
+      paymentCountdownTimer = null;
+    }
+
+    function startPaymentCountdown(orderId, expiresAt) {
+      clearPaymentTimers();
+      const countdownEl = document.getElementById('payment-countdown');
+      const tick = () => {
+        const remaining = Math.max(0, expiresAt - Date.now());
+        const minutes = Math.floor(remaining / 60000);
+        const seconds = Math.floor((remaining % 60000) / 1000);
+        if (countdownEl) {
+          countdownEl.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+      };
+      tick();
+      paymentCountdownTimer = setInterval(tick, 1000);
+      paymentTimer = setTimeout(() => cancelOrderForPaymentTimeout(orderId), Math.max(0, expiresAt - Date.now()));
+    }
+
+    function cancelOrderForPaymentTimeout(orderId) {
+      clearPaymentTimers();
+      fetch(getFirebaseOrderUrl(orderId), { cache: 'no-store' })
+        .then(res => res.json())
+        .then(order => {
+          const status = order && order.status;
+          if (status === 'cooking' || status === 'done' || status === 'cancel') return;
+          return fetch(getFirebaseOrderUrl(orderId), {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              status: 'cancel',
+              paymentStatus: 'timeout',
+              cancelReason: "You haven't pay in time",
+              updatedAt: new Date().toISOString()
+            })
+          });
+        })
+        .catch(err => {
+          console.warn('Could not cancel timed-out order in Firebase:', err);
+        });
+      closePaymentPopup();
+      alert(currentLangIdx === 0 ? 'คุณไม่ได้ชำระเงินภายในเวลาที่กำหนด' : "You haven't pay in time");
+      if (pendingSubmitButton) {
+        pendingSubmitButton.disabled = false;
+        pendingSubmitButton.innerHTML = pendingSubmitButtonHtml;
+      }
+    }
+
+    function openPaymentPopup(orderPayload, submitBtn, originalText) {
+      pendingSubmitButton = submitBtn;
+      pendingSubmitButtonHtml = originalText;
+      const total = orderPayload.total || calculateOrderTotal();
+      const expiresAt = Date.now() + PAYMENT_TIMEOUT_MS;
+      pendingPaymentOrder = {
+        ...orderPayload,
+        paymentTimeoutAt: new Date(expiresAt).toISOString()
+      };
+      const overlay = document.getElementById('payment-popup-overlay');
+      const promptPayPanel = document.getElementById('promptpay-panel');
+      const choiceRow = document.getElementById('payment-choice-row');
+      const qrImg = document.getElementById('promptpay-qr');
+      const sub = document.getElementById('payment-popup-sub');
+
+      if (promptPayPanel) {
+        promptPayPanel.classList.remove('visible');
+        promptPayPanel.style.display = 'none';
+      }
+      if (choiceRow) {
+        choiceRow.classList.remove('hidden');
+        choiceRow.style.display = 'flex';
+      }
+      if (qrImg) {
+        qrImg.onerror = () => {
+          qrImg.onerror = null;
+          qrImg.src = STATIC_QR_PATH;
+          setPromptPayInstruction('static', total);
+        };
+        qrImg.src = getPromptPayQrUrl(total);
+      }
+      setPromptPayInstruction(
+        USE_STATIC_QR ? 'static' : (isValidPromptPayId() ? 'dynamic' : 'invalid-id'),
+        total
+      );
+      if (sub) {
+        sub.textContent = currentLangIdx === 0
+          ? `ออเดอร์ #${orderPayload.orderId} รวม ${total.toFixed(2)} บาท กรุณาชำระภายใน 5 นาที`
+          : `Order #${orderPayload.orderId} total: ${total.toFixed(2)} Baht. Please pay within five minutes.`;
+      }
+      setPaymentControlsEnabled(true);
+      if (overlay) overlay.classList.add('visible');
+      startCustomerOrderTracker(orderPayload.orderId);
+      saveOrderToFirebase({
+        ...pendingPaymentOrder
+      }, 'payment').catch(err => {
+        console.warn('Could not save payment waiting order:', err);
+      });
+      startPaymentCountdown(orderPayload.orderId, expiresAt);
+    }
+
+
+    function showCashConfirmationWaiting() {
+      const overlay = document.getElementById('cash-confirm-overlay');
+      if (overlay) overlay.classList.add('visible');
+    }
+
+    function closeCashConfirmationWaiting() {
+      const overlay = document.getElementById('cash-confirm-overlay');
+      if (overlay) overlay.classList.remove('visible');
+    }
+
+
+    function closePaymentPopup() {
+      const overlay = document.getElementById('payment-popup-overlay');
+      if (overlay) overlay.classList.remove('visible');
+      setPaymentControlsEnabled(true);
+      updateOrderCooldownUi();
+    }
+
+    function cancelPayment() {
+      // Cancel timers and close popup, restoring the submit button
+      clearPaymentTimers();
+      closePaymentPopup();
+      closeCashConfirmationWaiting();
+      pendingPaymentOrder = null;
+      if (pendingSubmitButton) {
+        pendingSubmitButton.disabled = false;
+        pendingSubmitButton.innerHTML = pendingSubmitButtonHtml;
+        pendingSubmitButton = null;
+      }
+      updateOrderCooldownUi();
+      // Also reset the QR panel view for next open
+      const promptPayPanel = document.getElementById('promptpay-panel');
+      const choiceRow = document.getElementById('payment-choice-row');
+      if (promptPayPanel) {
+        promptPayPanel.classList.remove('visible');
+        promptPayPanel.style.display = 'none';
+      }
+      if (choiceRow) {
+        choiceRow.classList.remove('hidden');
+        choiceRow.style.display = 'flex';
+      }
+    }
+
+    function backToPaymentChoice() {
+      // Go back from QR panel to the payment method choice screen
+      const promptPayPanel = document.getElementById('promptpay-panel');
+      const choiceRow = document.getElementById('payment-choice-row');
+      if (promptPayPanel) {
+        promptPayPanel.classList.remove('visible');
+        promptPayPanel.style.display = 'none';
+      }
+      if (choiceRow) {
+        choiceRow.classList.remove('hidden');
+        choiceRow.style.display = 'flex';
+      }
+    }
+
+    function savePromptPayQr() {
+      const qrImg = document.getElementById('promptpay-qr');
+      if (!qrImg || !qrImg.src) return;
+      const link = document.createElement('a');
+      link.href = qrImg.src;
+      link.download = `promptpay-qr-${pendingPaymentOrder?.orderId || 'order'}.png`;
+      link.target = '_blank';
+      link.rel = 'noopener';
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    }
+
+    function selectPaymentMethod(method) {
+      if (!pendingPaymentOrder) return;
+      triggerClickSound();
+
+      if (method === 'qr') {
+        const promptPayPanel = document.getElementById('promptpay-panel');
+        const choiceRow = document.getElementById('payment-choice-row');
+        if (promptPayPanel) {
+          promptPayPanel.classList.add('visible');
+          promptPayPanel.style.display = 'flex';
+        }
+        if (choiceRow) {
+          choiceRow.classList.add('hidden');
+          choiceRow.style.display = 'none';
+        }
+        const qrPaymentOrder = {
+          ...pendingPaymentOrder,
+          paymentMethod: currentLangIdx === 0 ? 'QR พร้อมเพย์' : 'PromptPay QR',
+          paymentStatus: 'awaiting_promptpay',
+          paymentNote: currentLangIdx === 0
+            ? 'ลูกค้าเลือก QR พร้อมเพย์ กรุณาเช็คยอดเข้าก่อนเริ่มทำอาหาร'
+            : 'Customer selected PromptPay QR. Please check bank transfer before cooking.'
+        };
+        pendingPaymentOrder = {
+          ...qrPaymentOrder,
+          qrChefNotified: pendingPaymentOrder.qrChefNotified
+        };
+        saveOrderToFirebase(qrPaymentOrder, 'payment').catch(err => {
+          console.warn('Could not update QR payment status:', err);
+        });
+        if (!pendingPaymentOrder.qrChefNotified) {
+          pendingPaymentOrder.qrChefNotified = true;
+          dispatchOrderToDiscord(qrPaymentOrder, () => {}, () => {
+            pendingPaymentOrder.qrChefNotified = false;
+            setPaymentControlsEnabled(true);
+          });
+        }
+        return;
+      }
+
+      if (method === 'cash') {
+        // Disable buttons while submitting, but re-enable if it fails
+        setPaymentControlsEnabled(false);
+        const orderToSend = {
+          ...pendingPaymentOrder,
+          paymentMethod: currentLangIdx === 0 ? 'เงินสด' : 'Cash',
+          paymentStatus: 'awaiting_cash_verification',
+          paymentNote: currentLangIdx === 0 ? 'กรุณาตรวจสอบเงินสด' : 'Verify payment'
+        };
+        dispatchOrderToDiscord(orderToSend, () => {
+          closePaymentPopup();
+          showCashConfirmationWaiting();
+        }, () => {
+          // Re-enable buttons if dispatch fails so user can try again
+          setPaymentControlsEnabled(true);
+        });
+      }
+    }
+
+    function confirmPromptPayPaid() {
+      if (!pendingPaymentOrder) return;
+      triggerClickSound();
+      clearPaymentTimers();
+      setPaymentControlsEnabled(false);
+      const orderToSend = {
+        ...pendingPaymentOrder,
+        paymentMethod: currentLangIdx === 0 ? 'QR พร้อมเพย์' : 'PromptPay QR',
+        paymentStatus: 'paid',
+        paymentNote: currentLangIdx === 0 ? 'ลูกค้ากดชำระแล้วผ่าน QR พร้อมเพย์ กรุณาเช็คยอดเข้า' : 'Customer has paid with prompt pay Please check the income'
+      };
+      dispatchOrderToDiscord(orderToSend, () => {
+        closePaymentPopup();
+      }, () => {
+        // Re-enable buttons if dispatch fails so user can try again or go back
+        setPaymentControlsEnabled(true);
+      });
+    }
+    // Core Web Audio API Sound Synthesizer (Instant & Dependency-Free!)
+    let audioCtx = null;
+    let audioPlaybackUnlocked = false;
+    let audioUnlockTester = null;
+
+    function getAudioContext() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      return audioCtx;
+    }
+
+    function unlockAudioPlayback() {
+      if (audioPlaybackUnlocked) return;
+      audioPlaybackUnlocked = true;
+      const ctx = getAudioContext();
+      if (ctx && ctx.state === 'suspended') {
+        ctx.resume().catch(() => {});
+      }
+      try {
+        audioUnlockTester = new Audio();
+        audioUnlockTester.preload = 'auto';
+        audioUnlockTester.muted = true;
+        audioUnlockTester.playsInline = true;
+        audioUnlockTester.setAttribute('playsinline', 'true');
+        audioUnlockTester.src = new URL('alert.mp3', location.href).href;
+        audioUnlockTester.load();
+        audioUnlockTester.play().then(() => {
+          audioUnlockTester.pause();
+          audioUnlockTester.src = '';
+        }).catch(() => {
+          // ignore failures from preview/play policies; we only need the gesture to unlock
+        });
+      } catch (err) {
+        console.warn('Audio unlock fallback failed:', err);
+      }
+    }
+
+    // Play synthesized high-quality cute hover tick
+    function playHoverTick() {
+      try {
+        const ctx = getAudioContext();
+        if (ctx.state === 'suspended') return; // Browser security lock
+        
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        const filter = ctx.createBiquadFilter();
+        
+        filter.type = 'bandpass';
+        filter.frequency.value = 1400;
+        filter.Q.value = 1.0;
+        
+        osc.connect(filter);
+        filter.connect(gain);
+        gain.connect(ctx.destination);
+        
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(1000, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(500, ctx.currentTime + 0.05);
+        
+        gain.gain.setValueAtTime(0, ctx.currentTime);
+        gain.gain.linearRampToValueAtTime(0.06, ctx.currentTime + 0.005);
+        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.05);
+        
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.055);
+      } catch (e) {
+        console.log("Audio synthesis error:", e);
+      }
+    }
+
+    // Play synthesized cute pop sound for click
+    function playClickPop() {
+      try {
+        const ctx = getAudioContext();
+        if (ctx.state === 'suspended') return;
+        
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(350, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(1200, ctx.currentTime + 0.12);
+        
+        gain.gain.setValueAtTime(0, ctx.currentTime);
+        gain.gain.linearRampToValueAtTime(0.15, ctx.currentTime + 0.01);
+        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.15);
+        
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.16);
+      } catch (e) {}
+    }
+
+    // Play synthesized success sound for checkout
+    function playCheckoutTink() {
+      try {
+        const ctx = getAudioContext();
+        if (ctx.state === 'suspended') return;
+        
+        const now = ctx.currentTime;
+        
+        // Quick dual-note melody
+        [440, 554, 659, 880].forEach((freq, index) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, now + index * 0.08);
+          
+          gain.gain.setValueAtTime(0, now + index * 0.08);
+          gain.gain.linearRampToValueAtTime(0.12, now + index * 0.08 + 0.01);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + index * 0.08 + 0.2);
+          
+          osc.start(now + index * 0.08);
+          osc.stop(now + index * 0.08 + 0.22);
+        });
+      } catch (e) {}
+    }
+
+    // Attempt to play local mp3 sounds with synthesized audio as bulletproof fallback
+    function triggerClickSound() {
+      try {
+        let audio = document.getElementById('sound-click');
+        if (!audio) {
+          audio = document.createElement('audio');
+          audio.id = 'sound-click';
+          audio.preload = 'auto';
+          audio.playsInline = true;
+          audio.setAttribute('playsinline', 'true');
+          audio.src = new URL('click.mp3', location.href).href;
+          document.body.appendChild(audio);
+        }
+        audio.volume = 0.4;
+        audio.currentTime = 0;
+        audio.play().catch(() => {
+          playClickPop();
+        });
+      } catch (err) {
+        console.warn('Click sound failed:', err);
+        playClickPop();
+      }
+    }
+
+    function triggerHoverSound() {
+      try {
+        let audio = document.getElementById('sound-hover');
+        if (!audio) {
+          audio = document.createElement('audio');
+          audio.id = 'sound-hover';
+          audio.preload = 'auto';
+          audio.playsInline = true;
+          audio.setAttribute('playsinline', 'true');
+          audio.src = new URL('hover.mp3', location.href).href;
+          document.body.appendChild(audio);
+        }
+        audio.volume = 0.2;
+        audio.currentTime = 0;
+        audio.play().catch(() => {
+          playHoverTick();
+        });
+      } catch (err) {
+        console.warn('Hover sound failed:', err);
+        playHoverTick();
+      }
+    }
+
+    function playOrderReadySounds() {
+      unlockAudioPlayback();
+      try {
+        let mySound = document.getElementById('sound-order-ready');
+        if (!mySound) {
+          mySound = document.createElement('audio');
+          mySound.id = 'sound-order-ready';
+          mySound.preload = 'auto';
+          mySound.playsInline = true;
+          mySound.setAttribute('playsinline', 'true');
+          mySound.src = new URL('My sound.mp3', location.href).href;
+          document.body.appendChild(mySound);
+        }
+        mySound.volume = 0.7;
+        mySound.currentTime = 0;
+
+        let alertSound = document.getElementById('sound-alert');
+        if (!alertSound) {
+          alertSound = document.createElement('audio');
+          alertSound.id = 'sound-alert';
+          alertSound.preload = 'auto';
+          alertSound.playsInline = true;
+          alertSound.setAttribute('playsinline', 'true');
+          alertSound.src = new URL('alert.mp3', location.href).href;
+          document.body.appendChild(alertSound);
+        }
+        alertSound.volume = 0.7;
+        alertSound.currentTime = 0;
+
+        let alertPlayed = false;
+        const playAlert = () => {
+          if (alertPlayed) return;
+          alertPlayed = true;
+          alertSound.play().catch(err => {
+            console.warn('alert.mp3 playback failed:', err);
+            playOrderReadySynth();
+          });
+        };
+
+        mySound.addEventListener('ended', playAlert, { once: true });
+        mySound.play()
+          .then(() => {
+            console.log('My sound.mp3 playing successfully');
+          })
+          .catch(err => {
+            console.warn('My sound.mp3 playback failed, falling back to alert.mp3:', err);
+            playAlert();
+          });
+
+        // Safety fallback to ensure alert.mp3 plays even if My sound.mp3 hangs or fails silently
+        setTimeout(playAlert, 3000);
+      } catch (err) {
+        console.warn('Order ready sound setup failed:', err);
+        playOrderReadySynth();
+      }
+    }
+
+    function playOrderReadySynth() {
+      try {
+        const ctx = getAudioContext();
+        if (!ctx) return;
+        const startSynth = () => {
+          try {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(880, ctx.currentTime);
+            gain.gain.setValueAtTime(0.04, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.4);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(ctx.currentTime);
+            osc.stop(ctx.currentTime + 0.4);
+          } catch (innerErr) {
+            console.warn('Order ready synth inner play failed:', innerErr);
+          }
+        };
+
+        if (ctx.state === 'suspended') {
+          ctx.resume().then(startSynth).catch(err => {
+            console.warn('AudioContext resume failed:', err);
+          });
+        } else {
+          startSynth();
+        }
+      } catch (err) {
+        console.warn('Order ready synth fallback failed:', err);
+      }
+    }
+
+    // (Theme Switcher Logic removed)
+
+    // Custom Time-based Greeting
+    function initTimeGreeting() {
+      const hr = new Date().getHours();
+      const textEl = document.getElementById('time-greeting-text');
+      const subEl = document.getElementById('time-greeting-sub');
+      if (!textEl || !subEl) return;
+      
+      const timeGreetings = {
+        th: {
+          morning: "อรุณสวัสดิ์!🍳🥞",
+          afternoon: "สวัสดีตอนบ่าย!🍔🔥",
+          evening: "สวัสดีตอนเย็น!🍟🥤",
+          night: "หิวรอบดึกใช่ไหมเอ่ย!🍕🦉",
+          sub_morning: "ขอบคุณที่อุดหนุน?",
+          sub_afternoon: "หนังท้องตึงหนังตาเหี่ยว...",
+          sub_evening: "หิว!!!!!!!!",
+          sub_night: "หิวตอนกลางคืนนี่นรกชัดๆ"
+        },
+        en: {
+          morning: "Good Morning!🍳🥞",
+          afternoon: "Good Afternoon!🍔🔥",
+          evening: "Good Evening!🍟🥤",
+          night: "Late Night Cravings Active!🍕🦉",
+          sub_morning: "Thanks for bought our burger!",
+          sub_afternoon: "This website is made by ssnmhjjg",
+          sub_evening: "HUNGRY!!!!!!!",
+          sub_night: "Hungry at night isn't funny at all..."
+        }
+      };
+      
+      const lang = langCodes[currentLangIdx];
+      const g = timeGreetings[lang];
+      
+      let greet = '';
+      let sub = '';
+      
+      if (hr >= 5 && hr < 11) {
+        greet = g.morning;
+        sub = g.sub_morning;
+      } else if (hr >= 11 && hr < 16) {
+        greet = g.afternoon;
+        sub = g.sub_afternoon;
+      } else if (hr >= 16 && hr < 21) {
+        greet = g.evening;
+        sub = g.sub_evening;
+      } else {
+        greet = g.night;
+        sub = g.sub_night;
+      }
+      
+      textEl.textContent = greet;
+      subEl.textContent = sub;
+    }
+
+    // Step-by-Step Customizer Navigation
+    function selectBurger(name, price, icon) {
+      triggerClickSound();
+      selectedBurgerName = name;
+      selectedBurgerPrice = price;
+      selectedBurgerIcon = icon;
+      // legacy compat
+      selectedPattyName = name;
+      selectedPattyIcon = icon;
+
+      document.getElementById('dot-1').classList.remove('active');
+      document.getElementById('dot-2').classList.add('active');
+
+      document.getElementById('step-1').classList.add('hidden');
+      document.getElementById('step-2').classList.remove('hidden');
+    }
+
+    function selectMeat(meat, icon) {
+      triggerClickSound();
+      selectedMeatName = meat;
+      selectedMeatIcon = icon;
+
+      document.getElementById('dot-2').classList.remove('active');
+      document.getElementById('dot-3').classList.add('active');
+
+      document.getElementById('step-2').classList.add('hidden');
+      updateReceiptSummaries();
+      document.getElementById('step-3').classList.remove('hidden');
+    }
+
+    function goBack(toStep) {
+      triggerClickSound();
+
+      if (toStep === 1) {
+        // Meat step → Burger step
+        document.getElementById('dot-2').classList.remove('active');
+        document.getElementById('dot-1').classList.add('active');
+        document.getElementById('step-2').classList.add('hidden');
+        document.getElementById('step-1').classList.remove('hidden');
+      } else if (toStep === 2) {
+        // Summary step → Meat step
+        document.getElementById('dot-3').classList.remove('active');
+        document.getElementById('dot-2').classList.add('active');
+        document.getElementById('step-3').classList.add('hidden');
+        document.getElementById('step-2').classList.remove('hidden');
+      }
+    }
+
+    function resetOrder() {
+      triggerClickSound();
+      // Reset all dots
+      ['dot-2','dot-3'].forEach(id => document.getElementById(id).classList.remove('active'));
+      document.getElementById('dot-1').classList.add('active');
+      // Hide all steps, show step 1
+      ['step-2','step-3'].forEach(id => document.getElementById(id).classList.add('hidden'));
+      document.getElementById('step-1').classList.remove('hidden');
+      // Reset all selections
+      selectedBurgerName = '';
+      selectedBurgerPrice = 0;
+      selectedBurgerIcon = '';
+      selectedMeatName = '';
+      selectedMeatIcon = '';
+      selectedPattyName = '';
+      const noteInput = document.getElementById('special-note-input');
+      if (noteInput) noteInput.value = '';
+      const queueInfoEl = document.getElementById('status-queue-info');
+      if (queueInfoEl) queueInfoEl.style.display = 'none';
+      const queueAheadEl = document.getElementById('status-queue-ahead');
+      if (queueAheadEl) queueAheadEl.style.display = 'none';
+    }
+
+    function dispatchOrderToDiscord(orderPayload, afterSuccess, onError) {
+      // ── Firebase-only dispatch (no Discord bot required) ──
+      const submitBtn = pendingSubmitButton || document.querySelector('button[onclick="submitOrder()"]');
+      const originalText = pendingSubmitButtonHtml || (submitBtn && submitBtn.innerHTML);
+      const orderId = orderPayload.orderId;
+      const isThai = currentLangIdx === 0;
+
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = isThai ? 'กำลังส่งให้เชฟ... 🍳' : 'Sending to Chef... 🍳';
+      }
+
+      const completeOrderSuccess = async () => {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = originalText;
+        }
+
+        saveRecentOrder(orderPayload);
+        playCheckoutTink();
+
+        const rect = document.getElementById('order-pad').getBoundingClientRect();
+        const x = rect.left + rect.width / 2;
+        const y = rect.top + rect.height / 2;
+        for (let i = 0; i < 20; i++) {
+          createSpark({ clientX: x + (Math.random() - 0.5) * 100, clientY: y + (Math.random() - 0.5) * 100 });
+        }
+
+        const paymentText = orderPayload.paymentMethod
+          ? `\n${isThai ? 'การชำระเงิน' : 'Payment'}: ${orderPayload.paymentMethod}`
+          : '';
+        await siteAlert(
+          isThai
+            ? `ส่งออเดอร์แล้ว! [ออเดอร์ #${orderId}]${paymentText}\n\nรอเชฟยืนยันยอดเงินก่อนที่จะทำอาหารให้คุณ... โปรดจำหมายเลขออเดอร์ให้ครบท่วน!`
+            : `Order Placed! [Order #${orderId}]${paymentText}\n\nWaiting for the chef to confirm payment. Please remember your order number!`,
+          isThai ? 'สั่งออเดอร์แล้ว' : 'Order placed'
+        );
+        setOrderCooldown();
+        if (typeof afterSuccess === 'function') afterSuccess();
+        resetOrder();
+      };
+
+      // Save to Firebase and complete
+      saveOrderToFirebase(orderPayload, 'pending')
+        .then(() => {
+          completeOrderSuccess();
+        })
+        .catch(err => {
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalText;
+          }
+          setPaymentControlsEnabled(true);
+          if (typeof onError === 'function') onError();
+          console.error('Firebase order save failed:', err);
+          alert(isThai
+            ? 'โอ๊ะ! ไม่สามารถส่งออเดอร์ได้ กรุณาตรวจสอบอินเทอร์เน็ต'
+            : 'Oh no! Could not send your order. Please check your internet connection.');
+        });
+    }
+
+    // ── legacy placeholder to avoid reference errors ──
+    function _discardedDiscordFallback() {
+      const submitBtn = pendingSubmitButton || document.querySelector('button[onclick="submitOrder()"]');
+      const originalText = pendingSubmitButtonHtml || submitBtn.innerHTML;
+      const orderId = orderPayload.orderId;
+      const timeStr = orderPayload.time;
+      const isThai = currentLangIdx === 0;
+
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = isThai ? 'กำลังส่งให้เชฟ... 🍳' : 'Sending to Chef... 🍳';
+      }
+
+      const completeOrderSuccess = async () => {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = originalText;
+        }
+
+        saveOrderToFirebase(orderPayload, 'pending').catch(err => {
+          console.warn('Could not save dispatched order:', err);
+        });
+        saveRecentOrder(orderPayload);
+
+        playCheckoutTink();
+
+        const rect = document.getElementById('order-pad').getBoundingClientRect();
+        const x = rect.left + rect.width / 2;
+        const y = rect.top + rect.height / 2;
+
+        for (let i = 0; i < 20; i++) {
+          createSpark({ clientX: x + (Math.random() - 0.5) * 100, clientY: y + (Math.random() - 0.5) * 100 });
+        }
+
+        const paymentText = orderPayload.paymentMethod
+          ? `\n${isThai ? 'การชำระเงิน' : 'Payment'}: ${orderPayload.paymentMethod}`
+          : '';
+        await siteAlert(isThai
+          ? `ส่งออเดอร์แล้ว! [ออเดอร์ #${orderId}]${paymentText}\n\n รอเชฟยืนยันยอดเงินก่อนที่จะทำอาหารให้คุณ... โปรดจำหมายเลขออเดอร์ให้ครบท่วน!`
+          : `Order Placed! [Order #${orderId}]${paymentText}\n\nWaiting Chef to confirm payment...`, isThai ? 'สั่งออเดอร์แล้ว' : 'Order placed');
+        setOrderCooldown();
+        if (typeof afterSuccess === 'function') afterSuccess();
+        resetOrder();
+      };
+
+      fetch('/api/order', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(orderPayload)
+      })
+      .then(res => {
+        if (!res.ok) throw new Error('Backend function not running or failed');
+        return res.json();
+      })
+      .then(data => {
+        if (data.success) {
+          completeOrderSuccess();
+        } else {
+          throw new Error(data.error || 'Backend failed');
+        }
+      })
+      .catch(err => {
+        console.warn('Backend endpoint unavailable (e.g. running on Live Server). Falling back to direct browser post...', err);
+
+        let DISCORD_WEBHOOK_URL = localStorage.getItem('bitty-burger-local-webhook');
+        if (!DISCORD_WEBHOOK_URL) {
+          DISCORD_WEBHOOK_URL = prompt(isThai 
+            ? 'กรุณากรอก Discord Webhook URL สำหรับการทดสอบเครื่องของคุณ (จะบันทึกในบราวเซอร์นี้เท่านั้น):' 
+            : 'Please enter your Discord Webhook URL for local testing (this will only be saved in your browser):');
+          if (DISCORD_WEBHOOK_URL) {
+            localStorage.setItem('bitty-burger-local-webhook', DISCORD_WEBHOOK_URL.trim());
+          }
+        }
+        if (!DISCORD_WEBHOOK_URL) {
+          alert(isThai ? 'ไม่ได้ระบุ Webhook ไม่สามารถส่งออเดอร์ไปที่ Discord' : 'Webhook URL not provided. Order could not be sent to Discord.');
+          if (onError) onError();
+          return;
+        }
+        const SITE_URL = 'https://black-burger-ssnmhjjg-ice.vercel.app';
+        const paymentNote = orderPayload.paymentNote || (orderPayload.paymentMethod
+          ? `${isThai ? 'วิธีชำระเงิน' : 'Payment method'}: ${orderPayload.paymentMethod}`
+          : (isThai ? 'ยังไม่ได้เลือกวิธีชำระเงิน' : 'Payment method not selected'));
+
+        const discordEmbedPayload = {
+          embeds: [
+            {
+              title: "🍔 Big Black Burger 🖤",
+              description: "THERE'S A NEW ORDER!! | ออเดอร์มาเเล้ว!!",
+              color: orderPayload.paymentStatus === 'awaiting_cash_verification' ? 16750848 : 14753096,
+              fields: [
+                {
+                  name: "👤 Customer Name | ชื่อลูกค้า",
+                  value: `**${orderPayload.customerName || 'Guest'}**`,
+                  inline: false
+                },
+                {
+                  name: "📋 Value Order | หมายเลขออเดอร์",
+                  value: `\`#${orderId}\``,
+                  inline: true
+                },
+                {
+                  name: "🍔 Burger | เบอร์เกอร์",
+                  value: `**${orderPayload.patty}**`,
+                  inline: true
+                },
+                {
+                  name: "Special Note",
+                  value: orderPayload.specialNote ? `**${orderPayload.specialNote}**` : "None",
+                  inline: false
+                },
+                {
+                  name: "💳 Payment",
+                  value: `**${orderPayload.paymentMethod || 'Unknown'}**\n${paymentNote}`,
+                  inline: false
+                },
+                {
+                  name: "🕒 Order Time | เวลาที่สั่ง",
+                  value: `\`${timeStr}\``,
+                  inline: false
+                },
+                {
+                  name: "⏳ Order Status",
+                  value: orderPayload.paymentStatus === 'awaiting_cash_verification'
+                    ? (isThai ? "**PENDING** — ลูกค้าจ่ายเงินสด" : "**PENDING** — Verify payment timeout five minute")
+                    : (isThai ? "**PENDING** — ลูกค้ากดชำระแล้ว" : "**PENDING** — Payment marked paid by customer"),
+                  inline: false
+                }
+              ],
+              footer: {
+                text: "ไปปรับใช้ชาติได้เเล้วเจ้าพวกไพร่!!!",
+                icon_url: "https://ssnmhjjg-gg.vercel.app/aaaaaa.gif"
+              },
+              timestamp: new Date().toISOString()
+            }
+          ]
+        };
+
+        fetch(DISCORD_WEBHOOK_URL + '?wait=true', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(discordEmbedPayload)
+        })
+        .then(res => {
+          if (!res.ok) throw new Error('Direct webhook call returned error status');
+          return res.json();
+        })
+        .then(msgData => {
+          const mid = msgData.id;
+          const cookingLink = `${SITE_URL}/api/status?mid=${mid}&action=cooking&oid=${orderId}`;
+          const doneLink = `${SITE_URL}/api/status?mid=${mid}&action=done&oid=${orderId}`;
+          const cancelLink = `${SITE_URL}/api/status?mid=${mid}&action=cancel&oid=${orderId}`;
+          const confirmLink = `${SITE_URL}/api/status?mid=${mid}&action=confirm_payment&oid=${orderId}`;
+          const needsConfirmation = orderPayload.paymentStatus === 'awaiting_promptpay' || orderPayload.paymentStatus === 'awaiting_cash_verification';
+
+          discordEmbedPayload.embeds[0].description += `\n\n**📊 Update Order Status:**\n[🍳 Cooking](${cookingLink}) · [✅ Done](${doneLink})`;
+          if (needsConfirmation) {
+            discordEmbedPayload.embeds[0].description += ` · [💵 Confirm Payment](${confirmLink})`;
+          }
+          discordEmbedPayload.embeds[0].description += ` · [❌ Cancel](${cancelLink})`;
+
+          const buttons = [
+            { type: 2, style: 1, label: "🍳 Cooking", custom_id: `cooking:${orderId}:${mid}` },
+            { type: 2, style: 3, label: "✅ Done", custom_id: `done:${orderId}:${mid}` }
+          ];
+          if (needsConfirmation) {
+            buttons.push({ type: 2, style: 2, label: "💵 Confirm Payment", custom_id: `confirm_payment:${orderId}:${mid}` });
+          }
+          buttons.push({ type: 2, style: 4, label: "❌ Cancel", custom_id: `cancel:${orderId}:${mid}` });
+
+          discordEmbedPayload.components = [
+            {
+              type: 1,
+              components: buttons
+            }
+          ];
+
+          return fetch(`${DISCORD_WEBHOOK_URL}/messages/${mid}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(discordEmbedPayload)
+          });
+        })
+        .then(() => {
+          completeOrderSuccess();
+        })
+        .catch(fallbackErr => {
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalText;
+          }
+          setPaymentControlsEnabled(true);
+          if (typeof onError === 'function') onError();
+          console.error('All order dispatch methods failed:', fallbackErr);
+          alert(isThai
+            ? 'โอ๊ะ! ระบบส่งออเดอร์มีปัญหา กรุณาตรวจสอบอินเทอร์เน็ตหรือ Discord Webhook'
+            : 'Oh no! The kitchen wifi is down. Please check your internet connection or Discord Webhook!');
+        });
+      });
+    }
+
+    function submitOrder() {
+      const cooldownRemaining = getOrderCooldownRemainingMs();
+      if (cooldownRemaining > 0) {
+        alert(getOrderCooldownMessage(cooldownRemaining, currentLangIdx === 0));
+        updateOrderCooldownUi();
+        return;
+        alert(currentLangIdx === 0
+          ? `กรุณารอ ${formatCooldown(cooldownRemaining)} ก่อนสั่งอีกครั้ง`
+          : `Please wait ${formatCooldown(cooldownRemaining)} before ordering again.`);
+        updateOrderCooldownUi();
+        return;
+      }
+      const orderId = Math.floor(1000 + Math.random() * 9000);
+      const timeStr = new Date().toLocaleString();
+      
+      const submitBtn = document.querySelector('button[onclick="submitOrder()"]');
+      const originalText = submitBtn.innerHTML;
+      submitBtn.disabled = true;
+      
+      const isThai = currentLangIdx === 0;
+      submitBtn.innerHTML = isThai ? 'กำลังส่งให้เชฟ... 🍳' : 'Sending to Chef... 🍳';
+
+       async function getNextQueueNumber() {
+        try {
+          const res = await fetch(`${FIREBASE_DATABASE_URL}/orders.json`);
+          if (res.ok) {
+            const allOrders = await res.json();
+            if (!allOrders) {
+              return 1;
+            }
+
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = now.getMonth();
+            const date = now.getDate();
+            const hours = now.getHours();
+
+            // Reset queue at 6 AM and 11 PM local time each day
+            let periodStart;
+            if (hours >= 23) {
+              periodStart = new Date(year, month, date, 23, 0, 0, 0);
+            } else if (hours >= 6) {
+              periodStart = new Date(year, month, date, 6, 0, 0, 0);
+            } else {
+              periodStart = new Date(year, month, date - 1, 23, 0, 0, 0);
+            }
+
+            const periodOrders = Object.values(allOrders).filter(o => {
+              if (!o) return false;
+              if (o.createdAt) {
+                const orderDate = new Date(o.createdAt);
+                return orderDate >= periodStart && orderDate <= now;
+              }
+              return false;
+            });
+
+            return periodOrders.length + 1;
+          }
+        } catch (err) {
+          console.warn('Could not fetch queue count, defaulting to random:', err);
+        }
+        return Math.floor(1 + Math.random() * 20);
+      }
+      
+      getNextQueueNumber().then(queueNumber => {
+        const orderPayload = {
+          orderId: orderId,
+          customerClientId: getOrCreateCustomerClientId(),
+          customerName: customerName,
+          burger: `${selectedBurgerName} ${selectedBurgerIcon}`,
+          meat: `${selectedMeatName} ${selectedMeatIcon}`,
+          patty: `${selectedBurgerName} (${selectedMeatName}) ${selectedBurgerIcon}`,
+          specialNote: getSpecialNote(),
+          time: timeStr,
+          total: calculateOrderTotal(),
+          queueNumber: queueNumber
+        };
+        openPaymentPopup(orderPayload, submitBtn, originalText);
+      });
+      return;
+
+    } // end _discardedDiscordFallback
+
+      // (dead code below — kept only as reference; execution never reaches here due to return above)
+      const completeOrderSuccess = () => {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalText;
+        
+        // Play triumphant tink sound!
+        playCheckoutTink();
+        
+        // Animate a massive heart/star burst!
+        const rect = document.getElementById('order-pad').getBoundingClientRect();
+        const x = rect.left + rect.width / 2;
+        const y = rect.top + rect.height / 2;
+        
+        for (let i = 0; i < 20; i++) {
+          createSpark({ clientX: x + (Math.random() - 0.5) * 100, clientY: y + (Math.random() - 0.5) * 100 });
+        }
+        
+        // Show cute success popup (Translated dynamically!)
+        const alertMsg = isThai 
+          ? `🍔 ส่งรายการสั่งซื้อเรียบร้อย! [หมายเลขสั่งซื้อ #${orderId}]\n\nชุดคอมโบของคุณ:\n- ${selectedBurgerName} ${selectedBurgerIcon}\n- เนื้อ: ${selectedMeatName} ${selectedMeatIcon}\n\nระบบได้ส่งการแจ้งเตือนไปยังบอท Discord แล้ว! เชฟกำลังเตรียมแบล็คเบอร์เกอร์แสนอร่อยให้คุณอยู่ครับ! ♥`
+          : `🍔 Order Placed! [Order #${orderId}]\n\nYour combo:\n- ${selectedBurgerName} ${selectedBurgerIcon}\n- Meat: ${selectedMeatName} ${selectedMeatIcon}\n\nOur Discord Bot has been notified! Chef is prepping your charcoal burger now! ♥`;
+        alert(alertMsg);
+        resetOrder();
+      };
+
+      // 1. First try calling the Vercel backend /api/order securely
+      fetch('/api/order', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(orderPayload)
+      })
+      .then(res => {
+        if (!res.ok) throw new Error('Backend function not running or failed');
+        return res.json();
+      })
+      .then(data => {
+        if (data.success) {
+          completeOrderSuccess();
+        } else {
+          throw new Error(data.error || 'Backend failed');
+        }
+      })
+      .catch(err => {
+        console.warn('Backend endpoint unavailable (e.g. running on Live Server). Falling back to direct browser post...', err);
+        
+        let DISCORD_WEBHOOK_URL = localStorage.getItem('bitty-burger-local-webhook');
+        if (!DISCORD_WEBHOOK_URL) {
+          DISCORD_WEBHOOK_URL = prompt(isThai 
+            ? 'กรุณากรอก Discord Webhook URL สำหรับการทดสอบเครื่องของคุณ (จะบันทึกในบราวเซอร์นี้เท่านั้น):' 
+            : 'Please enter your Discord Webhook URL for local testing (this will only be saved in your browser):');
+          if (DISCORD_WEBHOOK_URL) {
+            localStorage.setItem('bitty-burger-local-webhook', DISCORD_WEBHOOK_URL.trim());
+          }
+        }
+        if (!DISCORD_WEBHOOK_URL) {
+          alert(isThai ? 'ไม่ได้ระบุ Webhook ไม่สามารถส่งออเดอร์ไปที่ Discord' : 'Webhook URL not provided. Order could not be sent to Discord.');
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = originalText;
+          return;
+        }
+        const SITE_URL = 'https://black-burger-ssnmhjjg-ice.vercel.app';
+        
+        const discordEmbedPayload = {
+          embeds: [
+            {
+              title: "🍔 Big Black Burger 🖤",
+              description: "THERE'S A NEW ORDER!! | ออเดอร์มาเเล้ว!!",
+              color: 14753096, // Hex #e11d48 in decimal (Strawberry Rose Red)
+              fields: [
+                {
+                  name: "👤 Customer Name | ชื่อลูกค้า",
+                  value: `**${customerName  || 'Guest'}**`,
+                  inline: false
+                },
+                {
+                  name: "📋 Value Order | หมายเลขออเดอร์",
+                  value: `\`#${orderId}\``,
+                  inline: true
+                },
+                {
+                  name: "🍔 Burger | เบอร์เกอร์",
+                  value: `**${selectedPattyName} ${selectedPattyIcon}**`,
+                  inline: true
+                },
+                {
+                  name: "🔢 Queue Number | หมายเลขคิว",
+                  value: `**Queue #${orderPayload.queueNumber || 'N/A'}**`,
+                  inline: true
+                },
+                {
+                  name: "🕒 Order Time | เวลาที่สั่ง",
+                  value: `\`${timeStr}\``,
+                  inline: false
+                },
+                {
+                  name: "⏳ Order Status | สถานะออเดอร์",
+                  value: "**PENDING** — Waiting for chef...",
+                  inline: false
+                }
+              ],
+              footer: {
+                text: "ไปรับใช้ชาติได้เเล้วเจ้าพวกไพร่!!!",
+                icon_url: "https://ssnmhjjg-gg.vercel.app/aaaaaa.gif"
+              },
+              timestamp: new Date().toISOString()
+            }
+          ]
+        };
+
+        // Send with ?wait=true to get message ID back
+        fetch(DISCORD_WEBHOOK_URL + '?wait=true', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(discordEmbedPayload)
+        })
+        .then(res => {
+          if (!res.ok) throw new Error('Direct webhook call returned error status');
+          return res.json();
+        })
+        .then(msgData => {
+          // Patch the message to add Cooking/Done/Cancel status links
+          const mid = msgData.id;
+          const cookingLink = `${SITE_URL}/api/status?mid=${mid}&action=cooking&oid=${orderId}`;
+          const doneLink = `${SITE_URL}/api/status?mid=${mid}&action=done&oid=${orderId}`;
+          const cancelLink = `${SITE_URL}/api/status?mid=${mid}&action=cancel&oid=${orderId}`;
+
+          discordEmbedPayload.embeds[0].description += `\n\n**📊 Update Order Status:**\n[🍳 Cooking](${cookingLink}) · [✅ Done](${doneLink}) · [❌ Cancel](${cancelLink})`;
+
+          return fetch(`${DISCORD_WEBHOOK_URL}/messages/${mid}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(discordEmbedPayload)
+          });
+        })
+        .then(() => {
+          completeOrderSuccess();
+        })
+        .catch(fallbackErr => {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = originalText;
+          console.error('All order dispatch methods failed:', fallbackErr);
+          const errorMsg = isThai 
+            ? '❌ โอ๊ะโอ! อินเทอร์เน็ตในห้องครัวขัดข้อง กรุณาตรวจสอบการเชื่อมต่อของคุณหรือเเจ้งคุณฟ้า Discord Webhook! 📡'
+            : '❌ Oh no! The kitchen wifi is down. Please check your internet connection or Discord Webhook! 📡';
+          alert(errorMsg);
+        });
+      });
+
+    // Custom Cursor & Sparks (Only on Desktop Screens)
+    const cursor = document.getElementById('custom-cursor');
+    const isMobile = window.matchMedia('(max-width: 640px)').matches;
+
+    if (!isMobile) {
+      const gridOverlay = document.querySelector('.grid-overlay');
+      document.addEventListener('mousemove', e => {
+        // Cursor movement
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+        
+        // Magnetic grid effect (drifts slightly towards the user's cursor)
+        if (gridOverlay) {
+          const dx = (e.clientX - window.innerWidth / 2) / (window.innerWidth / 2);
+          const dy = (e.clientY - window.innerHeight / 2) / (window.innerHeight / 2);
+          const shiftX = dx * 16; // Shift up to 16px towards mouse
+          const shiftY = dy * 16;
+          gridOverlay.style.transform = `scale(1.05) translate(${shiftX}px, ${shiftY}px)`;
+        }
+      });
+
+      // Scale cursor up on clickable elements
+      const clickables = 'a, button, [onclick], input';
+      document.addEventListener('mouseover', e => {
+        if (e.target.closest(clickables)) {
+          cursor.classList.add('hovering');
+        }
+      });
+      document.addEventListener('mouseout', e => {
+        if (e.target.closest(clickables)) {
+          cursor.classList.remove('hovering');
+        }
+      });
+    }
+
+    // Playful Spark Burst on click (adapted for cute food hearts/stars!)
+    const sparkSymbols = ['❤️', '✨', '⭐', '🍔', '🍟', '🥤'];
+    function createSpark(e) {
+      const spark = document.createElement('div');
+      spark.className = 'playful-spark';
+      spark.textContent = sparkSymbols[Math.floor(Math.random() * sparkSymbols.length)];
+      
+      // Random directions
+      const mx = (Math.random() - 0.5) * 120 + 'px';
+      const my = (Math.random() - 0.5) * 120 - 40 + 'px'; // tend to drift slightly upwards
+      
+      spark.style.cssText = `
+        left: ${e.clientX}px;
+        top: ${e.clientY}px;
+        --mx: ${mx};
+        --my: ${my};
+      `;
+      
+      document.body.appendChild(spark);
+      setTimeout(() => spark.remove(), 800);
+    }
+
+    document.addEventListener('pointerdown', unlockAudioPlayback, { once: true, passive: true });
+    document.addEventListener('touchstart', unlockAudioPlayback, { once: true, passive: true });
+    document.addEventListener('click', e => {
+      unlockAudioPlayback();
+      
+      // Create cute burst
+      for (let i = 0; i < 4; i++) {
+        createSpark(e);
+      }
+    });
+
+    // Tactile Hover Sound Triggering (throttled to avoid sound machine gunning)
+    let lastHoverTime = 0;
+    const hoverThrottleMs = 120;
+
+    document.addEventListener('mouseover', e => {
+      if (e.target.closest('a, button, [onclick], input')) {
+        const now = Date.now();
+        if (now - lastHoverTime > hoverThrottleMs) {
+          lastHoverTime = now;
+          triggerHoverSound();
+        }
+      }
+    });
+
+    // Initialize Page
+    window.addEventListener('DOMContentLoaded', () => {
+      initLanguage(); // Initialize language switching and load Thai automaticly!
+      startInitialCustomerOrderTracker();
+      
+      // Physics Engine Loop
+      function physicsLoop() {
+        floatingBurgers.forEach(b => b.update());
+        requestAnimationFrame(physicsLoop);
+      }
+      requestAnimationFrame(physicsLoop);
+      
+      // Pre-activate click listener for wiggles
+      document.body.addEventListener('click', () => {
+        // Just empty to trigger audio resume easily
+      });
+
+      // ══ PARTICLE BACKGROUND ENGINE ══
+      initParticleCanvas();
+
+      // Silently clean up expired orders (older than 12h) from Firebase
+      cleanExpiredFirebaseOrders();
+    });
+
+    function initParticleCanvas() {
+      const canvas = document.getElementById('bg-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+
+      function resize() {
+        canvas.width  = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      resize();
+      window.addEventListener('resize', resize);
+
+      // Luxury ambient flame & warm amber bokeh light glows
+      const GLOWS = [
+        'rgba(239,68,68,',    // flame crimson
+        'rgba(245,158,11,',   // warm amber gold
+        'rgba(220,38,38,',    // deep ember red
+        'rgba(251,191,36,',   // golden ember
+      ];
+
+      class BokehParticle {
+        constructor() { this.reset(true); }
+        reset(fromBottom = false) {
+          this.x      = Math.random() * canvas.width;
+          this.y      = fromBottom ? canvas.height + 30 : Math.random() * canvas.height;
+          this.size   = Math.random() * 3.5 + 1.2;
+          this.speedY = -(Math.random() * 0.4 + 0.15);
+          this.speedX = (Math.random() - 0.5) * 0.25;
+          this.alpha  = Math.random() * 0.45 + 0.15;
+          this.alphaDir = (Math.random() < 0.5 ? 1 : -1) * 0.002;
+          this.glow   = GLOWS[Math.floor(Math.random() * GLOWS.length)];
+          this.pulse  = Math.random() * Math.PI * 2;
+        }
+        update() {
+          this.x += this.speedX + Math.sin(this.pulse) * 0.2;
+          this.y += this.speedY;
+          this.pulse += 0.015;
+          this.alpha += this.alphaDir;
+          if (this.alpha > 0.65) this.alphaDir = -Math.abs(this.alphaDir);
+          if (this.alpha < 0.1) this.alphaDir = Math.abs(this.alphaDir);
+          if (this.y < -40) this.reset(true);
+        }
+        draw(ctx) {
+          // Soft radial bokeh glow
+          const glowRadius = this.size * 6;
+          const grad = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, glowRadius);
+          grad.addColorStop(0,   this.glow + this.alpha + ')');
+          grad.addColorStop(0.5, this.glow + (this.alpha * 0.35) + ')');
+          grad.addColorStop(1,   this.glow + '0)');
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, glowRadius, 0, Math.PI * 2);
+          ctx.fillStyle = grad;
+          ctx.fill();
+
+          // Luminous ember core
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.size * 0.8, 0, Math.PI * 2);
+          ctx.fillStyle = this.glow + Math.min(this.alpha * 1.5, 1) + ')';
+          ctx.fill();
+        }
+      }
+
+      const COUNT = Math.min(85, Math.floor((canvas.width * canvas.height) / 13000));
+      const particles = Array.from({ length: COUNT }, () => new BokehParticle());
+
+      function drawFrame() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // Deep obsidian base fill
+        ctx.fillStyle = '#070709';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        particles.forEach(p => { p.update(); p.draw(ctx); });
+        requestAnimationFrame(drawFrame);
+      }
+      drawFrame();
+    }
+  </script>
+</body>
+</html>

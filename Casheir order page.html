@@ -1,0 +1,1393 @@
+<!DOCTYPE html>
+<html lang="th" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-select=no">
+  <title>🖤 Emperor Burger — Cashier Kiosk Order 🍔</title>
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Emperor Burger Cashier Order Kiosk System for Customers.">
+  <meta name="theme-color" content="#ef4444">
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Prompt:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Mitr:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ══ LUXURY DESIGN TOKENS & RESPONSIVE THEME ══ */
+    :root {
+      --bg-primary: #070709;
+      --bg-surface: #121215;
+      --card-glass: rgba(24, 24, 27, 0.75);
+      --card-glass-hover: rgba(39, 39, 42, 0.85);
+      --border-glass: rgba(255, 255, 255, 0.08);
+      --border-glow: rgba(239, 68, 68, 0.35);
+      --accent-flame: #ef4444;
+      --accent-flame-hover: #dc2626;
+      --accent-amber: #f59e0b;
+      --accent-amber-glow: rgba(245, 158, 11, 0.3);
+      --text-light: #fafaf9;
+      --text-muted: #a1a1aa;
+      --ease-silk: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      margin: 0; padding: 0;
+    }
+
+    html[lang="th"] * {
+      font-family: 'Prompt', 'Mitr', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-light);
+      overflow-x: hidden;
+      min-height: 100vh;
+      transition: background-color 0.4s ease;
+    }
+
+    /* Smooth custom scrollbar */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #070709; }
+    ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 99px; }
+    ::-webkit-scrollbar-thumb:hover { background: #ef4444; }
+
+    /* Glassmorphism Surface Base */
+    .glass-panel {
+      background: var(--card-glass);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border-glass);
+      border-radius: 24px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      transition: transform 0.35s var(--ease-silk), box-shadow 0.35s var(--ease-silk), border-color 0.35s var(--ease-silk);
+    }
+
+    .glass-panel:hover {
+      border-color: rgba(239, 68, 68, 0.3);
+      box-shadow: 0 25px 60px rgba(239, 68, 68, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    /* Buttons */
+    .btn-flame {
+      background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+      color: #ffffff;
+      font-weight: 700;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 16px;
+      box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      transition: transform 0.25s var(--ease-spring), box-shadow 0.25s ease, filter 0.25s ease;
+      cursor: pointer;
+    }
+    .btn-flame:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 12px 35px rgba(239, 68, 68, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+      filter: brightness(1.1);
+    }
+    .btn-flame:active {
+      transform: translateY(1px) scale(0.98);
+      box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+    }
+
+    .btn-glass {
+      background: rgba(39, 39, 42, 0.7);
+      backdrop-filter: blur(8px);
+      color: var(--text-light);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      transition: transform 0.25s var(--ease-silk), background-color 0.25s ease, border-color 0.25s ease;
+      cursor: pointer;
+    }
+    .btn-glass:hover {
+      background: rgba(63, 63, 70, 0.9);
+      border-color: rgba(255, 255, 255, 0.25);
+      transform: translateY(-2px);
+    }
+    .btn-glass:active {
+      transform: translateY(1px);
+    }
+
+    /* Menu Option Card Button */
+    .menu-option-btn {
+      background: rgba(24, 24, 27, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      transition: all 0.35s var(--ease-silk);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+    .menu-option-btn:hover {
+      background: rgba(39, 39, 42, 0.8);
+      border-color: rgba(239, 68, 68, 0.4);
+      transform: translateY(-3px) scale(1.01);
+      box-shadow: 0 10px 30px rgba(239, 68, 68, 0.15);
+    }
+    .menu-option-btn:active {
+      transform: translateY(1px) scale(0.99);
+    }
+
+    /* Step Dots */
+    .step-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      background-color: rgba(39, 39, 42, 0.8);
+      transition: all 0.4s var(--ease-spring);
+    }
+    .step-dot.active {
+      background-color: #ef4444;
+      border-color: #f59e0b;
+      box-shadow: 0 0 15px rgba(239, 68, 68, 0.8);
+      transform: scale(1.2);
+    }
+
+    /* Background particles canvas */
+    #bg-canvas {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      z-index: -30; pointer-events: none;
+    }
+
+    .grid-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      z-index: -10;
+      background-image:
+        radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+        linear-gradient(rgba(239, 68, 68, 0.02) 1px, transparent 1px);
+      background-size: 32px 32px;
+      pointer-events: none;
+    }
+
+    .aurora-blob {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(120px);
+      z-index: -20;
+      pointer-events: none;
+      opacity: 0.45;
+    }
+    .aurora-1 {
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(239, 68, 68, 0.4) 0%, transparent 70%);
+      top: -200px; left: -150px;
+      animation: aurora-float 16s ease-in-out infinite alternate;
+    }
+    .aurora-2 {
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(245, 158, 11, 0.35) 0%, transparent 70%);
+      bottom: -200px; right: -150px;
+      animation: aurora-float 20s ease-in-out infinite alternate-reverse;
+    }
+    @keyframes aurora-float {
+      0% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(60px, 40px) scale(1.15); }
+      100% { transform: translate(-30px, 70px) scale(0.9); }
+    }
+
+    /* ══ POPUPS & OVERLAYS ══ */
+    #name-popup-overlay,
+    #warning-popup-overlay,
+    #site-dialog-overlay,
+    #payment-popup-overlay,
+    #cash-confirm-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(9, 9, 11, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s var(--ease-silk);
+      padding: 20px;
+    }
+
+    #name-popup-overlay.visible,
+    #warning-popup-overlay.visible,
+    #site-dialog-overlay.visible,
+    #payment-popup-overlay.visible,
+    #cash-confirm-overlay.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    #name-popup-box,
+    #warning-popup-box,
+    #site-dialog-box,
+    #payment-popup-box,
+    #cash-confirm-box {
+      background: rgba(24, 24, 27, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 25px 70px rgba(0, 0, 0, 0.8), 0 0 40px rgba(239, 68, 68, 0.2);
+      border-radius: 28px;
+      padding: 32px;
+      max-width: 440px;
+      width: 100%;
+      text-align: center;
+      transform: scale(0.9) translateY(20px);
+      transition: transform 0.35s var(--ease-spring);
+    }
+
+    #name-popup-overlay.visible #name-popup-box,
+    #payment-popup-overlay.visible #payment-popup-box,
+    #cash-confirm-overlay.visible #cash-confirm-box {
+      transform: scale(1) translateY(0);
+    }
+
+    #name-popup-input {
+      width: 100%;
+      padding: 14px 18px;
+      margin: 18px 0;
+      background: rgba(9, 9, 11, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 14px;
+      color: #fafaf9;
+      font-size: 16px;
+      outline: none;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    #name-popup-input:focus {
+      border-color: #ef4444;
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.25);
+    }
+
+    #name-popup-btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+      color: white;
+      border: none;
+      border-radius: 14px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4);
+      transition: transform 0.25s var(--ease-spring);
+    }
+    #name-popup-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    /* Language Switcher Floating Pill */
+    .lang-container {
+      position: fixed;
+      top: 20px; right: 20px;
+      z-index: 9990;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    #lang-switcher {
+      background: rgba(24, 24, 27, 0.85);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 99px;
+      padding: 6px 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+      font-size: 12px;
+      color: #fafaf9;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+      transition: all 0.3s var(--ease-silk);
+    }
+    #lang-switcher:hover {
+      border-color: #ef4444;
+      box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
+      transform: translateY(-2px);
+    }
+
+    /* Payment modal styling */
+    .payment-choice-row {
+      display: flex; gap: 12px; margin-top: 16px; width: 100%;
+    }
+    .payment-choice-row.hidden {
+      display: none !important;
+    }
+    .payment-choice-btn {
+      flex: 1; padding: 14px;
+      background: rgba(39, 39, 42, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 14px;
+      color: #fafaf9;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+    .payment-choice-btn:hover {
+      background: #ef4444; border-color: #ef4444;
+      box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4);
+    }
+    #promptpay-panel {
+      display: none; flex-direction: column; align-items: center; gap: 14px; margin-top: 16px; width: 100%;
+    }
+    #promptpay-panel.visible {
+      display: flex !important;
+    }
+    #promptpay-qr {
+      width: 220px; height: 220px; border-radius: 16px; border: 3px solid #ffffff; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    .payment-action-btn {
+      width: 100%; padding: 12px; border-radius: 12px; font-weight: 700; cursor: pointer; border: none;
+    }
+    .payment-action-btn.primary {
+      background: #ef4444; color: white; box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+    }
+    #payment-back-btn, #promptpay-back-btn {
+      background: transparent; color: #a1a1aa; border: none; font-size: 13px; cursor: pointer; transition: color 0.2s;
+    }
+    #payment-back-btn:hover, #promptpay-back-btn:hover { color: #fafaf9; }
+  </style>
+</head>
+
+<body class="p-4 sm:p-6 md:p-8 flex flex-col items-center min-h-screen">
+
+  <!-- POPUPS & MODALS Preserved DOM IDs -->
+  <div id="name-popup-overlay">
+    <div id="name-popup-box">
+      <div class="w-14 h-14 mx-auto mb-3 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400">
+        <svg class="w-8 h-8 filter drop-shadow-[0_0_10px_rgba(245,158,11,0.5)]" fill="currentColor" viewBox="0 0 24 24"><path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"/></svg>
+      </div>
+      <h2 id="name-popup-title" class="text-xl font-bold text-white">บอกชื่อลูกค้า | Customer Name</h2>
+      <p id="name-popup-sub" class="text-xs text-zinc-400 mt-2">กรุณาใส่ชื่อลูกค้าสำหรับออเดอร์นี้ | Please enter customer name for this order</p>
+      <input type="text" id="name-popup-input" placeholder="พิมพ์ชื่อลูกค้า..." maxlength="30" autocomplete="off">
+      <button id="name-popup-btn" onclick="submitName()">เริ่มต้นสั่งอาหาร / Start Order</button>
+    </div>
+  </div>
+
+  <div id="warning-popup-overlay">
+    <div id="warning-popup-box">
+      <h3></h3>
+      <p></p>
+      <button id="warning-popup-btn" onclick="closeWarning()"></button>
+    </div>
+  </div>
+
+  <div id="site-dialog-overlay" aria-hidden="true">
+    <div id="site-dialog-box" role="dialog" aria-modal="true">
+      <h3 id="site-dialog-title" class="text-lg font-bold text-white mb-2">Notice</h3>
+      <p id="site-dialog-message" class="text-sm text-zinc-300 mb-4"></p>
+      <textarea id="site-dialog-input" class="hidden w-full p-3 bg-zinc-900 border border-zinc-700 rounded-xl text-white text-sm" maxlength="240"></textarea>
+      <p id="site-dialog-error" class="text-xs text-red-400 mt-1"></p>
+      <div id="site-dialog-actions" class="flex gap-3 mt-4">
+        <button id="site-dialog-cancel" class="btn-glass flex-1 py-2 text-xs font-bold" type="button">Cancel</button>
+        <button id="site-dialog-ok" class="btn-flame flex-1 py-2 text-xs font-bold" type="button">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="payment-popup-overlay">
+    <div id="payment-popup-box">
+      <button id="payment-back-btn" onclick="cancelPayment()" class="mb-2">← ย้อนกลับ / Back</button>
+      <h2 data-i18n="payment-title" class="text-xl font-bold text-white">Select your payment method</h2>
+      <p id="payment-popup-sub" data-i18n="payment-sub" class="text-xs text-zinc-400 mt-1">Cashier Order — Confirm payment method</p>
+      
+      <div class="payment-choice-row" id="payment-choice-row">
+        <button class="payment-choice-btn" onclick="selectPaymentMethod('qr')" data-i18n="payment-qr-btn">QR PromptPay</button>
+        <button class="payment-choice-btn" onclick="selectPaymentMethod('cash')" data-i18n="payment-cash-btn">Cash</button>
+      </div>
+      <div id="promptpay-panel">
+        <img id="promptpay-qr" alt="PromptPay QR code">
+        <p data-i18n="payment-qr-instruction" class="text-xs text-zinc-300">Scan this PromptPay QR code. The chef is notified automatically.</p>
+        <div class="flex gap-2 w-full">
+          <button class="payment-action-btn primary flex-1" onclick="savePromptPayQr()" data-i18n="payment-save-qr-btn">Save QR code</button>
+          <button class="payment-action-btn flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold" onclick="finishQrPayment()">✓ ชำระแล้ว / Done (Home)</button>
+        </div>
+        <button id="promptpay-back-btn" onclick="backToPaymentChoice()">← เปลี่ยนวิธีชำระเงิน / Change Method</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="cash-confirm-overlay">
+    <div id="cash-confirm-box">
+      <div id="cash-confirm-icon" class="w-16 h-16 mx-auto bg-amber-500/10 border border-amber-500/30 rounded-full flex items-center justify-center text-amber-400 animate-pulse">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+      </div>
+      <h2 id="cash-confirm-title" class="text-lg font-bold text-amber-400 mt-3">กำลังรอยืนยัน / Waiting for Confirmation</h2>
+      <p id="cash-confirm-message" class="text-xs text-zinc-400 mt-1">รอการยืนยันจากเชฟ / Waiting for chef to confirm payment...</p>
+    </div>
+  </div>
+
+  <!-- Ambient background graphics -->
+  <canvas id="bg-canvas"></canvas>
+  <div class="grid-overlay"></div>
+  <div class="aurora-blob aurora-1"></div>
+  <div class="aurora-blob aurora-2"></div>
+
+  <!-- LANGUAGE SWITCHER -->
+  <div class="lang-container">
+    <span id="lang-switcher" onclick="toggleLanguage()" data-tip="SWITCH LANGUAGE">
+      <span id="langText">TH</span>
+      <span class="flag-inside-holder">
+        <span class="flag-emoji" id="flagInside">🇺🇸</span>
+      </span>
+      <span class="flag-outside-holder hidden" onclick="toggleLanguage()">
+        <span class="flag-emoji" id="flagOutside">🇹🇭</span>
+      </span>
+    </span>
+  </div>
+
+  <!-- MAIN CONTAINER -->
+  <main class="max-w-4xl w-full mx-auto flex flex-col gap-8 my-6 relative z-10">
+    
+    <!-- HEADER HERO BANNER -->
+    <header class="glass-panel p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden border-amber-500/30">
+      <div class="flex flex-col gap-3 text-center md:text-left z-10 max-w-xl">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-950/70 border border-amber-500/40 w-fit mx-auto md:mx-0">
+          <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+          <svg class="w-3.5 h-3.5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+          <span class="text-[11px] font-mono font-bold text-amber-300 tracking-wider uppercase">CASHIER ORDER KIOSK • หน้าร้าน</span>
+        </div>
+        <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight text-white leading-tight" data-i18n="diner-title">
+          Emperor Burger<span class="text-red-500">.</span>
+        </h1>
+        <p class="text-sm font-mono text-zinc-400 uppercase tracking-widest">
+          ✦ CASHIER ORDER COUNTER ✦
+        </p>
+        <div class="flex items-center gap-2 pt-1 justify-center md:justify-start">
+          <a href="queue.html" class="btn-glass px-3 py-1.5 text-xs font-bold flex items-center gap-1.5 text-amber-300 border-amber-500/30 hover:bg-amber-950/40">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+            ดูคิวอาหาร (Queue)
+          </a>
+          <a href="manage.html" class="btn-glass px-3 py-1.5 text-xs font-bold flex items-center gap-1.5 text-zinc-300">
+            ⚙️ จัดการเมนู
+          </a>
+        </div>
+      </div>
+
+      <!-- Hero Visual Burger Container -->
+      <div class="relative w-48 sm:w-56 aspect-square rounded-2xl overflow-hidden border border-white/10 shadow-2xl group flex-shrink-0">
+        <img src="hero_burger.jpg" alt="Emperor Burger Hero" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+        <span class="absolute bottom-2 right-2 bg-red-600/90 backdrop-blur-md text-white text-[10px] font-mono font-bold px-3 py-1 rounded-full border border-white/20 flex items-center gap-1.5">
+          <svg class="w-3 h-3 text-amber-300" fill="currentColor" viewBox="0 0 24 24"><path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"/></svg>
+          Signature 100% Beef
+        </span>
+      </div>
+    </header>
+
+    <!-- PERSONAL GREETING CARD -->
+    <section id="customer-greeting-card" class="glass-panel p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-amber-500/20">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-red-600 to-amber-500 flex items-center justify-center text-white shadow-lg">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+        </div>
+        <div>
+          <p class="text-[11px] font-mono uppercase tracking-wider text-zinc-400">Current Customer / ลูกค้าปัจจุบัน</p>
+          <h2 id="customer-greeting-text" class="text-xl font-bold text-white">กรุณาใส่ชื่อลูกค้า...</h2>
+        </div>
+      </div>
+      <button type="button" onclick="changeName()" class="btn-glass px-4 py-2 text-xs font-bold uppercase tracking-wider">
+        ใส่ชื่อลูกค้าใหม่
+      </button>
+    </section>
+
+    <!-- MAIN INTERACTIVE ORDER PAD -->
+    <section class="glass-panel p-6 sm:p-8 flex flex-col gap-6 relative overflow-hidden" id="order-pad">
+      <!-- Header Badge -->
+      <div class="flex justify-between items-center border-b border-white/10 pb-4">
+        <div class="flex items-center gap-2">
+          <span class="text-xs font-mono font-bold tracking-wider text-red-400">สั่งอาหารหน้าร้าน CASHIER KIOSK</span>
+        </div>
+        <div class="flex gap-2">
+          <div class="step-dot active" id="dot-1"></div>
+          <div class="step-dot" id="dot-2"></div>
+          <div class="step-dot" id="dot-3"></div>
+        </div>
+      </div>
+
+      <!-- STEP 1: SELECT BURGER MENU ITEM -->
+      <div id="step-1" class="flex flex-col gap-5">
+        <div class="text-center sm:text-left">
+          <h3 class="text-2xl font-bold text-white" data-i18n="burger-title">1. เลือกเบอร์เกอร์!</h3>
+          <p class="text-xs text-zinc-400 mt-1" data-i18n="burger-desc">เลือกเบอร์เกอร์แบล็คเบอร์เกอร์สูตรพิเศษของเรา</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <!-- Option 1: Classic Emperor -->
+          <button data-menu="Classic Emperor" onclick="selectBurger('Classic Emperor', 30, '👑')" class="menu-option-btn p-5 text-left flex items-start gap-4 group">
+            <span class="w-12 h-12 rounded-2xl bg-red-950/60 border border-red-500/30 flex items-center justify-center text-amber-400 group-hover:scale-110 transition-transform flex-shrink-0">
+              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"/></svg>
+            </span>
+            <div class="flex flex-col flex-1">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-base text-white group-hover:text-red-400 transition-colors" data-i18n="burger-opt-1-title">1. Classic Emperor</span>
+                <span class="font-mono font-bold text-sm text-red-400">30 ฿</span>
+              </div>
+              <span class="text-xs text-zinc-400 mt-1 leading-relaxed" data-i18n="burger-opt-1-desc">เบอร์เกอร์สูตรดั้งเดิม รสชาติคลาสสิกที่ไม่เคยเบื่อ</span>
+            </div>
+            <span class="menu-status-tag"></span>
+          </button>
+
+          <!-- Option 2: Double Emperor -->
+          <button data-menu="Double Emperor" onclick="selectBurger('Double Emperor', 40, '🔥')" class="menu-option-btn p-5 text-left flex items-start gap-4 group">
+            <span class="w-12 h-12 rounded-2xl bg-red-950/60 border border-red-500/30 flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0 p-1">
+              <img src="extra_meat.png" alt="Extra Meat" class="w-10 h-10 object-contain drop-shadow">
+            </span>
+            <div class="flex flex-col flex-1">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-base text-white group-hover:text-red-400 transition-colors" data-i18n="burger-opt-2-title">2. Double Emperor</span>
+                <span class="font-mono font-bold text-sm text-red-400">40 ฿</span>
+              </div>
+              <span class="text-xs text-zinc-400 mt-1 leading-relaxed" data-i18n="burger-opt-2-desc">เนื้อคู่สองชั้น พลังสองเท่า อิ่มสองเท่า!</span>
+            </div>
+            <span class="menu-status-tag"></span>
+          </button>
+
+          <!-- Option 3: Emperor Cheese -->
+          <button data-menu="Emperor Cheese" onclick="selectBurger('Emperor Cheese', 35, '🧀')" class="menu-option-btn p-5 text-left flex items-start gap-4 group">
+            <span class="w-12 h-12 rounded-2xl bg-amber-950/60 border border-amber-500/30 flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0 p-1">
+              <img src="extra_cheese.png" alt="Extra Cheese" class="w-10 h-10 object-contain drop-shadow">
+            </span>
+            <div class="flex flex-col flex-1">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-base text-white group-hover:text-amber-400 transition-colors" data-i18n="burger-opt-3-title">3. Emperor Cheese</span>
+                <span class="font-mono font-bold text-sm text-amber-400">35 ฿</span>
+              </div>
+              <span class="text-xs text-zinc-400 mt-1 leading-relaxed" data-i18n="burger-opt-3-desc">ชีสละลายราดสุดเยิ้ม เข้มข้นทุกคำ</span>
+            </div>
+            <span class="menu-status-tag"></span>
+          </button>
+        </div>
+      </div>
+
+      <!-- STEP 2: SELECT MEAT TYPE & ADD-ONS (Hidden initially) -->
+      <div id="step-2" class="flex flex-col gap-5 hidden">
+        <button onclick="goBack(1)" class="text-xs font-mono text-left text-zinc-400 hover:text-red-400 flex items-center gap-1 w-fit" data-i18n="back-to-burger-btn">
+          ← ย้อนกลับเลือกเบอร์เกอร์
+        </button>
+        <div class="text-center sm:text-left">
+          <h3 class="text-2xl font-bold text-white" data-i18n="meat-title">
+            2. เลือกเนื้อและท็อปปิ้งเสริม
+          </h3>
+          <p class="text-xs text-zinc-400 mt-1" data-i18n="meat-desc">เลือกเนื้อสัตว์และท็อปปิ้งเพิ่มความอร่อยได้เลย!</p>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <!-- Chicken -->
+          <button data-menu="Chicken" onclick="selectMeat('Chicken', '🐔')" class="menu-option-btn p-6 flex flex-col items-center text-center gap-3 group">
+            <span class="w-16 h-16 bg-red-950/40 border border-red-500/20 rounded-2xl flex items-center justify-center text-red-400 group-hover:scale-110 transition-transform">
+              <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+            </span>
+            <span class="font-bold text-lg text-white group-hover:text-red-400" data-i18n="meat-opt-1-title">ไก่</span>
+            <span class="text-xs text-zinc-400" data-i18n="meat-opt-1-desc">ไก่ย่างชุ่มฉ่ำ รสเด็ด</span>
+            <span class="menu-status-tag"></span>
+          </button>
+          <!-- Pork -->
+          <button data-menu="Pork" onclick="selectMeat('Pork', '🐖')" class="menu-option-btn p-6 flex flex-col items-center text-center gap-3 group">
+            <span class="w-16 h-16 bg-red-950/40 border border-red-500/20 rounded-2xl flex items-center justify-center text-amber-400 group-hover:scale-110 transition-transform">
+              <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            </span>
+            <span class="font-bold text-lg text-white group-hover:text-red-400" data-i18n="meat-opt-2-title">หมู</span>
+            <span class="text-xs text-zinc-400" data-i18n="meat-opt-2-desc">หมูย่างหอม นุ่มลิ้น</span>
+            <span class="menu-status-tag"></span>
+          </button>
+        </div>
+      </div>
+
+      <!-- STEP 3: SUMMARY & ORDER TICKET (Hidden initially) -->
+      <div id="step-3" class="flex flex-col gap-5 hidden text-center">
+        <h3 class="text-2xl font-bold text-white" data-i18n="summary-title">คอมโบเบอร์เกอร์ของคุณ!</h3>
+        
+        <!-- Order Ticket Display -->
+        <div class="border border-white/10 p-5 rounded-2xl bg-zinc-950/80 flex flex-col gap-3 font-mono text-sm relative text-left">
+          <div class="flex justify-between items-center pb-2 border-b border-zinc-800">
+            <span class="text-zinc-400 text-xs" data-i18n="summary-burger-label">เบอร์เกอร์:</span>
+            <span class="font-bold text-white" id="summary-burger-item">Classic Emperor</span>
+          </div>
+          <div class="flex justify-between items-center pb-2 border-b border-zinc-800">
+            <span class="text-zinc-400 text-xs" data-i18n="summary-meat-label">เนื้อ:</span>
+            <span class="font-bold text-white" id="summary-meat">ไก่</span>
+          </div>
+          <div class="pt-2 flex justify-between font-bold text-base text-red-400">
+            <span data-i18n="summary-total-label">ราคารวมทั้งหมด:</span>
+            <span id="summary-total-val" class="font-mono">0.00 บาท</span>
+          </div>
+          <div class="pt-3 border-t border-zinc-800">
+            <label for="special-note-input" class="block text-xs uppercase tracking-wider text-zinc-400 mb-2" data-i18n="special-note-label">Special note</label>
+            <textarea id="special-note-input" maxlength="120" data-i18n-placeholder="special-note-placeholder" placeholder="No tomato, extra sauce, allergies..." class="w-full p-3 bg-zinc-900 border border-zinc-700 rounded-xl text-white text-xs outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all"></textarea>
+          </div>
+        </div>
+
+        <div class="flex gap-3">
+          <button onclick="resetOrder()" class="btn-glass flex-1 py-3 text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-1.5" data-i18n="reset-btn">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+            เลือกใหม่ / ลูกค้าใหม่
+          </button>
+          <button onclick="submitOrder()" class="btn-flame flex-[2] py-3 text-sm font-bold uppercase tracking-wide flex items-center justify-center gap-2" data-i18n="place-order-btn">
+            <span>ส่งสั่งอาหาร!</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- CUSTOMER ORDER STATUS TRACKER -->
+    <section id="customer-status-card" class="glass-panel p-6 flex flex-col gap-5 hidden border-red-500/30">
+      <div class="flex items-center justify-between gap-3 border-b border-white/10 pb-4">
+        <div>
+          <p class="text-xs font-mono uppercase text-zinc-400">Live order status</p>
+          <h3 class="text-xl font-bold text-white">Order <span id="status-order-id" class="text-red-400">#----</span></h3>
+          <p class="text-xs font-semibold text-zinc-400 mt-1" id="status-queue-info" style="display: none;">Your queue is <span id="status-queue-val" class="text-amber-400">#--</span></p>
+          <p class="text-xs font-semibold text-zinc-400 mt-1" id="status-queue-ahead" style="display: none;"></p>
+        </div>
+        <span id="status-pill" class="text-xs font-mono font-bold uppercase px-3 py-1.5 rounded-full border border-white/20 bg-zinc-800 text-white">Pending</span>
+      </div>
+
+      <div class="grid grid-cols-3 gap-3 text-center font-mono text-xs">
+        <div id="status-step-pending" class="rounded-xl border border-zinc-800 p-4 bg-zinc-950/60 transition-all flex flex-col items-center justify-center gap-1.5">
+          <svg class="w-6 h-6 text-amber-400 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div class="font-bold text-zinc-300">Pending</div>
+        </div>
+        <div id="status-step-cooking" class="rounded-xl border border-zinc-800 p-4 bg-zinc-950/60 transition-all flex flex-col items-center justify-center gap-1.5">
+          <svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/></svg>
+          <div class="font-bold text-zinc-300">Cooking</div>
+        </div>
+        <div id="status-step-done" class="rounded-xl border border-zinc-800 p-4 bg-zinc-950/60 transition-all flex flex-col items-center justify-center gap-1.5">
+          <svg class="w-6 h-6 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div class="font-bold text-zinc-300">Ready</div>
+        </div>
+      </div>
+
+      <p id="status-message" class="text-sm text-zinc-300 leading-relaxed text-center">Waiting for the chef to accept your order...</p>
+      <p id="status-updated" class="text-[11px] font-mono text-zinc-500 text-center">Syncing with kitchen...</p>
+
+      <button id="customer-cancel-order-btn" type="button" onclick="cancelCustomerOrder()" class="btn-glass py-3 text-xs font-bold uppercase tracking-wider hidden" data-i18n="customer-cancel-btn">
+        Cancel order
+      </button>
+      <p id="order-cooldown-message" class="text-xs font-mono text-red-400 text-center hidden"></p>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="text-center font-mono text-xs text-zinc-500 py-8 border-t border-white/10 flex flex-col gap-2">
+      <p>Crafted for Cashier Kiosk • Emperor Burger System</p>
+    </footer>
+
+  </main>
+
+  <script>
+    // State Variables
+    let selectedPattyName = '';
+    let selectedPattyIcon = '';
+    let selectedBurgerName = '';
+    let selectedBurgerPrice = 0;
+    let selectedBurgerIcon = '';
+    let selectedMeatName = '';
+    let selectedMeatIcon = '';
+    let selectedExtraMeat = false;
+    let selectedExtraCheese = false;
+    let customerName = '';
+    
+    // CASHIER MODE: NO COOLDOWN & NO PAYMENT TIMEOUT
+    const ORDER_COOLDOWN_MS = 0;
+    const PAYMENT_TIMEOUT_MS = 0; // Disabled timeout
+    const CUSTOMER_NAME_STORAGE_KEY = 'bitty-burger-cashier-customer-name';
+    const CUSTOMER_CLIENT_ID_STORAGE_KEY = 'bitty-burger-customer-client-id';
+    const FIREBASE_DATABASE_URL = 'https://food-34707-default-rtdb.asia-southeast1.firebasedatabase.app';
+    const PROMPTPAY_ID = '0967293692';
+    const USE_STATIC_QR = false;
+    const STATIC_QR_PATH = 'qr.png';
+    
+    let customerOrderPoller = null;
+    let customerOrderStream = null;
+    let pendingPaymentOrder = null;
+    let pendingSubmitButton = null;
+    let pendingSubmitButtonHtml = '';
+    let currentCustomerOrderId = null;
+    let currentCustomerOrder = null;
+
+    function toggleAddon(addon) {
+      triggerClickSound();
+      if (addon === 'extraMeat') {
+        selectedExtraMeat = !selectedExtraMeat;
+        const btn = document.getElementById('addon-extra-meat-btn');
+        const badge = document.getElementById('addon-extra-meat-badge');
+        if (btn && badge) {
+          btn.classList.toggle('border-red-500', selectedExtraMeat);
+          btn.classList.toggle('bg-red-950/40', selectedExtraMeat);
+          badge.textContent = selectedExtraMeat ? 'ON (+15฿)' : 'OFF';
+          badge.className = selectedExtraMeat 
+            ? 'text-xs font-mono font-bold px-2.5 py-1 rounded-full bg-red-600 text-white border border-red-400' 
+            : 'text-xs font-mono font-bold px-2.5 py-1 rounded-full bg-zinc-800 text-zinc-400 border border-white/10';
+        }
+      } else if (addon === 'extraCheese') {
+        selectedExtraCheese = !selectedExtraCheese;
+        const btn = document.getElementById('addon-extra-cheese-btn');
+        const badge = document.getElementById('addon-extra-cheese-badge');
+        if (btn && badge) {
+          btn.classList.toggle('border-amber-500', selectedExtraCheese);
+          btn.classList.toggle('bg-amber-950/40', selectedExtraCheese);
+          badge.textContent = selectedExtraCheese ? 'ON (+10฿)' : 'OFF';
+          badge.className = selectedExtraCheese 
+            ? 'text-xs font-mono font-bold px-2.5 py-1 rounded-full bg-amber-500 text-black border border-amber-300' 
+            : 'text-xs font-mono font-bold px-2.5 py-1 rounded-full bg-zinc-800 text-zinc-400 border border-white/10';
+        }
+      }
+      updateReceiptSummaries();
+    }
+
+    function getFirebaseOrderUrl(orderId) {
+      return `${FIREBASE_DATABASE_URL}/orders/${encodeURIComponent(orderId)}.json`;
+    }
+
+    function getOrCreateCustomerClientId() {
+      let customerClientId = localStorage.getItem(CUSTOMER_CLIENT_ID_STORAGE_KEY);
+      if (!customerClientId) {
+        const randomPart = Math.random().toString(36).slice(2);
+        customerClientId = `cashier-${Date.now().toString(36)}-${randomPart}`;
+      }
+      localStorage.setItem(CUSTOMER_CLIENT_ID_STORAGE_KEY, customerClientId);
+      return customerClientId;
+    }
+
+    function saveOrderToFirebase(orderPayload, status = 'pending') {
+      const now = new Date().toISOString();
+      const expiresAt = new Date(Date.now() + 12 * 60 * 60 * 1000).toISOString(); // auto-expire after 12 hours
+      const firebasePayload = {
+        ...orderPayload,
+        customerClientId: orderPayload.customerClientId || getOrCreateCustomerClientId(),
+        status,
+        createdAt: now,
+        updatedAt: now,
+        expiresAt
+      };
+
+      return fetch(getFirebaseOrderUrl(orderPayload.orderId), {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(firebasePayload)
+      });
+    }
+
+    // Clean up expired orders from Firebase (runs silently on page load)
+    async function cleanExpiredFirebaseOrders() {
+      try {
+        const res = await fetch(`${FIREBASE_DATABASE_URL}/orders.json`, { cache: 'no-store' });
+        if (!res.ok) return;
+        const orders = await res.json();
+        if (!orders) return;
+        const now = Date.now();
+        const deletes = Object.entries(orders)
+          .filter(([, order]) => order && order.expiresAt && new Date(order.expiresAt).getTime() < now)
+          .map(([id]) =>
+            fetch(`${FIREBASE_DATABASE_URL}/orders/${encodeURIComponent(id)}.json`, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: 'null'
+            }).catch(() => {})
+          );
+        await Promise.all(deletes);
+      } catch (e) {
+        // silent — don't block the page
+      }
+    }
+
+    function showNamePopup() {
+      const overlay = document.getElementById('name-popup-overlay');
+      const nameInput = document.getElementById('name-popup-input');
+      nameInput.value = '';
+      overlay.classList.add('visible');
+      setTimeout(() => {
+        nameInput.focus();
+        nameInput.select();
+      }, 200);
+    }
+
+    function changeName() {
+      triggerClickSound();
+      showNamePopup();
+    }
+
+    function submitName() {
+      const nameInput = document.getElementById('name-popup-input');
+      const val = nameInput.value.trim();
+
+      if (!val) {
+        alert("กรุณาใส่ชื่อลูกค้าก่อนนะ! / Please enter customer name.");
+        nameInput.focus();
+        return;
+      }
+
+      customerName = val;
+      updateCustomerGreeting();
+      document.getElementById('name-popup-overlay').classList.remove('visible');
+    }
+
+    function updateCustomerGreeting() {
+      const greeting = document.getElementById('customer-greeting-text');
+      if (!greeting) return;
+      greeting.textContent = customerName
+        ? `ลูกค้า: ${customerName}`
+        : 'กรุณาใส่ชื่อลูกค้า...';
+    }
+
+    function showSiteDialog({ title = 'Notice', message = '', mode = 'alert', placeholder = '', requiredMessage = '' } = {}) {
+      return new Promise(resolve => {
+        const overlay = document.getElementById('site-dialog-overlay');
+        const titleEl = document.getElementById('site-dialog-title');
+        const messageEl = document.getElementById('site-dialog-message');
+        const inputEl = document.getElementById('site-dialog-input');
+        const errorEl = document.getElementById('site-dialog-error');
+        const okBtn = document.getElementById('site-dialog-ok');
+        const cancelBtn = document.getElementById('site-dialog-cancel');
+        const isPrompt = mode === 'prompt';
+
+        if (!overlay || !titleEl || !messageEl || !inputEl || !errorEl || !okBtn || !cancelBtn) {
+          resolve(isPrompt ? null : undefined);
+          return;
+        }
+
+        titleEl.textContent = title;
+        messageEl.textContent = message;
+        inputEl.value = '';
+        inputEl.placeholder = placeholder;
+        inputEl.classList.toggle('hidden', !isPrompt);
+        errorEl.textContent = '';
+        cancelBtn.classList.toggle('hidden', !isPrompt);
+        overlay.setAttribute('aria-hidden', 'false');
+        overlay.classList.add('visible');
+
+        const cleanup = result => {
+          overlay.classList.remove('visible');
+          overlay.setAttribute('aria-hidden', 'true');
+          okBtn.removeEventListener('click', handleOk);
+          cancelBtn.removeEventListener('click', handleCancel);
+          inputEl.removeEventListener('keydown', handleInputKeydown);
+          resolve(result);
+        };
+        const handleOk = () => {
+          if (isPrompt) {
+            const value = inputEl.value.trim().slice(0, 240);
+            if (!value && requiredMessage) {
+              errorEl.textContent = requiredMessage;
+              inputEl.focus();
+              return;
+            }
+            cleanup(value);
+            return;
+          }
+          cleanup(undefined);
+        };
+        const handleCancel = () => cleanup(null);
+        const handleInputKeydown = event => {
+          if (event.key === 'Enter' && (event.ctrlKey || event.metaKey)) handleOk();
+          if (event.key === 'Escape') handleCancel();
+        };
+
+        okBtn.addEventListener('click', handleOk);
+        cancelBtn.addEventListener('click', handleCancel);
+        inputEl.addEventListener('keydown', handleInputKeydown);
+        setTimeout(() => (isPrompt ? inputEl : okBtn).focus(), 30);
+      });
+    }
+
+    function siteAlert(message, title) {
+      const isThai = currentLangIdx === 0;
+      return showSiteDialog({
+        title: title || (isThai ? 'แจ้งเตือน' : 'Notice'),
+        message: String(message || '')
+      });
+    }
+
+    // ══ TRANSLATION ENGINE ══
+    const langCodes = ['th', 'en'];
+    let currentLangIdx = 0;
+
+    const translations = {
+      th: {
+        "diner-title": "Emperor Burger!",
+        "burger-title": "1. เลือกเบอร์เกอร์!",
+        "burger-desc": "เลือกเบอร์เกอร์แบล็คเบอร์เกอร์สูตรพิเศษของเรา",
+        "burger-opt-1-title": "1. Classic Emperor",
+        "burger-opt-1-desc": "เบอร์เกอร์สูตรดั้งเดิม รสชาติคลาสสิกที่ไม่เคยเบื่อ",
+        "burger-opt-2-title": "2. Double Emperor",
+        "burger-opt-2-desc": "เนื้อคู่สองชั้น พลังสองเท่า อิ่มสองเท่า!",
+        "burger-opt-3-title": "3. Emperor Cheese",
+        "burger-opt-3-desc": "ชีสละลายราดสุดเยิ้ม เข้มข้นทุกคำ",
+        "back-to-burger-btn": "← ย้อนกลับเลือกเบอร์เกอร์",
+        "meat-title": "2. เลือกเนื้อและท็อปปิ้งเสริม",
+        "meat-desc": "เลือกเนื้อสัตว์และท็อปปิ้งเพิ่มความอร่อยได้เลย!",
+        "meat-opt-1-title": "ไก่",
+        "meat-opt-1-desc": "ไก่ย่างชุ่มฉ่ำ รสเด็ด",
+        "meat-opt-2-title": "หมู",
+        "meat-opt-2-desc": "หมูย่างหอม นุ่มลิ้น (+10 บาท)",
+        "summary-title": "รายการทั้งหมด",
+        "summary-burger-label": "เบอร์เกอร์:",
+        "summary-meat-label": "เนื้อ:",
+        "summary-total-label": "ราคารวมทั้งหมด:",
+        "reset-btn": "เลือกใหม่ / ลูกค้าใหม่",
+        "place-order-btn": "ส่งสั่งอาหาร!",
+        "payment-title": "เลือกวิธีชำระเงิน",
+        "payment-sub": "สั่งอาหารหน้าร้าน — ยืนยันการชำระเงิน",
+        "payment-qr-btn": "QR พร้อมเพย์",
+        "payment-cash-btn": "เงินสด",
+        "payment-qr-instruction": "สแกน QR พร้อมเพย์นี้ ระบบจะแจ้งเชฟอัตโนมัติ",
+        "payment-save-qr-btn": "บันทึก QR",
+        "special-note-label": "โน้ตพิเศษ",
+        "special-note-placeholder": "ไม่ใส่มะเขือเทศ, เพิ่มซอส, แพ้อาหาร...",
+        "customer-cancel-btn": "ยกเลิกออเดอร์"
+      },
+      en: {
+        "diner-title": "Emperor Burger!",
+        "burger-title": "1. Pick your Burger!",
+        "burger-desc": "Choose from our Emperor Black Burger menu!",
+        "burger-opt-1-title": "1. Classic Emperor",
+        "burger-opt-1-desc": "The original recipe. A classic taste.",
+        "burger-opt-2-title": "2. Double Emperor",
+        "burger-opt-2-desc": "Double patty, double power!",
+        "burger-opt-3-title": "3. Emperor Cheese",
+        "burger-opt-3-desc": "Melted cheese dripping on every bite.",
+        "back-to-burger-btn": "← Back to Burger",
+        "meat-title": "2. Pick Meat & Add-ons",
+        "meat-desc": "Choose meat and extra add-ons!",
+        "meat-opt-1-title": "Chicken",
+        "meat-opt-1-desc": "Juicy flame-grilled chicken",
+        "meat-opt-2-title": "Pork",
+        "meat-opt-2-desc": "Aromatic grilled pork (+10 Baht)",
+        "summary-title": "Your Order Summary",
+        "summary-burger-label": "BURGER:",
+        "summary-meat-label": "MEAT:",
+        "summary-total-label": "TOTAL PRICE:",
+        "reset-btn": "Reset / Next Customer",
+        "place-order-btn": "Place Order!",
+        "payment-title": "Select Payment Method",
+        "payment-sub": "Cashier Order — Confirm Payment",
+        "payment-qr-btn": "QR PromptPay",
+        "payment-cash-btn": "Cash",
+        "payment-qr-instruction": "Scan QR PromptPay. The chef is notified.",
+        "payment-save-qr-btn": "Save QR Code",
+        "special-note-label": "Special Note",
+        "special-note-placeholder": "No tomato, extra sauce, allergies...",
+        "customer-cancel-btn": "Cancel Order"
+      }
+    };
+
+    function toggleLanguage() {
+      triggerClickSound();
+      currentLangIdx = (currentLangIdx + 1) % langCodes.length;
+      updateLanguageDisplay();
+    }
+
+    function updateLanguageDisplay() {
+      const langText = document.getElementById('langText');
+      if (langText) langText.textContent = langCodes[currentLangIdx].toUpperCase();
+      document.documentElement.setAttribute('lang', langCodes[currentLangIdx]);
+      updatePageLanguage();
+    }
+
+    function updatePageLanguage() {
+      const lang = langCodes[currentLangIdx];
+      const t = translations[lang];
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (t && t[key]) el.textContent = t[key];
+      });
+      updateReceiptSummaries();
+    }
+
+    function updateReceiptSummaries() {
+      if (!selectedBurgerName) return;
+      const isThai = currentLangIdx === 0;
+      const burgerEl = document.getElementById('summary-burger-item');
+      const meatEl = document.getElementById('summary-meat');
+
+      let burgerText = `${selectedBurgerName} ${selectedBurgerIcon}`;
+      if (selectedExtraMeat) burgerText += ' (+Extra Meat)';
+      if (selectedExtraCheese) burgerText += ' (+Extra Cheese)';
+      
+      if (burgerEl) burgerEl.textContent = burgerText;
+      if (meatEl) meatEl.textContent = `${selectedMeatName} ${selectedMeatIcon}`;
+
+      const totalPrice = calculateOrderTotal();
+      const totalValEl = document.getElementById('summary-total-val');
+      if (totalValEl) {
+        totalValEl.textContent = isThai
+          ? `${totalPrice.toFixed(2)} บาท (รวม)` 
+          : `${totalPrice.toFixed(2)} Baht (Total)`;
+      }
+    }
+
+    function calculateOrderTotal() {
+      let totalPrice = selectedBurgerPrice || 0;
+      if (selectedMeatName === 'Pork') totalPrice += 10;
+      return totalPrice;
+    }
+
+    function selectBurger(name, price, icon) {
+      triggerClickSound();
+      selectedBurgerName = name;
+      selectedBurgerPrice = price;
+      selectedBurgerIcon = icon;
+
+      document.getElementById('dot-1').classList.remove('active');
+      document.getElementById('dot-2').classList.add('active');
+      document.getElementById('step-1').classList.add('hidden');
+      document.getElementById('step-2').classList.remove('hidden');
+    }
+
+    function selectMeat(meat, icon) {
+      triggerClickSound();
+      selectedMeatName = meat;
+      selectedMeatIcon = icon;
+
+      document.getElementById('dot-2').classList.remove('active');
+      document.getElementById('dot-3').classList.add('active');
+      document.getElementById('step-2').classList.add('hidden');
+      updateReceiptSummaries();
+      document.getElementById('step-3').classList.remove('hidden');
+    }
+
+    function goBack(toStep) {
+      triggerClickSound();
+      if (toStep === 1) {
+        document.getElementById('dot-2').classList.remove('active');
+        document.getElementById('dot-1').classList.add('active');
+        document.getElementById('step-2').classList.add('hidden');
+        document.getElementById('step-1').classList.remove('hidden');
+      } else if (toStep === 2) {
+        document.getElementById('dot-3').classList.remove('active');
+        document.getElementById('dot-2').classList.add('active');
+        document.getElementById('step-3').classList.add('hidden');
+        document.getElementById('step-2').classList.remove('hidden');
+      }
+    }
+
+    function closePaymentPopup() {
+      const overlay = document.getElementById('payment-popup-overlay');
+      if (overlay) overlay.classList.remove('visible');
+      const promptPayPanel = document.getElementById('promptpay-panel');
+      const choiceRow = document.getElementById('payment-choice-row');
+      if (promptPayPanel) {
+        promptPayPanel.classList.remove('visible');
+        promptPayPanel.style.display = 'none';
+      }
+      if (choiceRow) {
+        choiceRow.classList.remove('hidden');
+        choiceRow.style.display = 'flex';
+      }
+      setPaymentControlsEnabled(true);
+    }
+
+    function cancelPayment() {
+      closePaymentPopup();
+      pendingPaymentOrder = null;
+      if (pendingSubmitButton) {
+        pendingSubmitButton.disabled = false;
+        pendingSubmitButton.innerHTML = pendingSubmitButtonHtml;
+      }
+    }
+
+    function backToPaymentChoice() {
+      const promptPayPanel = document.getElementById('promptpay-panel');
+      const choiceRow = document.getElementById('payment-choice-row');
+      if (promptPayPanel) {
+        promptPayPanel.classList.remove('visible');
+        promptPayPanel.style.display = 'none';
+      }
+      if (choiceRow) {
+        choiceRow.classList.remove('hidden');
+        choiceRow.style.display = 'flex';
+      }
+    }
+
+    function savePromptPayQr() {
+      const qrImg = document.getElementById('promptpay-qr');
+      if (!qrImg || !qrImg.src) return;
+      const link = document.createElement('a');
+      link.href = qrImg.src;
+      link.download = `promptpay-qr-${pendingPaymentOrder?.orderId || 'order'}.png`;
+      link.target = '_blank';
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    }
+
+    function finishQrPayment() {
+      triggerClickSound();
+      const qrOrderToSend = pendingPaymentOrder ? { ...pendingPaymentOrder, paymentStatus: 'paid' } : null;
+      if (qrOrderToSend) {
+        saveOrderToFirebase(qrOrderToSend, 'pending');
+      }
+      playCheckoutTink();
+      closePaymentPopup();
+
+      const isThai = currentLangIdx === 0;
+      const orderId = qrOrderToSend?.orderId || '';
+      siteAlert(
+        isThai
+          ? `ชำระเงินเรียบร้อย! ขอบคุณที่อุดหนุน [ออเดอร์ #${orderId}]\nลูกค้า: ${customerName}`
+          : `Payment complete! Thank you for ordering [Order #${orderId}]\nCustomer: ${customerName}`,
+        isThai ? 'ชำระเงินสำเร็จ' : 'Payment Complete'
+      ).then(() => {
+        resetOrderAndReturnHome();
+      });
+    }
+
+    function selectPaymentMethod(method) {
+      if (!pendingPaymentOrder) return;
+      triggerClickSound();
+
+      if (method === 'qr') {
+        const promptPayPanel = document.getElementById('promptpay-panel');
+        const choiceRow = document.getElementById('payment-choice-row');
+        if (promptPayPanel) {
+          promptPayPanel.classList.add('visible');
+          promptPayPanel.style.display = 'flex';
+        }
+        if (choiceRow) {
+          choiceRow.classList.add('hidden');
+          choiceRow.style.display = 'none';
+        }
+        const qrPaymentOrder = {
+          ...pendingPaymentOrder,
+          paymentMethod: currentLangIdx === 0 ? 'QR พร้อมเพย์' : 'PromptPay QR',
+          paymentStatus: 'awaiting_promptpay'
+        };
+        pendingPaymentOrder = qrPaymentOrder;
+        saveOrderToFirebase(qrPaymentOrder, 'payment');
+        return;
+      }
+
+      if (method === 'cash') {
+        const orderToSend = {
+          ...pendingPaymentOrder,
+          paymentMethod: currentLangIdx === 0 ? 'เงินสด (Cashier)' : 'Cash (Cashier)',
+          paymentStatus: 'awaiting_cash_verification'
+        };
+        saveOrderToFirebase(orderToSend, 'pending');
+        closePaymentPopup();
+        playCheckoutTink();
+        const isThai = currentLangIdx === 0;
+        siteAlert(
+          isThai
+            ? `รับเงินสดเรียบร้อย! [ออเดอร์ #${orderToSend.orderId}]\nลูกค้า: ${customerName}`
+            : `Cash received! [Order #${orderToSend.orderId}]\nCustomer: ${customerName}`,
+          isThai ? 'ส่งออเดอร์สำเร็จ' : 'Order Placed'
+        ).then(() => {
+          resetOrderAndReturnHome();
+        });
+      }
+    }
+
+    function resetOrderAndReturnHome() {
+      closePaymentPopup();
+      closeCashConfirmationWaiting();
+
+      ['dot-2','dot-3'].forEach(id => document.getElementById(id)?.classList.remove('active'));
+      document.getElementById('dot-1')?.classList.add('active');
+      ['step-2','step-3'].forEach(id => document.getElementById(id)?.classList.add('hidden'));
+      document.getElementById('step-1')?.classList.remove('hidden');
+
+      selectedBurgerName = '';
+      selectedBurgerPrice = 0;
+      selectedBurgerIcon = '';
+      selectedMeatName = '';
+      selectedMeatIcon = '';
+      pendingPaymentOrder = null;
+
+      const noteInput = document.getElementById('special-note-input');
+      if (noteInput) noteInput.value = '';
+
+      if (pendingSubmitButton) {
+        pendingSubmitButton.disabled = false;
+        pendingSubmitButton.innerHTML = `<span>ส่งสั่งอาหาร!</span><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>`;
+        pendingSubmitButton = null;
+      }
+
+      document.getElementById('order-pad')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+      customerName = '';
+      updateCustomerGreeting();
+      setTimeout(showNamePopup, 400);
+    }
+
+    function submitOrder() {
+      if (!customerName || !customerName.trim()) {
+        showNamePopup();
+        return;
+      }
+
+      const orderId = Math.floor(1000 + Math.random() * 9000);
+      const timeStr = new Date().toLocaleString();
+      const submitBtn = document.querySelector('button[onclick="submitOrder()"]');
+      const originalText = submitBtn.innerHTML;
+      submitBtn.disabled = true;
+
+      const orderPayload = {
+        orderId: orderId,
+        customerClientId: getOrCreateCustomerClientId(),
+        customerName: customerName,
+        burger: `${selectedBurgerName} ${selectedBurgerIcon}`,
+        meat: `${selectedMeatName} ${selectedMeatIcon}`,
+        patty: `${selectedBurgerName} (${selectedMeatName}) ${selectedBurgerIcon}`,
+        specialNote: document.getElementById('special-note-input')?.value.trim() || '',
+        time: timeStr,
+        total: calculateOrderTotal(),
+        isCashierKiosk: true
+      };
+
+      openPaymentPopup(orderPayload, submitBtn, originalText);
+    }
+
+    // (removed duplicate dispatchOrderToDiscord — now handled by the Firebase-only version below)
+
+    function dispatchOrderToDiscord(orderPayload, afterSuccess) {
+      // ── Firebase-only dispatch (no Discord bot required) ──
+      const submitBtn = pendingSubmitButton || document.querySelector('button[onclick="submitOrder()"]');
+      const isThai = currentLangIdx === 0;
+
+      saveOrderToFirebase(orderPayload, 'pending');
+      playCheckoutTink();
+
+      const paymentText = orderPayload.paymentMethod ? `\nการชำระเงิน: ${orderPayload.paymentMethod}` : '';
+      siteAlert(
+        isThai
+          ? `ส่งออเดอร์หน้าร้านเรียบร้อย! [ออเดอร์ #${orderPayload.orderId}]\nลูกค้า: ${customerName}${paymentText}`
+          : `Cashier Order Placed! [Order #${orderPayload.orderId}]\nCustomer: ${customerName}${paymentText}`,
+        isThai ? 'ส่งออเดอร์สำเร็จ' : 'Order Placed'
+      ).then(() => {
+        if (typeof afterSuccess === 'function') afterSuccess();
+
+        // RESET ORDER & REQUIRE NAME FOR NEXT CUSTOMER!
+        ['dot-2','dot-3'].forEach(id => document.getElementById(id).classList.remove('active'));
+        document.getElementById('dot-1').classList.add('active');
+        ['step-2','step-3'].forEach(id => document.getElementById(id).classList.add('hidden'));
+        document.getElementById('step-1').classList.remove('hidden');
+
+        selectedBurgerName = '';
+        selectedBurgerPrice = 0;
+        selectedBurgerIcon = '';
+        selectedMeatName = '';
+        selectedMeatIcon = '';
+        selectedExtraMeat = false;
+        selectedExtraCheese = false;
+
+        const noteInput = document.getElementById('special-note-input');
+        if (noteInput) noteInput.value = '';
+
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = `<span>ส่งสั่งอาหาร!</span><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>`;
+        }
+
+        // PROMPT NAME FOR NEXT CUSTOMER!
+        customerName = '';
+        updateCustomerGreeting();
+        setTimeout(showNamePopup, 600);
+      });
+    }
+
+    // Audio helper
+    function getAudioContext() {
+      return new (window.AudioContext || window.webkitAudioContext)();
+    }
+    function triggerClickSound() {}
+    function playCheckoutTink() {
+      try {
+        const ctx = getAudioContext();
+        const now = ctx.currentTime;
+        [440, 554, 659, 880].forEach((freq, index) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, now + index * 0.08);
+          gain.gain.setValueAtTime(0, now + index * 0.08);
+          gain.gain.linearRampToValueAtTime(0.12, now + index * 0.08 + 0.01);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + index * 0.08 + 0.2);
+          osc.start(now + index * 0.08);
+          osc.stop(now + index * 0.08 + 0.22);
+        });
+      } catch (e) {}
+    }
+
+    // Init Page & Always Ask Name First
+    window.addEventListener('DOMContentLoaded', () => {
+      customerName = '';
+      updateCustomerGreeting();
+      initParticleCanvas();
+      setTimeout(showNamePopup, 500);
+
+      document.getElementById('name-popup-input').addEventListener('keydown', e => {
+        if (e.key === 'Enter') submitName();
+      });
+
+      // Silently clean up expired orders (older than 12h) from Firebase
+      cleanExpiredFirebaseOrders();
+    });
+
+    function initParticleCanvas() {
+      const canvas = document.getElementById('bg-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      function resize() {
+        canvas.width  = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      resize();
+      window.addEventListener('resize', resize);
+
+      const GLOWS = ['rgba(239,68,68,', 'rgba(255,255,255,', 'rgba(245,158,11,'];
+      class Ember {
+        constructor() { this.reset(true); }
+        reset(fromBottom = false) {
+          this.x = Math.random() * canvas.width;
+          this.y = fromBottom ? canvas.height + 20 : Math.random() * canvas.height;
+          this.size = Math.random() * 2.5 + 0.5;
+          this.speedY = -(Math.random() * 0.5 + 0.2);
+          this.speedX = (Math.random() - 0.5) * 0.3;
+          this.alpha = Math.random() * 0.5 + 0.1;
+          this.alphaDir = (Math.random() < 0.5 ? 1 : -1) * 0.003;
+          this.glow = GLOWS[Math.floor(Math.random() * GLOWS.length)];
+          this.pulse = Math.random() * Math.PI * 2;
+        }
+        update() {
+          this.x += this.speedX + Math.sin(this.pulse) * 0.15;
+          this.y += this.speedY;
+          this.pulse += 0.02;
+          this.alpha += this.alphaDir;
+          if (this.alpha > 0.7) this.alphaDir = -Math.abs(this.alphaDir);
+          if (this.alpha < 0.04) this.alphaDir = Math.abs(this.alphaDir);
+          if (this.y < -30) this.reset(true);
+        }
+        draw(ctx) {
+          const grad = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size * 5);
+          grad.addColorStop(0, this.glow + this.alpha + ')');
+          grad.addColorStop(0.4, this.glow + (this.alpha * 0.4) + ')');
+          grad.addColorStop(1, this.glow + '0)');
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.size * 5, 0, Math.PI * 2);
+          ctx.fillStyle = grad;
+          ctx.fill();
+        }
+      }
+
+      const embers = Array.from({ length: 70 }, () => new Ember());
+      function drawFrame() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        embers.forEach(e => { e.update(); e.draw(ctx); });
+        requestAnimationFrame(drawFrame);
+      }
+      drawFrame();
+    }
+  </script>
+</body>
+</html>

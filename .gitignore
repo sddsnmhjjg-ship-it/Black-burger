@@ -1,0 +1,33 @@
+# Dependencies
+node_modules/
+
+# Cache & build artifacts
+.cache/
+.next/
+dist/
+build/
+
+# LM Studio & AI tools
+.lmstudio/
+.gemini/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+npm-debug.log*
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Vercel
+.vercel/
+
+# Editor
+.vscode/
+.idea/
