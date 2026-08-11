@@ -1169,8 +1169,13 @@
       let actions = '';
       const fbKey = escHtml(String(o.fbKey || o.id));
 
-      // Payment status — show big green confirm button first
-      if (status === 'payment') {
+      // Payment status — show big green confirm button if payment is unconfirmed
+      const needsPaymentConfirm = status === 'payment' ||
+        o.paymentStatus === 'awaiting_promptpay' ||
+        o.paymentStatus === 'awaiting_cash_verification' ||
+        (status === 'pending' && o.paymentStatus !== 'paid' && o.paymentStatus !== 'confirmed');
+
+      if (needsPaymentConfirm) {
         actions += `<button class="action-btn confirm-pay" onclick="confirmPayment('${fbKey}')">💳 ยืนยันรับเงิน / Confirm Payment</button>`;
       }
 
