@@ -954,8 +954,23 @@
 
     async function deleteFirebaseNode(path) {
       const url = `${FIREBASE_URL}/${path}.json`;
-      const res = await fetch(url, { method: 'DELETE' });
-      return res.ok;
+      // Method 1: PUT null (CORS-safe in all browsers)
+      try {
+        const res1 = await fetch(url, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: 'null'
+        });
+        if (res1.ok) return true;
+      } catch (e) {}
+
+      // Method 2: DELETE method
+      try {
+        const res2 = await fetch(url, { method: 'DELETE' });
+        if (res2.ok) return true;
+      } catch (e) {}
+
+      return false;
     }
 
     function deleteOrder(fbKey) {
@@ -965,8 +980,10 @@
         'ลบ <strong>ออเดอร์ #' + orderLabel + '</strong> ออกจากคิวถาวร?',
         'ลบออก',
         async () => {
-          await deleteFirebaseNode('orders/' + encodeURIComponent(fbKey));
           delete allOrders[fbKey];
+          renderOrders();
+          updateStats();
+          await deleteFirebaseNode('orders/' + encodeURIComponent(fbKey));
           await loadOrders();
           showToast('ลบออเดอร์เรียบร้อย ✓');
         }
@@ -1007,8 +1024,10 @@
         `ลบ <strong>${doneKeys.length} ออเดอร์ที่เสร็จแล้ว</strong> ออกจากคิวถาวร?<br><small style="color:var(--dim)">ไม่สามารถย้อนกลับได้</small>`,
         `ลบ ${doneKeys.length} รายการ`,
         async () => {
-          await Promise.all(doneKeys.map(k => deleteFirebaseNode(`orders/${encodeURIComponent(k)}`)));
           doneKeys.forEach(k => delete allOrders[k]);
+          renderOrders();
+          updateStats();
+          await Promise.all(doneKeys.map(k => deleteFirebaseNode(`orders/${encodeURIComponent(k)}`)));
           await loadOrders();
           showToast(`ลบ ${doneKeys.length} ออเดอร์แล้ว ✓`);
         }
@@ -1024,11 +1043,13 @@
         `ลบ <strong style="color:var(--accent)">ออเดอร์ทั้งหมด ${countText}</strong> ออกจากคิวถาวร?<br><small style="color:var(--dim)">รวมถึงออเดอร์ที่ยังรออยู่ด้วย!</small>`,
         '🗑️ ลบทั้งหมดเลย!',
         async () => {
+          allOrders = {};
+          renderOrders();
+          updateStats();
           await Promise.all([
             deleteFirebaseNode('orders'),
             ...allKeys.map(k => deleteFirebaseNode(`orders/${encodeURIComponent(k)}`))
           ]);
-          allOrders = {};
           await loadOrders();
           showToast('ล้างคิวทั้งหมดเรียบร้อยแล้ว ✓');
         }
