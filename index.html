@@ -1954,7 +1954,25 @@ function updateReceiptSummaries() {
         .then(res => res.json())
         .then(order => {
           const status = order && order.status;
-          if (status === 'cooking' || status === 'done' || status === 'cancel') return;
+          const payStatus = order && order.paymentStatus;
+          if (
+            status === 'cooking' ||
+            status === 'done' ||
+            status === 'cancel' ||
+            status === 'pending' ||
+            payStatus === 'paid' ||
+            payStatus === 'confirmed'
+          ) {
+            return; // Order was confirmed/paid or moved forward — do not time out!
+          }
+
+          closePaymentPopup();
+          alert(currentLangIdx === 0 ? 'คุณไม่ได้ชำระเงินภายในเวลาที่กำหนด' : "You haven't pay in time");
+          if (pendingSubmitButton) {
+            pendingSubmitButton.disabled = false;
+            pendingSubmitButton.innerHTML = pendingSubmitButtonHtml;
+          }
+
           return fetch(getFirebaseOrderUrl(orderId), {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
@@ -1969,12 +1987,6 @@ function updateReceiptSummaries() {
         .catch(err => {
           console.warn('Could not cancel timed-out order in Firebase:', err);
         });
-      closePaymentPopup();
-      alert(currentLangIdx === 0 ? 'คุณไม่ได้ชำระเงินภายในเวลาที่กำหนด' : "You haven't pay in time");
-      if (pendingSubmitButton) {
-        pendingSubmitButton.disabled = false;
-        pendingSubmitButton.innerHTML = pendingSubmitButtonHtml;
-      }
     }
 
     function openPaymentPopup(orderPayload, submitBtn, originalText) {
