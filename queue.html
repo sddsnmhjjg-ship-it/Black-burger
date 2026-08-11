@@ -846,6 +846,12 @@
 
     window.onload = () => {
       initParticleCanvas();
+
+      // Close confirm popup when clicking the dark backdrop
+      document.getElementById('confirm-overlay').addEventListener('click', function(e) {
+        if (e.target === this) closeConfirm();
+      });
+
       if (sessionStorage.getItem('queue_auth') === '1') {
         document.getElementById('lock-screen').classList.add('hidden');
         document.getElementById('app').style.display = 'block';
@@ -901,30 +907,18 @@
 
     async function deleteFirebaseNode(path) {
       const url = `${FIREBASE_URL}/${path}.json`;
-      try {
-        const res = await fetch(url, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: 'null'
-        });
-        if (res.ok) return true;
-      } catch (e) {}
-
-      try {
-        const res = await fetch(url, { method: 'DELETE' });
-        if (res.ok) return true;
-      } catch (e) {}
-
-      return false;
+      const res = await fetch(url, { method: 'DELETE' });
+      return res.ok;
     }
 
     function deleteOrder(fbKey) {
+      const orderLabel = (allOrders[fbKey] && allOrders[fbKey].orderId) ? allOrders[fbKey].orderId : fbKey;
       showConfirm(
         '🗑️',
-        `ลบ <strong>ออเดอร์ #${allOrders[fbKey]?.orderId || fbKey}</strong> ออกจากคิวถาวร?`,
+        'ลบ <strong>ออเดอร์ #' + orderLabel + '</strong> ออกจากคิวถาวร?',
         'ลบออก',
         async () => {
-          await deleteFirebaseNode(`orders/${encodeURIComponent(fbKey)}`);
+          await deleteFirebaseNode('orders/' + encodeURIComponent(fbKey));
           delete allOrders[fbKey];
           await loadOrders();
           showToast('ลบออเดอร์เรียบร้อย ✓');
@@ -933,30 +927,26 @@
     }
 
     // ─── CONFIRM POPUP ────────────────────────────────────────────────────────
-    let _pendingConfirmAction = null;
+    window._confirmAction = null;
 
     function showConfirm(icon, subText, yesLabel, action) {
+      window._confirmAction = action;
       document.getElementById('confirm-icon').textContent = icon;
       document.getElementById('confirm-sub').innerHTML = subText;
       document.getElementById('confirm-yes-btn').textContent = yesLabel;
-      _pendingConfirmAction = action;
       document.getElementById('confirm-overlay').classList.add('visible');
     }
 
     function closeConfirm() {
+      window._confirmAction = null;
       document.getElementById('confirm-overlay').classList.remove('visible');
-      _pendingConfirmAction = null;
     }
 
     function executeConfirm() {
+      const action = window._confirmAction;
       closeConfirm();
-      if (typeof _pendingConfirmAction === 'function') _pendingConfirmAction();
+      if (typeof action === 'function') action();
     }
-
-    // Close on backdrop click
-    document.getElementById('confirm-overlay').addEventListener('click', e => {
-      if (e.target === document.getElementById('confirm-overlay')) closeConfirm();
-    });
 
     function promptClearDone() {
       const doneKeys = Object.entries(allOrders)
