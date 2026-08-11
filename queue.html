@@ -592,6 +592,20 @@
     .action-btn.delete { color: var(--dim); border-color: rgba(82,82,91,0.3); }
     .action-btn.delete:hover { background: rgba(239,68,68,0.08); color: var(--accent); border-color: rgba(239,68,68,0.3); }
 
+    .action-btn.confirm-pay {
+      color: #10b981;
+      border-color: rgba(16,185,129,0.4);
+      background: rgba(16,185,129,0.08);
+      font-size: 0.78rem;
+      flex: 2;
+      animation: glow-green 2s ease-in-out infinite;
+    }
+    .action-btn.confirm-pay:hover { background: rgba(16,185,129,0.2); box-shadow: 0 0 16px rgba(16,185,129,0.3); }
+    @keyframes glow-green {
+      0%, 100% { box-shadow: none; }
+      50%       { box-shadow: 0 0 10px rgba(16,185,129,0.35); }
+    }
+
     /* ─── EMPTY STATE ─────────────────────────────────────────────────────── */
     #empty-state {
       display: none;
@@ -905,6 +919,39 @@
       }
     }
 
+    async function confirmPayment(fbKey) {
+      const o = allOrders[fbKey];
+      if (!o) return;
+      const payMethod = o.paymentMethod || 'ไม่ระบุ';
+      const total = o.total ? `฿${Number(o.total).toFixed(2)}` : '';
+      const custName = o.customerName || 'Guest';
+      showConfirm(
+        '💳',
+        `ยืนยันรับเงินจาก <strong>${escHtml(custName)}</strong>?<br>วิธีชำระ: <strong>${escHtml(payMethod)}</strong> ${total ? `<span style="color:var(--amber)">${total}</span>` : ''}`,
+        '✅ ยืนยันรับเงินแล้ว!',
+        async () => {
+          const url = `${FIREBASE_URL}/orders/${encodeURIComponent(fbKey)}.json`;
+          await fetch(url, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              status: 'pending',
+              paymentStatus: 'paid',
+              paymentConfirmedAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString()
+            })
+          });
+          if (allOrders[fbKey]) {
+            allOrders[fbKey].status = 'pending';
+            allOrders[fbKey].paymentStatus = 'paid';
+          }
+          renderOrders();
+          updateStats();
+          showToast('✅ ยืนยันเงินแล้ว — ส่งเข้าคิวทำ!');
+        }
+      );
+    }
+
     async function deleteFirebaseNode(path) {
       const url = `${FIREBASE_URL}/${path}.json`;
       const res = await fetch(url, { method: 'DELETE' });
@@ -1100,6 +1147,11 @@
       // Action buttons (vary by status) using fbKey
       let actions = '';
       const fbKey = escHtml(String(o.fbKey || o.id));
+
+      // Payment status — show big green confirm button first
+      if (status === 'payment') {
+        actions += `<button class="action-btn confirm-pay" onclick="confirmPayment('${fbKey}')">💳 ยืนยันรับเงิน / Confirm Payment</button>`;
+      }
 
       if (status !== 'done' && status !== 'cancelled') {
         if (status !== 'cooking') {
