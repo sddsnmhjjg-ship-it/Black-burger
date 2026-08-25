@@ -1,9 +1,25 @@
 {
-  "redirects": [
+  "cleanUrls": true,
+  "rewrites": [
     {
       "source": "/",
-      "destination": "/index.html",
-      "permanent": false
+      "destination": "/api/root"
+    },
+    {
+      "source": "/casheir",
+      "destination": "/Casheir.html"
+    },
+    {
+      "source": "/cashier",
+      "destination": "/Casheir.html"
+    },
+    {
+      "source": "/queue",
+      "destination": "/queue.html"
+    },
+    {
+      "source": "/manage",
+      "destination": "/manage.html"
     }
   ]
 }
