@@ -579,11 +579,11 @@
       <div class="flex justify-between items-center border-b border-white/10 pb-4">
         <div class="flex items-center gap-2">
           <span class="text-xs font-mono font-bold tracking-wider text-red-400" data-i18n="order-slip-badge">ใบสั่งซื้อ #001</span>
+          <span class="text-[10px] font-mono bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2 py-0.5 rounded-full">🍗 100% Chicken / ไก่ย่างสูตรเด็ด</span>
         </div>
         <div class="flex gap-2">
           <div class="step-dot active" id="dot-1"></div>
           <div class="step-dot" id="dot-2"></div>
-          <div class="step-dot" id="dot-3"></div>
         </div>
       </div>
 
@@ -591,7 +591,7 @@
       <div id="step-1" class="flex flex-col gap-5">
         <div class="text-center sm:text-left">
           <h3 class="text-2xl font-bold text-white" data-i18n="burger-title">1. เลือกเบอร์เกอร์! 🍔</h3>
-          <p class="text-xs text-zinc-400 mt-1" data-i18n="burger-desc">เลือกเบอร์เกอร์เบอร์เกอร์สูตรพิเศษของเรา</p>
+          <p class="text-xs text-zinc-400 mt-1" data-i18n="burger-desc">เบอร์เกอร์ไก่ย่างสูตรพิเศษของเรา 🐔 (เสิร์ฟเฉพาะเนื้อไก่)</p>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -605,7 +605,7 @@
                 <span class="font-bold text-base text-white group-hover:text-red-400 transition-colors" data-i18n="burger-opt-1-title">1. Classic Emperor</span>
                 <span class="font-mono font-bold text-sm text-red-400">30 ฿</span>
               </div>
-              <span class="text-xs text-zinc-400 mt-1 leading-relaxed" data-i18n="burger-opt-1-desc">เบอร์เกอร์สูตรดั้งเดิม รสชาติคลาสสิกที่ไม่เคยเบื่อ</span>
+              <span class="text-xs text-zinc-400 mt-1 leading-relaxed" data-i18n="burger-opt-1-desc">เบอร์เกอร์ไก่สูตรดั้งเดิม รสชาติคลาสสิก</span>
             </div>
             <span class="menu-status-tag"></span>
           </button>
@@ -620,7 +620,7 @@
                 <span class="font-bold text-base text-white group-hover:text-red-400 transition-colors" data-i18n="burger-opt-2-title">2. Double Emperor</span>
                 <span class="font-mono font-bold text-sm text-red-400">40 ฿</span>
               </div>
-              <span class="text-xs text-zinc-400 mt-1 leading-relaxed" data-i18n="burger-opt-2-desc">เนื้อคู่สองชั้น พลังสองเท่า อิ่มสองเท่า!</span>
+              <span class="text-xs text-zinc-400 mt-1 leading-relaxed" data-i18n="burger-opt-2-desc">เนื้อไก่คู่สองชั้น พลังสองเท่า อิ่มสองเท่า!</span>
             </div>
             <span class="menu-status-tag"></span>
           </button>
@@ -635,59 +635,29 @@
                 <span class="font-bold text-base text-white group-hover:text-amber-400 transition-colors" data-i18n="burger-opt-3-title">3. Emperor Cheese</span>
                 <span class="font-mono font-bold text-sm text-amber-400">35 ฿</span>
               </div>
-              <span class="text-xs text-zinc-400 mt-1 leading-relaxed" data-i18n="burger-opt-3-desc">ชีสละลายราดสุดเยิ้ม เข้มข้นทุกคำ</span>
+              <span class="text-xs text-zinc-400 mt-1 leading-relaxed" data-i18n="burger-opt-3-desc">ไก่ย่างชีสละลายราดสุดเยิ้ม เข้มข้นทุกคำ</span>
             </div>
             <span class="menu-status-tag"></span>
           </button>
         </div>
       </div>
 
-      <!-- STEP 2: SELECT MEAT TYPE (Hidden initially) -->
-      <div id="step-2" class="flex flex-col gap-5 hidden">
-        <button onclick="goBack(1)" class="text-xs font-mono text-left text-zinc-400 hover:text-red-400 flex items-center gap-1 w-fit" data-i18n="back-to-burger-btn">
-          ← ย้อนกลับเลือกเบอร์เกอร์
+      <!-- STEP 2: SUMMARY & ORDER TICKET (Hidden initially) -->
+      <div id="step-2" class="flex flex-col gap-5 hidden text-center">
+        <button onclick="goBack(1)" class="text-xs font-mono text-left text-zinc-400 hover:text-red-400 flex items-center gap-1 w-fit">
+          ← ย้อนกลับเลือกเบอร์เกอร์ / Back to Burgers
         </button>
-        <div class="text-center sm:text-left">
-          <h3 class="text-2xl font-bold text-white" data-i18n="meat-title">
-            2. เลือกเนื้อที่ชอบ... 🥩
-          </h3>
-          <p class="text-xs text-zinc-400 mt-1" data-i18n="meat-desc">ชอบไก่หรือหมู? เลือกได้เลย!</p>
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <!-- Chicken -->
-          <button data-menu="Chicken" onclick="selectMeat('Chicken', '🐔')" class="menu-option-btn p-6 flex flex-col items-center text-center gap-3 group">
-            <span class="w-16 h-16 bg-red-950/40 border border-red-500/20 rounded-2xl flex items-center justify-center text-red-400 group-hover:scale-110 transition-transform">
-              <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
-            </span>
-            <span class="font-bold text-lg text-white group-hover:text-red-400" data-i18n="meat-opt-1-title">ไก่</span>
-            <span class="text-xs text-zinc-400" data-i18n="meat-opt-1-desc">ไก่ย่างชุ่มฉ่ำ รสเด็ด</span>
-            <span class="menu-status-tag"></span>
-          </button>
-          <!-- Pork -->
-          <button data-menu="Pork" onclick="selectMeat('Pork', '🐖')" class="menu-option-btn p-6 flex flex-col items-center text-center gap-3 group">
-            <span class="w-16 h-16 bg-red-950/40 border border-red-500/20 rounded-2xl flex items-center justify-center text-amber-400 group-hover:scale-110 transition-transform">
-              <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-            </span>
-            <span class="font-bold text-lg text-white group-hover:text-red-400" data-i18n="meat-opt-2-title">หมู</span>
-            <span class="text-xs text-zinc-400" data-i18n="meat-opt-2-desc">หมูย่างหอม นุ่มลิ้น</span>
-            <span class="menu-status-tag"></span>
-          </button>
-        </div>
-      </div>
-
-      <!-- STEP 3: SUMMARY & ORDER TICKET (Hidden initially) -->
-      <div id="step-3" class="flex flex-col gap-5 hidden text-center">
-        <h3 class="text-2xl font-bold text-white" data-i18n="summary-title">🍔 คอมโบเบอร์เกอร์ของคุณ!</h3>
+        <h3 class="text-2xl font-bold text-white" data-i18n="summary-title">🍔 2. คอมโบเบอร์เกอร์ของคุณ!</h3>
         
         <!-- Order Ticket Display -->
         <div class="border border-white/10 p-5 rounded-2xl bg-zinc-950/80 flex flex-col gap-3 font-mono text-sm relative text-left">
           <div class="flex justify-between items-center pb-2 border-b border-zinc-800">
-            <span class="text-zinc-400 text-xs" data-i18n="summary-burger-label">Chicken Burger</span>
+            <span class="text-zinc-400 text-xs" data-i18n="summary-burger-label">เบอร์เกอร์:</span>
             <span class="font-bold text-white" id="summary-burger-item">Classic Emperor 👑</span>
           </div>
           <div class="flex justify-between items-center pb-2 border-b border-zinc-800">
             <span class="text-zinc-400 text-xs" data-i18n="summary-meat-label">เนื้อ:</span>
-            <span class="font-bold text-white" id="summary-meat">ไก่ 🐔</span>
+            <span class="font-bold text-emerald-400" id="summary-meat">🐔 ไก่ย่าง (Chicken)</span>
           </div>
           <div class="pt-2 flex justify-between font-bold text-base text-red-400">
             <span data-i18n="summary-total-label">ราคารวมทั้งหมด:</span>
@@ -2724,69 +2694,89 @@ function updateReceiptSummaries() {
       subEl.textContent = sub;
     }
 
-    // Step-by-Step Customizer Navigation
+    // Step-by-Step Customizer Navigation (Chicken Only)
     function selectBurger(name, price, icon) {
       triggerClickSound();
       selectedBurgerName = name;
       selectedBurgerPrice = price;
       selectedBurgerIcon = icon;
-      // legacy compat
+      selectedMeatName = 'Chicken';
+      selectedMeatIcon = '🐔';
       selectedPattyName = name;
       selectedPattyIcon = icon;
 
-      document.getElementById('dot-1').classList.remove('active');
-      document.getElementById('dot-2').classList.add('active');
+      const dot1 = document.getElementById('dot-1');
+      const dot2 = document.getElementById('dot-2');
+      if (dot1) dot1.classList.remove('active');
+      if (dot2) dot2.classList.add('active');
 
-      document.getElementById('step-1').classList.add('hidden');
-      document.getElementById('step-2').classList.remove('hidden');
+      const step1 = document.getElementById('step-1');
+      const step2 = document.getElementById('step-2');
+      if (step1) step1.classList.add('hidden');
+      if (step2) step2.classList.remove('hidden');
+
+      updateReceiptSummaries();
     }
 
-    function selectMeat(meat, icon) {
-      triggerClickSound();
-      selectedMeatName = meat;
-      selectedMeatIcon = icon;
-
-      document.getElementById('dot-2').classList.remove('active');
-      document.getElementById('dot-3').classList.add('active');
-
-      document.getElementById('step-2').classList.add('hidden');
+    function selectMeat(meat = 'Chicken', icon = '🐔') {
+      selectedMeatName = 'Chicken';
+      selectedMeatIcon = '🐔';
       updateReceiptSummaries();
-      document.getElementById('step-3').classList.remove('hidden');
     }
 
     function goBack(toStep) {
       triggerClickSound();
+      const dot1 = document.getElementById('dot-1');
+      const dot2 = document.getElementById('dot-2');
+      if (dot2) dot2.classList.remove('active');
+      if (dot1) dot1.classList.add('active');
 
-      if (toStep === 1) {
-        // Meat step → Burger step
-        document.getElementById('dot-2').classList.remove('active');
-        document.getElementById('dot-1').classList.add('active');
-        document.getElementById('step-2').classList.add('hidden');
-        document.getElementById('step-1').classList.remove('hidden');
-      } else if (toStep === 2) {
-        // Summary step → Meat step
-        document.getElementById('dot-3').classList.remove('active');
-        document.getElementById('dot-2').classList.add('active');
-        document.getElementById('step-3').classList.add('hidden');
-        document.getElementById('step-2').classList.remove('hidden');
-      }
+      const step1 = document.getElementById('step-1');
+      const step2 = document.getElementById('step-2');
+      if (step2) step2.classList.add('hidden');
+      if (step1) step1.classList.remove('hidden');
     }
 
     function resetOrder() {
       triggerClickSound();
-      // Reset all dots
-      ['dot-2','dot-3'].forEach(id => document.getElementById(id).classList.remove('active'));
-      document.getElementById('dot-1').classList.add('active');
-      // Hide all steps, show step 1
-      ['step-2','step-3'].forEach(id => document.getElementById(id).classList.add('hidden'));
-      document.getElementById('step-1').classList.remove('hidden');
+      // Reset dots
+      const dot1 = document.getElementById('dot-1');
+      const dot2 = document.getElementById('dot-2');
+      if (dot2) dot2.classList.remove('active');
+      if (dot1) dot1.classList.add('active');
+
+      // Hide summary, show step 1
+      const step1 = document.getElementById('step-1');
+      const step2 = document.getElementById('step-2');
+      if (step2) step2.classList.add('hidden');
+      if (step1) step1.classList.remove('hidden');
+
       // Reset all selections
       selectedBurgerName = '';
       selectedBurgerPrice = 0;
       selectedBurgerIcon = '';
-      selectedMeatName = '';
-      selectedMeatIcon = '';
+      selectedMeatName = 'Chicken';
+      selectedMeatIcon = '🐔';
       selectedPattyName = '';
+      selectedExtraMeat = false;
+      selectedExtraCheese = false;
+
+      const extraMeatBtn = document.getElementById('addon-extra-meat-btn');
+      const extraMeatBadge = document.getElementById('addon-extra-meat-badge');
+      if (extraMeatBtn && extraMeatBadge) {
+        extraMeatBtn.classList.remove('border-red-500', 'bg-red-950/40');
+        extraMeatBadge.textContent = 'OFF';
+        extraMeatBadge.className = 'text-xs font-mono font-bold px-2.5 py-1 rounded-full bg-zinc-800 text-zinc-400 border border-white/10';
+      }
+
+      const extraCheeseBtn = document.getElementById('addon-extra-cheese-btn');
+      const extraCheeseBadge = document.getElementById('addon-extra-cheese-badge');
+      if (extraCheeseBtn && extraCheeseBadge) {
+        extraCheeseBtn.classList.remove('border-amber-500', 'bg-amber-950/40');
+        extraCheeseBadge.textContent = 'OFF';
+        extraCheeseBadge.className = 'text-xs font-mono font-bold px-2.5 py-1 rounded-full bg-zinc-800 text-zinc-400 border border-white/10';
+      }
+
       const noteInput = document.getElementById('special-note-input');
       if (noteInput) noteInput.value = '';
       const queueInfoEl = document.getElementById('status-queue-info');
