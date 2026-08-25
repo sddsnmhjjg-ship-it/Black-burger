@@ -1,29 +1,43 @@
 {
   "version": 2,
+  "builds": [
+    {
+      "src": "api/*.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "*.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "*.*",
+      "use": "@vercel/static"
+    }
+  ],
   "routes": [
     {
       "src": "/api/(.*)",
       "dest": "/api/$1"
     },
     {
-      "src": "/queue(\\.html)?",
-      "dest": "/queue.html",
-      "headers": { "content-type": "text/html; charset=utf-8" }
+      "src": "/queue",
+      "dest": "/queue.html"
     },
     {
-      "src": "/(casheir|cashier|Casheir)(\\.html)?",
-      "dest": "/Casheir.html",
-      "headers": { "content-type": "text/html; charset=utf-8" }
+      "src": "/casheir",
+      "dest": "/Casheir.html"
     },
     {
-      "src": "/manage(\\.html)?",
-      "dest": "/manage.html",
-      "headers": { "content-type": "text/html; charset=utf-8" }
+      "src": "/cashier",
+      "dest": "/cashier.html"
     },
     {
-      "src": "/(index(\\.html)?)?",
-      "dest": "/index.html",
-      "headers": { "content-type": "text/html; charset=utf-8" }
+      "src": "/manage",
+      "dest": "/manage.html"
+    },
+    {
+      "src": "/",
+      "dest": "/index.html"
     },
     {
       "src": "/(.*)",
