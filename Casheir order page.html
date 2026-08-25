@@ -1263,12 +1263,17 @@
         customerClientId: getOrCreateCustomerClientId(),
         customerName: customerName,
         burger: `${selectedBurgerName} ${selectedBurgerIcon}`,
-        meat: `${selectedMeatName} ${selectedMeatIcon}`,
-        patty: `${selectedBurgerName} (${selectedMeatName}) ${selectedBurgerIcon}`,
+        burgerName: selectedBurgerName,
+        meat: `${selectedMeatName || 'Chicken'} ${selectedMeatIcon || '🐔'}`,
+        meatName: selectedMeatName || 'Chicken',
+        extraMeat: !!selectedExtraMeat,
+        extraCheese: !!selectedExtraCheese,
+        patty: `${selectedBurgerName} ${selectedBurgerIcon}`,
         specialNote: document.getElementById('special-note-input')?.value.trim() || '',
         time: timeStr,
         total: calculateOrderTotal(),
-        isCashierKiosk: true
+        isCashierKiosk: true,
+        createdAt: new Date().toISOString()
       };
 
       openPaymentPopup(orderPayload, submitBtn, originalText);

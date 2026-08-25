@@ -3137,12 +3137,17 @@ function updateReceiptSummaries() {
           customerPhoto: currentAuthUser ? currentAuthUser.photoURL : '',
           customerUid: currentAuthUser ? currentAuthUser.uid : '',
           burger: `${selectedBurgerName} ${selectedBurgerIcon}`,
-          meat: `${selectedMeatName} ${selectedMeatIcon}`,
-          patty: `${selectedBurgerName} (${selectedMeatName}) ${selectedBurgerIcon}`,
+          burgerName: selectedBurgerName,
+          meat: `${selectedMeatName || 'Chicken'} ${selectedMeatIcon || '🐔'}`,
+          meatName: selectedMeatName || 'Chicken',
+          extraMeat: !!selectedExtraMeat,
+          extraCheese: !!selectedExtraCheese,
+          patty: `${selectedBurgerName} ${selectedBurgerIcon}`,
           specialNote: getSpecialNote(),
           time: timeStr,
           total: calculateOrderTotal(),
-          queueNumber: queueNumber
+          queueNumber: queueNumber,
+          createdAt: new Date().toISOString()
         };
         openPaymentPopup(orderPayload, submitBtn, originalText);
       });
