@@ -904,6 +904,7 @@
 
     async function updateOrderStatus(fbKey, status) {
       try {
+        const o = allOrders[fbKey];
         const url = `${FIREBASE_URL}/orders/${encodeURIComponent(fbKey)}.json`;
         await fetch(url, {
           method: 'PATCH',
@@ -914,8 +915,43 @@
         renderOrders();
         updateStats();
         showToast(statusLabel(status) + ' ✓');
+
+        // Automatically dispatch receipt email via Resend when food is ready
+        if (status === 'done' && o && o.customerEmail) {
+          sendReceiptEmail(o);
+        }
       } catch (e) {
         showToast('อัพเดตสถานะไม่สำเร็จ', true);
+      }
+    }
+
+    async function sendReceiptEmail(order) {
+      if (!order || !order.customerEmail) return;
+      try {
+        const response = await fetch('/api/send-receipt', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            customerEmail: order.customerEmail,
+            customerName: order.customerName || 'ลูกค้าคนสำคัญ',
+            orderId: order.orderId || order.id || '----',
+            queueNumber: order.queueNumber || order.queueNo || '-',
+            burger: order.burger || order.patty || order.burgerName || 'Classic Emperor',
+            meat: order.meat || order.meatName || 'ไก่ (Chicken)',
+            extraMeat: !!order.extraMeat,
+            extraCheese: !!order.extraCheese,
+            specialNote: order.specialNote || order.note || '',
+            total: order.total || 0,
+            paymentMethod: order.paymentMethod || 'PromptPay QR',
+            orderTime: order.createdAt ? new Date(order.createdAt).toLocaleString('th-TH') : new Date().toLocaleString('th-TH')
+          })
+        });
+        const resData = await response.json();
+        if (resData.success) {
+          showToast(`📧 ส่งใบเสร็จไปยัง ${order.customerEmail} แล้ว!`);
+        }
+      } catch (err) {
+        console.warn('Failed to send receipt email:', err);
       }
     }
 
