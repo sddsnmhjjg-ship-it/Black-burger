@@ -911,13 +911,13 @@
         .then(result => {
           const user = result.user;
           currentAuthUser = user;
-          if (!customerName) {
-            customerName = user.displayName || user.email.split('@')[0];
-            localStorage.setItem(CUSTOMER_NAME_STORAGE_KEY, customerName);
+          const savedName = localStorage.getItem(CUSTOMER_NAME_STORAGE_KEY);
+          if (savedName) {
+            customerName = savedName;
           }
           updateCustomerGreeting();
           playCheckoutTink();
-          // Prompt user to confirm/edit their nickname
+          // Prompt customer to explicitly enter/confirm their calling nickname
           showNamePopup();
         })
         .catch(error => {
@@ -947,9 +947,9 @@
     if (auth) {
       auth.onAuthStateChanged(user => {
         currentAuthUser = user;
-        if (user) {
-          customerName = user.displayName || user.email.split('@')[0];
-          localStorage.setItem(CUSTOMER_NAME_STORAGE_KEY, customerName);
+        const savedName = localStorage.getItem(CUSTOMER_NAME_STORAGE_KEY);
+        if (savedName) {
+          customerName = savedName;
         }
         updateCustomerGreeting();
       });
@@ -1593,14 +1593,14 @@ function showNamePopup() {
   const userEmail = document.getElementById('popup-google-user-email');
 
   if (currentAuthUser) {
-    // Already signed in with Google -> Show name entry & confirmation
+    // Already signed in with Google -> Show nickname entry step
     if (googleSection) googleSection.classList.add('hidden');
     if (nameSection) nameSection.classList.remove('hidden');
     if (userBadge) userBadge.classList.remove('hidden');
     if (userPhoto) userPhoto.src = currentAuthUser.photoURL || '';
     if (userEmail) userEmail.textContent = currentAuthUser.email || '';
     if (nameInput) {
-      nameInput.value = customerName || currentAuthUser.displayName || '';
+      nameInput.value = customerName || localStorage.getItem(CUSTOMER_NAME_STORAGE_KEY) || '';
     }
     if (overlay) overlay.classList.add('visible');
     setTimeout(() => {
@@ -1634,20 +1634,23 @@ function updateCustomerGreeting() {
   const googleSignOutBtn = document.getElementById('google-signout-btn');
   const changeNameBtn = document.getElementById('change-name-btn');
 
-  const displayName = customerName || (currentAuthUser ? currentAuthUser.displayName : '') || localStorage.getItem(CUSTOMER_NAME_STORAGE_KEY) || '';
-  const fallback = currentLangIdx === 0 ? 'เพื่อนสายเบอร์เกอร์' : 'burger friend';
+  const savedNick = localStorage.getItem(CUSTOMER_NAME_STORAGE_KEY) || customerName || '';
 
   if (greeting) {
-    greeting.textContent = currentLangIdx === 0
-      ? `สวัสดี, ${displayName || fallback}!`
-      : `Hi, ${displayName || fallback}!`;
+    if (savedNick) {
+      greeting.textContent = currentLangIdx === 0 ? `สวัสดีคุณ ${savedNick}!` : `Hi ${savedNick}!`;
+    } else if (currentAuthUser) {
+      greeting.textContent = currentLangIdx === 0 ? 'กรุณาตั้งชื่อเล่นสำหรับเรียกรับอาหาร' : 'Please set your calling nickname';
+    } else {
+      greeting.textContent = currentLangIdx === 0 ? 'สวัสดี, เพื่อนสายเบอร์เกอร์!' : 'Hi, burger friend!';
+    }
   }
 
   if (currentAuthUser) {
     if (greetingLabel) greetingLabel.textContent = currentLangIdx === 0 ? 'สมาชิก Google' : 'Google Member';
     if (verifiedBadge) verifiedBadge.classList.remove('hidden');
     if (emailText) {
-      emailText.textContent = currentAuthUser.email || '';
+      emailText.textContent = savedNick ? `ชื่อที่เชฟจะเรียก: "${savedNick}" (${currentAuthUser.email})` : currentAuthUser.email;
       emailText.classList.remove('hidden');
     }
     if (avatarImg && avatarSvg) {
@@ -1662,7 +1665,10 @@ function updateCustomerGreeting() {
     }
     if (googleSignInBtn) googleSignInBtn.classList.add('hidden');
     if (googleSignOutBtn) googleSignOutBtn.classList.remove('hidden');
-    if (changeNameBtn) changeNameBtn.classList.remove('hidden');
+    if (changeNameBtn) {
+      changeNameBtn.classList.remove('hidden');
+      changeNameBtn.textContent = savedNick ? (currentLangIdx === 0 ? 'เปลี่ยนชื่อ' : 'Change name') : (currentLangIdx === 0 ? 'ใส่ชื่อเล่น' : 'Set nickname');
+    }
   } else {
     if (greetingLabel) greetingLabel.textContent = currentLangIdx === 0 ? 'ยินดีต้อนรับ' : 'Welcome';
     if (verifiedBadge) verifiedBadge.classList.add('hidden');
@@ -1673,7 +1679,7 @@ function updateCustomerGreeting() {
     }
     if (googleSignInBtn) googleSignInBtn.classList.remove('hidden');
     if (googleSignOutBtn) googleSignOutBtn.classList.add('hidden');
-    if (changeNameBtn) changeNameBtn.classList.remove('hidden');
+    if (changeNameBtn) changeNameBtn.classList.add('hidden');
   }
 }
 
@@ -1752,22 +1758,22 @@ function submitName() {
     return;
   }
   const nameInput = document.getElementById('name-popup-input');
-  const val = nameInput.value.trim();
+  const val = nameInput ? nameInput.value.trim() : '';
 
-  if (!/\S/.test(val)) {
-    alert(currentLangIdx === 0 ? "กรุณาใส่ชื่อสำหรับเรียกรับอาหารด้วยครับ! / Please enter your name." : "Please enter your name for the order.");
-    nameInput.focus();
+  if (!val || val.length < 1) {
+    alert(currentLangIdx === 0 ? "กรุณาพิมพ์ชื่อเล่นสำหรับให้เชฟเรียกด้วยครับ! (เช่น น้องไอซ์, ฟ้า, John)" : "Please enter a nickname for the chef to call!");
+    if (nameInput) nameInput.focus();
     return;
   }
 
   customerName = val;
   localStorage.setItem(CUSTOMER_NAME_STORAGE_KEY, customerName);
   updateCustomerGreeting();
-  document.getElementById('name-popup-overlay').classList.remove('visible');
+  document.getElementById('name-popup-overlay')?.classList.remove('visible');
   playCheckoutTink();
   siteAlert(
-    currentLangIdx === 0 ? `บันทึกชื่อ "${customerName}" เรียบร้อยแล้ว! 🍔` : `Name "${customerName}" saved successfully! 🍔`,
-    currentLangIdx === 0 ? 'พร้อมสั่งอาหาร' : 'Ready to Order'
+    currentLangIdx === 0 ? `เชฟจะเรียกชื่อคุณว่า: "${customerName}" 🍔✨` : `Chef will call your name: "${customerName}" 🍔✨`,
+    currentLangIdx === 0 ? 'บันทึกชื่อสำเร็จ' : 'Name Confirmed'
   );
 }
 
@@ -3064,14 +3070,16 @@ function updateReceiptSummaries() {
         return;
       }
 
-      // 2. Mandatory Customer Name check
-      if (!customerName || !customerName.trim()) {
+      // 2. Mandatory Customer Nickname check
+      const currentNickname = customerName || localStorage.getItem(CUSTOMER_NAME_STORAGE_KEY) || '';
+      if (!currentNickname || !currentNickname.trim()) {
         showNamePopup();
         alert(currentLangIdx === 0 
-          ? 'กรุณาระบุชื่อสำหรับเรียกรับอาหารก่อนครับ' 
-          : 'Please enter your name for the order before submitting.');
+          ? '📢 กรุณาใส่ชื่อเล่นของคุณ เพื่อให้เชฟเรียกชื่อตอนอาหารเสร็จครับ!' 
+          : '📢 Please enter your nickname so the chef knows what name to call when ready!');
         return;
       }
+      customerName = currentNickname.trim();
 
       const cooldownRemaining = getOrderCooldownRemainingMs();
       if (cooldownRemaining > 0) {
