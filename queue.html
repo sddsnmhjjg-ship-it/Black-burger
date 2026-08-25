@@ -958,36 +958,36 @@
     }
 
     async function confirmPayment(fbKey) {
+      if (!fbKey) return;
       const o = allOrders[fbKey];
-      if (!o) return;
-      const payMethod = o.paymentMethod || 'ไม่ระบุ';
-      const total = o.total ? `฿${Number(o.total).toFixed(2)}` : '';
-      const custName = o.customerName || 'Guest';
-      showConfirm(
-        '💳',
-        `ยืนยันรับเงินจาก <strong>${escHtml(custName)}</strong>?<br>วิธีชำระ: <strong>${escHtml(payMethod)}</strong> ${total ? `<span style="color:var(--amber)">${total}</span>` : ''}`,
-        '✅ ยืนยันรับเงินแล้ว!',
-        async () => {
-          const url = `${FIREBASE_URL}/orders/${encodeURIComponent(fbKey)}.json`;
-          await fetch(url, {
-            method: 'PATCH',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              status: 'pending',
-              paymentStatus: 'paid',
-              paymentConfirmedAt: new Date().toISOString(),
-              updatedAt: new Date().toISOString()
-            })
-          });
-          if (allOrders[fbKey]) {
-            allOrders[fbKey].status = 'pending';
-            allOrders[fbKey].paymentStatus = 'paid';
-          }
-          renderOrders();
-          updateStats();
-          showToast('✅ ยืนยันเงินแล้ว — ส่งเข้าคิวทำ!');
-        }
-      );
+
+      // 1. Instant optimistic update
+      if (o) {
+        o.status = 'cooking';
+        o.paymentStatus = 'paid';
+        o.paymentConfirmedAt = new Date().toISOString();
+      }
+      renderOrders();
+      updateStats();
+      showToast('💳 ยืนยันรับเงินสำเร็จ! กำลังปรุงอาหาร 🍳');
+
+      // 2. Persist update to Firebase
+      try {
+        const url = `${FIREBASE_URL}/orders/${encodeURIComponent(fbKey)}.json`;
+        await fetch(url, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            status: 'cooking',
+            paymentStatus: 'paid',
+            paymentConfirmedAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+          })
+        });
+      } catch (err) {
+        console.error('Firebase payment confirmation error:', err);
+        showToast('อัพเดต Firebase ไม่สำเร็จ กรุณาตรวจสอบอินเทอร์เน็ต', true);
+      }
     }
 
     async function deleteFirebaseNode(path) {
