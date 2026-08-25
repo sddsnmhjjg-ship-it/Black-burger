@@ -1107,16 +1107,28 @@
       }
     }
 
-    function savePromptPayQr() {
+    async function savePromptPayQr() {
       const qrImg = document.getElementById('promptpay-qr');
       if (!qrImg || !qrImg.src) return;
-      const link = document.createElement('a');
-      link.href = qrImg.src;
-      link.download = `promptpay-qr-${pendingPaymentOrder?.orderId || 'order'}.png`;
-      link.target = '_blank';
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
+      try {
+        const res = await fetch(qrImg.src);
+        const blob = await res.blob();
+        const blobUrl = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = blobUrl;
+        link.download = `promptpay-qr-${pendingPaymentOrder?.orderId || 'order'}.png`;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        setTimeout(() => URL.revokeObjectURL(blobUrl), 2000);
+      } catch (err) {
+        window.open(qrImg.src, '_blank');
+      }
+    }
+
+    function resetOrder() {
+      triggerClickSound();
+      resetOrderAndReturnHome();
     }
 
     function finishQrPayment() {
