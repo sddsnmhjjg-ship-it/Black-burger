@@ -1176,7 +1176,7 @@
         (status === 'pending' && o.paymentStatus !== 'paid' && o.paymentStatus !== 'confirmed');
 
       if (needsPaymentConfirm) {
-        actions += `<button class="action-btn confirm-pay" onclick="confirmPayment('${fbKey}')">💳 ยืนยันรับเงิน / Confirm Payment</button>`;
+        actions += `<button class="action-btn confirm-pay" onclick="confirmPayment('${fbKey}')">💳 ยืนยันรับเงิน</button>`;
       }
 
       if (status !== 'done' && status !== 'cancelled') {
@@ -1190,12 +1190,20 @@
       }
       actions += `<button class="action-btn delete" onclick="deleteOrder('${fbKey}')" title="ลบออกจากคิว">🗑</button>`;
 
+      const googleBadge = o.customerEmail 
+        ? `<div style="display:flex;align-items:center;gap:5px;font-size:0.68rem;color:#93c5fd;margin-top:2px;font-family:monospace;">
+             ${o.customerPhoto ? `<img src="${escHtml(o.customerPhoto)}" style="width:14px;height:14px;border-radius:50%;object-fit:cover;border:1px solid rgba(255,255,255,0.2);">` : '📧'}
+             <span>${escHtml(o.customerEmail)}</span>
+           </div>` 
+        : '';
+
       return `
         <div class="order-card" data-status="${status}" data-id="${fbKey}">
           <div class="card-head">
             <div>
               <div class="queue-num">${queueDisplay}</div>
               <div class="customer-name">${escHtml(o.customerName || 'Guest')}</div>
+              ${googleBadge}
               <span class="order-id-tag">Order #${escHtml(String(orderNum))}</span>
             </div>
             <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
