@@ -375,26 +375,44 @@
   <!-- POPUPS & MODALS Preserved DOM IDs -->
   <div id="name-popup-overlay">
     <div id="name-popup-box">
+      <!-- Icon -->
       <div class="w-14 h-14 mx-auto mb-3 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400">
         <svg class="w-8 h-8 filter drop-shadow-[0_0_10px_rgba(245,158,11,0.5)]" fill="currentColor" viewBox="0 0 24 24"><path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"/></svg>
       </div>
-      <h2 id="name-popup-title" class="text-xl font-bold text-white">เข้าสู่ระบบเพื่อสั่งอาหาร | Sign In</h2>
-      <p id="name-popup-sub" class="text-xs text-zinc-400 mt-1 mb-4">เข้าสู่ระบบด้วย Google เพื่อติดตามคิวและบันทึกประวัติออเดอร์</p>
-      
-      <!-- 1-Click Google Sign In Button -->
-      <button type="button" onclick="signInWithGoogle()" class="w-full mb-4 flex items-center justify-center gap-3 bg-white hover:bg-zinc-100 text-zinc-900 font-bold px-4 py-3 rounded-xl transition-all shadow-lg hover:scale-[1.02] active:scale-[0.98] text-sm">
-        <svg class="w-5 h-5" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
-        <span>Sign in with Google</span>
-      </button>
 
-      <div class="flex items-center my-3 text-xs text-zinc-500">
-        <div class="flex-1 border-t border-white/10"></div>
-        <span class="px-3 uppercase font-mono text-[10px]">หรือใส่ชื่อเอง / Or enter name</span>
-        <div class="flex-1 border-t border-white/10"></div>
+      <!-- STEP 1: Google Sign In (Anti-Spam Required) -->
+      <div id="popup-google-signin-section">
+        <h2 id="name-popup-title" class="text-xl font-bold text-white">เข้าสู่ระบบเพื่อสั่งอาหาร</h2>
+        <p id="name-popup-sub" class="text-xs text-zinc-400 mt-1 mb-5 leading-relaxed">
+          🛡️ เพื่อความปลอดภัยและป้องกันสแปม กรุณาเข้าสู่ระบบด้วยบัญชี Google ก่อนสั่งอาหาร
+        </p>
+        
+        <button type="button" onclick="signInWithGoogle()" class="w-full flex items-center justify-center gap-3 bg-white hover:bg-zinc-100 text-zinc-900 font-bold px-5 py-3.5 rounded-xl transition-all shadow-xl hover:scale-[1.02] active:scale-[0.98] text-sm">
+          <svg class="w-5 h-5" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
+          <span>Sign in with Google</span>
+        </button>
       </div>
 
-      <input type="text" id="name-popup-input" placeholder="พิมพ์ชื่อของคุณ..." maxlength="30" autocomplete="off">
-      <button id="name-popup-btn" onclick="submitName()">ดำเนินการต่อ / Continue</button>
+      <!-- STEP 2: Name Input (After Google Verification) -->
+      <div id="popup-name-entry-section" class="hidden">
+        <!-- Verified Google Account Info -->
+        <div id="popup-google-user-badge" class="mb-4 p-3 rounded-xl bg-blue-950/30 border border-blue-500/30 flex items-center gap-3">
+          <img id="popup-google-user-photo" src="" alt="Google Avatar" class="w-8 h-8 rounded-full border border-blue-400 object-cover">
+          <div class="text-left overflow-hidden">
+            <div class="flex items-center gap-1.5 text-blue-400 text-[10px] font-mono font-bold uppercase">
+              <svg class="w-3.5 h-3.5 text-blue-400" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+              Google Account Verified
+            </div>
+            <p id="popup-google-user-email" class="text-xs text-zinc-300 font-mono truncate"></p>
+          </div>
+        </div>
+
+        <h2 class="text-lg font-bold text-white mb-1">ใส่ชื่อสำหรับเรียกรับอาหาร</h2>
+        <p class="text-xs text-zinc-400 mb-4">เวลาอาหารเสร็จเราจะเรียกชื่อนี้ | What name should we call?</p>
+
+        <input type="text" id="name-popup-input" placeholder="พิมพ์ชื่อเล่นของคุณ..." maxlength="30" autocomplete="off" class="w-full mb-3">
+        <button id="name-popup-btn" onclick="submitName()" class="w-full">ยืนยันชื่อและเริ่มสั่งอาหาร / Confirm Name</button>
+      </div>
     </div>
   </div>
 
@@ -893,15 +911,14 @@
         .then(result => {
           const user = result.user;
           currentAuthUser = user;
-          customerName = user.displayName || user.email.split('@')[0];
-          localStorage.setItem(CUSTOMER_NAME_STORAGE_KEY, customerName);
+          if (!customerName) {
+            customerName = user.displayName || user.email.split('@')[0];
+            localStorage.setItem(CUSTOMER_NAME_STORAGE_KEY, customerName);
+          }
           updateCustomerGreeting();
-          document.getElementById('name-popup-overlay')?.classList.remove('visible');
           playCheckoutTink();
-          siteAlert(
-            currentLangIdx === 0 ? `ยินดีต้อนรับคุณ ${customerName}! เข้าสู่ระบบด้วย Google สำเร็จ 🍔✨` : `Welcome ${customerName}! Signed in with Google 🍔✨`,
-            currentLangIdx === 0 ? 'เข้าสู่ระบบสำเร็จ' : 'Sign in Success'
-          );
+          // Prompt user to confirm/edit their nickname
+          showNamePopup();
         })
         .catch(error => {
           console.error('Google Sign-in Error:', error);
@@ -1569,12 +1586,36 @@ async function cancelCustomerOrder() {
 function showNamePopup() {
   const overlay = document.getElementById('name-popup-overlay');
   const nameInput = document.getElementById('name-popup-input');
-  nameInput.value = customerName || localStorage.getItem(CUSTOMER_NAME_STORAGE_KEY) || '';
-  overlay.classList.add('visible');
-  setTimeout(() => {
-    nameInput.focus();
-    nameInput.select();
-  }, 200);
+  const googleSection = document.getElementById('popup-google-signin-section');
+  const nameSection = document.getElementById('popup-name-entry-section');
+  const userBadge = document.getElementById('popup-google-user-badge');
+  const userPhoto = document.getElementById('popup-google-user-photo');
+  const userEmail = document.getElementById('popup-google-user-email');
+
+  if (currentAuthUser) {
+    // Already signed in with Google -> Show name entry & confirmation
+    if (googleSection) googleSection.classList.add('hidden');
+    if (nameSection) nameSection.classList.remove('hidden');
+    if (userBadge) userBadge.classList.remove('hidden');
+    if (userPhoto) userPhoto.src = currentAuthUser.photoURL || '';
+    if (userEmail) userEmail.textContent = currentAuthUser.email || '';
+    if (nameInput) {
+      nameInput.value = customerName || currentAuthUser.displayName || '';
+    }
+    if (overlay) overlay.classList.add('visible');
+    setTimeout(() => {
+      if (nameInput) {
+        nameInput.focus();
+        nameInput.select();
+      }
+    }, 200);
+  } else {
+    // Not signed in with Google -> Must sign in first to prevent spam
+    if (googleSection) googleSection.classList.remove('hidden');
+    if (nameSection) nameSection.classList.add('hidden');
+    if (userBadge) userBadge.classList.add('hidden');
+    if (overlay) overlay.classList.add('visible');
+  }
 }
 
 function changeName() {
@@ -1621,7 +1662,7 @@ function updateCustomerGreeting() {
     }
     if (googleSignInBtn) googleSignInBtn.classList.add('hidden');
     if (googleSignOutBtn) googleSignOutBtn.classList.remove('hidden');
-    if (changeNameBtn) changeNameBtn.classList.add('hidden');
+    if (changeNameBtn) changeNameBtn.classList.remove('hidden');
   } else {
     if (greetingLabel) greetingLabel.textContent = currentLangIdx === 0 ? 'ยินดีต้อนรับ' : 'Welcome';
     if (verifiedBadge) verifiedBadge.classList.add('hidden');
@@ -1705,24 +1746,29 @@ function reorderLastOrder() {
   document.getElementById('order-pad').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-// รวมพลังเป็นฟังก์ชันเดียว ไม่ซ้อน ไม่มั่ว!
 function submitName() {
+  if (!currentAuthUser) {
+    signInWithGoogle();
+    return;
+  }
   const nameInput = document.getElementById('name-popup-input');
   const val = nameInput.value.trim();
 
-  // 1. ดักจับค่าว่าง/สเปซบาร์รัวๆ ก่อนเลย (ไม่ผ่านคือเด้งออก)
   if (!/\S/.test(val)) {
-    alert("กรุณาใส่ชื่อก่อนนะตัวเธอ! / Please enter your name.");
+    alert(currentLangIdx === 0 ? "กรุณาใส่ชื่อสำหรับเรียกรับอาหารด้วยครับ! / Please enter your name." : "Please enter your name for the order.");
     nameInput.focus();
-    return; // บล็อก! ไม่ให้ไปต่อ
+    return;
   }
 
-  // 2. ถ้าพิมพ์ชื่อมาจริง ถึงจะบันทึกค่าแล้วปิดป็อปอัพ
   customerName = val;
   localStorage.setItem(CUSTOMER_NAME_STORAGE_KEY, customerName);
   updateCustomerGreeting();
   document.getElementById('name-popup-overlay').classList.remove('visible');
-  console.log("Name submitted:", customerName);
+  playCheckoutTink();
+  siteAlert(
+    currentLangIdx === 0 ? `บันทึกชื่อ "${customerName}" เรียบร้อยแล้ว! 🍔` : `Name "${customerName}" saved successfully! 🍔`,
+    currentLangIdx === 0 ? 'พร้อมสั่งอาหาร' : 'Ready to Order'
+  );
 }
 
 // ══ EVENT LISTENERS ══
@@ -3009,9 +3055,21 @@ function updateReceiptSummaries() {
     }
 
     function submitOrder() {
-      // Require Google Sign-In or name entry before ordering
-      if (!currentAuthUser && !customerName) {
+      // 1. Mandatory Google Sign-In check to prevent spam
+      if (!currentAuthUser) {
         showNamePopup();
+        alert(currentLangIdx === 0 
+          ? '🛡️ เพื่อป้องกันสแปม กรุณาเข้าสู่ระบบด้วย Google ก่อนส่งออเดอร์ครับ' 
+          : '🛡️ To prevent spam, please sign in with Google before placing your order.');
+        return;
+      }
+
+      // 2. Mandatory Customer Name check
+      if (!customerName || !customerName.trim()) {
+        showNamePopup();
+        alert(currentLangIdx === 0 
+          ? 'กรุณาระบุชื่อสำหรับเรียกรับอาหารก่อนครับ' 
+          : 'Please enter your name for the order before submitting.');
         return;
       }
 
