@@ -1,0 +1,25 @@
+{
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/", "destination": "/index.html" },
+    { "source": "/casheir", "destination": "/Casheir.html" },
+    { "source": "/cashier", "destination": "/cashier.html" },
+    { "source": "/queue", "destination": "/queue.html" },
+    { "source": "/manage", "destination": "/manage.html" }
+  ],
+  "headers": [
+    {
+      "source": "/(.*\\.html|/)",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/html; charset=utf-8"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
+      ]
+    }
+  ]
+}
