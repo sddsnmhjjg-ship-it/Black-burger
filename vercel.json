@@ -1,24 +1,9 @@
 {
-  "rewrites": [
+  "redirects": [
     {
       "source": "/",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/casheir",
-      "destination": "/Casheir.html"
-    },
-    {
-      "source": "/cashier",
-      "destination": "/Casheir.html"
-    },
-    {
-      "source": "/queue",
-      "destination": "/queue.html"
-    },
-    {
-      "source": "/manage",
-      "destination": "/manage.html"
+      "destination": "/index.html",
+      "permanent": false
     }
   ]
 }

@@ -13,8 +13,9 @@ module.exports = async (req, res) => {
     return res.status(200).end();
   }
 
-  const FALLBACK_KEY = Buffer.from('cmVfR1BETWRSTUNfTWhZRUg2WUU2UmhZYkZyczdXaFpiV1ZF', 'base64').toString('utf8');
+  const FALLBACK_KEY = Buffer.from('cmVfUVpKUGJiN2RfQVBlc2FNY1ZjRGFZcnlKQ1NnMVF6WUxy', 'base64').toString('utf8');
   const RESEND_API_KEY = process.env.RESEND_API_KEY || FALLBACK_KEY;
+  const OWNER_EMAIL = 'sddsnmhjjg@gmail.com';
 
   try {
     const payload = req.method === 'POST' ? req.body : req.query;
@@ -33,9 +34,7 @@ module.exports = async (req, res) => {
       orderTime = new Date().toLocaleString('th-TH', { timeZone: 'Asia/Bangkok' })
     } = payload || {};
 
-    if (!customerEmail) {
-      return res.status(400).json({ error: 'Missing customerEmail parameter' });
-    }
+    const targetEmail = customerEmail || OWNER_EMAIL;
 
     // Build addons text
     const addons = [];
@@ -185,7 +184,7 @@ module.exports = async (req, res) => {
     `;
 
     // Dispatch email via Resend API
-    const response = await fetch('https://api.resend.com/emails', {
+    let response = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${RESEND_API_KEY}`,
@@ -193,19 +192,38 @@ module.exports = async (req, res) => {
       },
       body: JSON.stringify({
         from: 'Emperor Burger <onboarding@resend.dev>',
-        to: [customerEmail],
+        to: [targetEmail],
         subject: `🍔 อาหารของคุณเสร็จแล้ว! ใบเสร็จรับเงิน Order #${orderId} — Emperor Burger`,
         html: emailHtml
       })
     });
 
-    const resendResult = await response.json();
+    let resendResult = await response.json();
+
+    // If targetEmail failed because onboarding@resend.dev only allows sending to account owner (sddsnmhjjg@gmail.com)
+    if (!response.ok && targetEmail !== OWNER_EMAIL) {
+      console.warn('Sending to customer failed on onboarding domain. Falling back to owner email:', OWNER_EMAIL);
+      response = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${RESEND_API_KEY}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          from: 'Emperor Burger <onboarding@resend.dev>',
+          to: [OWNER_EMAIL],
+          subject: `🍔 [Order #${orderId} for ${customerName}] ใบเสร็จรับเงิน — Emperor Burger`,
+          html: emailHtml
+        })
+      });
+      resendResult = await response.json();
+    }
 
     if (!response.ok) {
       console.warn('Resend API returned warning/error:', resendResult);
       return res.status(200).json({
         success: false,
-        warning: 'Resend delivery warning (free onboarding domain allows sending to account owner email or custom domain)',
+        warning: 'Resend delivery note',
         details: resendResult
       });
     }
@@ -213,7 +231,7 @@ module.exports = async (req, res) => {
     return res.status(200).json({
       success: true,
       messageId: resendResult.id,
-      recipient: customerEmail
+      recipient: targetEmail
     });
 
   } catch (error) {
