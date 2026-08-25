@@ -1,25 +1,33 @@
 {
-  "cleanUrls": true,
-  "rewrites": [
-    { "source": "/", "destination": "/index.html" },
-    { "source": "/casheir", "destination": "/Casheir.html" },
-    { "source": "/cashier", "destination": "/cashier.html" },
-    { "source": "/queue", "destination": "/queue.html" },
-    { "source": "/manage", "destination": "/manage.html" }
-  ],
-  "headers": [
+  "version": 2,
+  "routes": [
     {
-      "source": "/(.*\\.html|/)",
-      "headers": [
-        {
-          "key": "Content-Type",
-          "value": "text/html; charset=utf-8"
-        },
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=0, must-revalidate"
-        }
-      ]
+      "src": "/api/(.*)",
+      "dest": "/api/$1"
+    },
+    {
+      "src": "/queue(\\.html)?",
+      "dest": "/queue.html",
+      "headers": { "content-type": "text/html; charset=utf-8" }
+    },
+    {
+      "src": "/(casheir|cashier|Casheir)(\\.html)?",
+      "dest": "/Casheir.html",
+      "headers": { "content-type": "text/html; charset=utf-8" }
+    },
+    {
+      "src": "/manage(\\.html)?",
+      "dest": "/manage.html",
+      "headers": { "content-type": "text/html; charset=utf-8" }
+    },
+    {
+      "src": "/(index(\\.html)?)?",
+      "dest": "/index.html",
+      "headers": { "content-type": "text/html; charset=utf-8" }
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
     }
   ]
 }
