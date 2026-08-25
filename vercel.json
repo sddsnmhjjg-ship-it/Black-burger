@@ -1,32 +1,24 @@
 {
-  "version": 2,
-  "routes": [
+  "rewrites": [
     {
-      "src": "/api/(.*)",
-      "dest": "/api/$1"
+      "source": "/",
+      "destination": "/index.html"
     },
     {
-      "src": "/",
-      "dest": "/index.html"
+      "source": "/casheir",
+      "destination": "/Casheir.html"
     },
     {
-      "src": "/casheir",
-      "dest": "/Casheir.html"
+      "source": "/cashier",
+      "destination": "/Casheir.html"
     },
     {
-      "src": "/cashier",
-      "dest": "/Casheir.html"
+      "source": "/queue",
+      "destination": "/queue.html"
     },
     {
-      "src": "/queue",
-      "dest": "/queue.html"
-    },
-    {
-      "src": "/manage",
-      "dest": "/manage.html"
-    },
-    {
-      "handle": "filesystem"
+      "source": "/manage",
+      "destination": "/manage.html"
     }
   ]
 }
