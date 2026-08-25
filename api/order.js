@@ -18,7 +18,7 @@ module.exports = async (req, res) => {
     const DISCORD_WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL || '';
     const DISCORD_BOT_TOKEN = process.env.DISCORD_BOT_TOKEN || '';
     const DISCORD_CHANNEL_ID = process.env.DISCORD_CHANNEL_ID || '';
-    const SITE_URL = process.env.SITE_URL || 'https://black-burger-ssnmhjjg-ice.vercel.app';
+    const SITE_URL = process.env.SITE_URL || 'https://emperor-burger-ssnmhjjg.vercel.app';
     const FIREBASE_DATABASE_URL = process.env.FIREBASE_DATABASE_URL || 'https://food-34707-default-rtdb.asia-southeast1.firebasedatabase.app';
     const saveOrderStatus = async (status, extra = {}) => {
       const now = new Date().toISOString();
