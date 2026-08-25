@@ -50,6 +50,15 @@ module.exports = async (req, res) => {
 
     const formattedTotal = Number(total).toFixed(2);
 
+    // Build payment method badge
+    let paymentBadgeHtml = '';
+    const payLower = String(paymentMethod || '').toLowerCase();
+    if (payLower.includes('cash') || payLower.includes('เงินสด')) {
+      paymentBadgeHtml = '<span style="display: inline-block; background-color: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); padding: 4px 10px; border-radius: 8px; font-weight: 700; font-size: 13px;">💵 เงินสด (Cash)</span>';
+    } else {
+      paymentBadgeHtml = '<span style="display: inline-block; background-color: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.4); padding: 4px 10px; border-radius: 8px; font-weight: 700; font-size: 13px;">📱 สแกนจ่ายพร้อมเพย์ (PromptPay QR)</span>';
+    }
+
     const emailHtml = `
 <!DOCTYPE html>
 <html lang="th">
@@ -115,9 +124,9 @@ module.exports = async (req, res) => {
                   </td>
                 </tr>
                 <tr>
-                  <td style="font-size: 14px; color: #a1a1aa;">วิธีชำระเงิน:</td>
-                  <td align="right" style="font-size: 13px; color: #60a5fa; font-weight: 600;">
-                    ${escapeHtml(paymentMethod)}
+                  <td style="font-size: 14px; color: #a1a1aa; padding-top: 4px;">วิธีชำระเงิน:</td>
+                  <td align="right" style="padding-top: 4px;">
+                    ${paymentBadgeHtml}
                   </td>
                 </tr>
               </table>
