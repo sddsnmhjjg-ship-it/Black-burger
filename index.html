@@ -205,7 +205,8 @@
     #warning-popup-overlay,
     #site-dialog-overlay,
     #payment-popup-overlay,
-    #cash-confirm-overlay {
+    #cash-confirm-overlay,
+    #logout-confirm-overlay {
       position: fixed;
       inset: 0;
       background: rgba(9, 9, 11, 0.82);
@@ -225,7 +226,8 @@
     #warning-popup-overlay.visible,
     #site-dialog-overlay.visible,
     #payment-popup-overlay.visible,
-    #cash-confirm-overlay.visible {
+    #cash-confirm-overlay.visible,
+    #logout-confirm-overlay.visible {
       opacity: 1;
       pointer-events: auto;
     }
@@ -234,7 +236,8 @@
     #warning-popup-box,
     #site-dialog-box,
     #payment-popup-box,
-    #cash-confirm-box {
+    #cash-confirm-box,
+    #logout-confirm-box {
       background: rgba(24, 24, 27, 0.95);
       border: 1px solid rgba(255, 255, 255, 0.12);
       box-shadow: 0 25px 70px rgba(0, 0, 0, 0.8), 0 0 40px rgba(239, 68, 68, 0.2);
@@ -249,7 +252,8 @@
 
     #name-popup-overlay.visible #name-popup-box,
     #payment-popup-overlay.visible #payment-popup-box,
-    #cash-confirm-overlay.visible #cash-confirm-box {
+    #cash-confirm-overlay.visible #cash-confirm-box,
+    #logout-confirm-overlay.visible #logout-confirm-box {
       transform: scale(1) translateY(0);
     }
 
@@ -463,6 +467,35 @@
       </div>
       <h2 id="cash-confirm-title" class="text-lg font-bold text-amber-400 mt-3">กำลังรอยืนยัน / Waiting for Confirmation</h2>
       <p id="cash-confirm-message" class="text-xs text-zinc-400 mt-1">รอการยืนยันจากเชฟ / Waiting for chef to confirm payment...</p>
+    </div>
+  </div>
+
+  <!-- LOGOUT CONFIRMATION POPUP -->
+  <div id="logout-confirm-overlay" onclick="if(event.target===this) closeLogoutConfirm()">
+    <div id="logout-confirm-box">
+      <!-- Icon -->
+      <div class="w-14 h-14 mx-auto mb-3 rounded-2xl bg-red-950/40 border border-red-500/30 flex items-center justify-center text-red-400">
+        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+        </svg>
+      </div>
+
+      <h2 id="logout-confirm-title" class="text-xl font-bold text-white mb-1.5">
+        แน่ใจหรือไม่ว่าต้องการออกจากระบบ?
+      </h2>
+      <p id="logout-confirm-sub" class="text-xs text-zinc-400 mb-6 leading-relaxed">
+        คุณจะต้องเข้าสู่ระบบด้วยบัญชี Google ใหม่อีกครั้งเพื่อสั่งอาหารในครั้งถัดไป
+      </p>
+
+      <!-- Action Buttons -->
+      <div class="flex gap-3">
+        <button type="button" onclick="closeLogoutConfirm()" class="btn-glass flex-1 py-3 text-xs font-bold uppercase tracking-wider">
+          Nevermind
+        </button>
+        <button type="button" onclick="executeLogout()" class="btn-flame flex-1 py-3 text-xs font-bold uppercase tracking-wider">
+          Yes please
+        </button>
+      </div>
     </div>
   </div>
 
@@ -897,8 +930,30 @@
         });
     }
 
-    function signOutFromGoogle() {
+    function promptSignOut() {
       triggerClickSound();
+      const overlay = document.getElementById('logout-confirm-overlay');
+      const title = document.getElementById('logout-confirm-title');
+      const sub = document.getElementById('logout-confirm-sub');
+      
+      if (title && sub) {
+        title.textContent = currentLangIdx === 0 ? 'แน่ใจหรือไม่ว่าต้องการออกจากระบบ?' : 'Are you sure you want to log out?';
+        sub.textContent = currentLangIdx === 0 
+          ? 'คุณจะต้องเข้าสู่ระบบด้วยบัญชี Google ใหม่อีกครั้งเพื่อสั่งอาหาร' 
+          : 'You will need to sign in with Google again to place your next order.';
+      }
+      if (overlay) overlay.classList.add('visible');
+    }
+
+    function closeLogoutConfirm() {
+      triggerClickSound();
+      const overlay = document.getElementById('logout-confirm-overlay');
+      if (overlay) overlay.classList.remove('visible');
+    }
+
+    function executeLogout() {
+      triggerClickSound();
+      closeLogoutConfirm();
       if (auth) {
         auth.signOut().then(() => {
           currentAuthUser = null;
@@ -909,9 +964,14 @@
             currentLangIdx === 0 ? 'ออกจากระบบเรียบร้อยแล้ว' : 'Signed out successfully',
             currentLangIdx === 0 ? 'ออกจากระบบ' : 'Sign Out'
           );
+        }).catch(err => {
+          console.warn('Sign out error:', err);
         });
       }
     }
+
+    // Alias so legacy or direct calls open the confirmation modal
+    const signOutFromGoogle = promptSignOut;
 
     if (auth) {
       auth.onAuthStateChanged(user => {
