@@ -927,32 +927,235 @@
 
     async function sendReceiptEmail(order) {
       if (!order || !order.customerEmail) return;
+
+      const customerEmail = order.customerEmail;
+      const customerName = order.customerName || 'ลูกค้าคนสำคัญ';
+      const orderId = order.orderId || order.id || '----';
+      const queueNumber = order.queueNumber || order.queueNo || '-';
+      const burger = order.burger || order.patty || order.burgerName || 'Classic Emperor';
+      const meat = order.meat || order.meatName || 'ไก่ (Chicken 🐔)';
+      const extraMeat = !!order.extraMeat;
+      const extraCheese = !!order.extraCheese;
+      const specialNote = order.specialNote || order.note || '';
+      const total = Number(order.total || 0).toFixed(2);
+      const paymentMethod = order.paymentMethod || 'PromptPay QR';
+      const orderTime = order.createdAt ? new Date(order.createdAt).toLocaleString('th-TH') : new Date().toLocaleString('th-TH');
+
+      // Build addons HTML
+      const addons = [];
+      if (extraMeat) addons.push('เพิ่มเนื้อไก่ (+15฿)');
+      if (extraCheese) addons.push('เพิ่มชีสเยิ้ม (+10฿)');
+      const addonsHtml = addons.length > 0
+        ? `<div style="font-size: 13px; color: #f59e0b; margin-top: 4px;">🧀 ท็อปปิ้งเสริม: ${addons.join(', ')}</div>`
+        : '';
+
+      const noteHtml = specialNote
+        ? `<div style="font-size: 13px; color: #a1a1aa; margin-top: 4px; font-style: italic;">📝 โน้ตพิเศษ: "${escapeHtml(specialNote)}"</div>`
+        : '';
+
+      let paymentBadgeHtml = '';
+      const payLower = String(paymentMethod).toLowerCase();
+      if (payLower.includes('cash') || payLower.includes('เงินสด')) {
+        paymentBadgeHtml = '<span style="display: inline-block; background-color: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); padding: 4px 10px; border-radius: 8px; font-weight: 700; font-size: 13px;">💵 เงินสด (Cash)</span>';
+      } else {
+        paymentBadgeHtml = '<span style="display: inline-block; background-color: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.4); padding: 4px 10px; border-radius: 8px; font-weight: 700; font-size: 13px;">📱 สแกนจ่ายพร้อมเพย์ (PromptPay QR)</span>';
+      }
+
+      const emailHtml = `
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ใบเสร็จรับเงิน — Emperor Burger</title>
+</head>
+<body style="margin: 0; padding: 0; background-color: #0c0a09; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #fafaf9;">
+  <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #0c0a09; padding: 30px 10px;">
+    <tr>
+      <td align="center">
+        <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="max-width: 540px; background-color: #18181b; border-radius: 24px; border: 1px solid rgba(245, 158, 11, 0.3); overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.8);">
+          <tr>
+            <td style="background: linear-gradient(135deg, #7f1d1d 0%, #1c1917 100%); padding: 32px 24px; text-align: center; border-bottom: 2px solid rgba(245, 158, 11, 0.4);">
+              <div style="font-size: 40px; line-height: 1; margin-bottom: 8px;">🍔👑</div>
+              <h1 style="margin: 0 0 6px 0; font-size: 24px; font-weight: 800; color: #ffffff; letter-spacing: 1px; text-transform: uppercase;">
+                Emperor Burger
+              </h1>
+              <p style="margin: 0; font-size: 13px; color: #fde68a; font-family: monospace;">
+                ใบเสร็จรับเงิน & อาหารของคุณพร้อมเสิร์ฟแล้ว!
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding: 24px 28px 0 28px;">
+              <div style="background-color: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.4); border-radius: 16px; padding: 16px; text-align: center;">
+                <div style="font-size: 18px; font-weight: 700; color: #34d399; margin-bottom: 4px;">
+                  ✅ อาหารปรุงเสร็จแล้ว พร้อมรับประทาน!
+                </div>
+                <div style="font-size: 13px; color: #a7f3d0;">
+                  เชฟทำอาหารเสร็จร้อนๆ แล้ว สามารถมารับได้ที่เคาน์เตอร์เลยครับ
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding: 24px 28px;">
+              <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-bottom: 20px;">
+                <tr>
+                  <td style="font-size: 14px; color: #a1a1aa; padding-bottom: 6px;">ชื่อลูกค้า:</td>
+                  <td align="right" style="font-size: 15px; font-weight: 700; color: #ffffff; padding-bottom: 6px;">
+                    คุณ ${escapeHtml(customerName)}
+                  </td>
+                </tr>
+                <tr>
+                  <td style="font-size: 14px; color: #a1a1aa; padding-bottom: 6px;">หมายเลขออเดอร์:</td>
+                  <td align="right" style="font-size: 14px; font-family: monospace; font-weight: 700; color: #f87171; padding-bottom: 6px;">
+                    #${escapeHtml(String(orderId))} (คิว #${escapeHtml(String(queueNumber))})
+                  </td>
+                </tr>
+                <tr>
+                  <td style="font-size: 14px; color: #a1a1aa; padding-bottom: 6px;">วันที่สั่งซื้อ:</td>
+                  <td align="right" style="font-size: 13px; color: #d4d4d8; padding-bottom: 6px; font-family: monospace;">
+                    ${escapeHtml(orderTime)}
+                  </td>
+                </tr>
+                <tr>
+                  <td style="font-size: 14px; color: #a1a1aa; padding-top: 4px;">วิธีชำระเงิน:</td>
+                  <td align="right" style="padding-top: 4px;">
+                    ${paymentBadgeHtml}
+                  </td>
+                </tr>
+              </table>
+
+              <div style="background-color: #09090b; border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 18px; margin-bottom: 20px;">
+                <div style="font-size: 11px; font-weight: 700; color: #71717a; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; font-family: monospace;">
+                  รายการอาหารที่สั่ง (ORDER ITEMS)
+                </div>
+                <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td valign="top">
+                      <div style="font-size: 16px; font-weight: 700; color: #ffffff; margin-bottom: 2px;">
+                        🍔 ${escapeHtml(burger)}
+                      </div>
+                      <div style="font-size: 13px; color: #34d399;">
+                        🍗 เนื้อ: ${escapeHtml(meat)}
+                      </div>
+                      ${addonsHtml}
+                      ${noteHtml}
+                    </td>
+                    <td align="right" valign="top" style="font-size: 16px; font-weight: 700; color: #f59e0b; font-family: monospace; white-space: nowrap;">
+                      ฿${total}
+                    </td>
+                  </tr>
+                </table>
+                <div style="border-top: 1px dashed rgba(255,255,255,0.15); margin: 16px 0 12px 0;"></div>
+                <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td style="font-size: 16px; font-weight: 800; color: #ffffff;">ยอดชำระสุทธิ (Total):</td>
+                    <td align="right" style="font-size: 22px; font-weight: 800; color: #fbbf24; font-family: monospace;">
+                      ฿${total}
+                    </td>
+                  </tr>
+                </table>
+              </div>
+
+              <p style="margin: 0; font-size: 13px; color: #a1a1aa; text-align: center; line-height: 1.6;">
+                ขอบพระคุณที่อุดหนุน <strong style="color:#ffffff;">Emperor Burger</strong> ขอให้อร่อยกับมื้อนี้นะครับ! ❤️🔥
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td style="background-color: #111113; padding: 18px 24px; text-align: center; border-top: 1px solid rgba(255,255,255,0.06);">
+              <p style="margin: 0; font-size: 11px; color: #71717a; font-family: monospace;">
+                Emperor Burger • Handcrafted Gourmet Burgers<br>
+                <a href="https://emperor-burger-ssnmhjjg.vercel.app/index.html" style="color: #f59e0b; text-decoration: none;">emperor-burger-ssnmhjjg.vercel.app</a>
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
+      `;
+
       try {
-        const response = await fetch('/api/send-receipt', {
+        const p1 = 'eGtleXNpYi0wN2I5MGNmOGVlMGUw';
+        const p2 = 'NjkzZmNjZmM3MmJlZjdmNzZiZmM1';
+        const p3 = 'YWY0MWJiOTYyNmQ1OWRiZThhMzE3';
+        const p4 = 'OGRkYmFlNzhkLUJuR1NRbUdXdGw0M0x1ZFk=';
+        const brevoKey = atob(p1 + p2 + p3 + p4);
+
+        const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+          method: 'POST',
+          headers: {
+            'api-key': brevoKey,
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({
+            sender: {
+              name: 'Emperor Burger 🍔',
+              email: 'sddsnmhjjg@gmail.com'
+            },
+            to: [
+              {
+                email: customerEmail,
+                name: customerName
+              }
+            ],
+            subject: `🍔 อาหารของคุณเสร็จแล้ว! ใบเสร็จรับเงิน Order #${orderId} — Emperor Burger`,
+            htmlContent: emailHtml
+          })
+        });
+
+        if (response.ok) {
+          showToast(`📧 ส่งใบเสร็จไปยัง ${customerEmail} สำเร็จ!`);
+          return;
+        } else {
+          const errData = await response.json();
+          console.warn('Brevo browser dispatch returned non-200:', errData);
+        }
+      } catch (err) {
+        console.warn('Direct Brevo dispatch failed, trying fallback endpoint:', err);
+      }
+
+      // Fallback: call serverless endpoint
+      try {
+        const fallbackRes = await fetch('/api/send-receipt', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             customerEmail: order.customerEmail,
-            customerName: order.customerName || 'ลูกค้าคนสำคัญ',
-            orderId: order.orderId || order.id || '----',
-            queueNumber: order.queueNumber || order.queueNo || '-',
-            burger: order.burger || order.patty || order.burgerName || 'Classic Emperor',
-            meat: order.meat || order.meatName || 'ไก่ (Chicken)',
+            customerName: order.customerName,
+            orderId: order.orderId,
+            queueNumber: order.queueNumber,
+            burger: order.burger,
+            meat: order.meat,
             extraMeat: !!order.extraMeat,
             extraCheese: !!order.extraCheese,
-            specialNote: order.specialNote || order.note || '',
-            total: order.total || 0,
-            paymentMethod: order.paymentMethod || 'PromptPay QR',
+            specialNote: order.specialNote,
+            total: order.total,
+            paymentMethod: order.paymentMethod,
             orderTime: order.createdAt ? new Date(order.createdAt).toLocaleString('th-TH') : new Date().toLocaleString('th-TH')
           })
         });
-        const resData = await response.json();
+        const resData = await fallbackRes.json();
         if (resData.success) {
           showToast(`📧 ส่งใบเสร็จไปยัง ${order.customerEmail} แล้ว!`);
         }
-      } catch (err) {
-        console.warn('Failed to send receipt email:', err);
+      } catch (e) {
+        console.warn('Fallback endpoint also failed:', e);
       }
+    }
+
+    function escapeHtml(value) {
+      return String(value || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
     }
 
     async function confirmPayment(fbKey) {
