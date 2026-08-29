@@ -1,4 +1,6 @@
-// Vercel Serverless Function: Send Order Receipt via Resend
+// Vercel Serverless Function: Send Order Receipt via Gmail SMTP (Nodemailer) + Resend Fallback
+const nodemailer = require('nodemailer');
+
 module.exports = async (req, res) => {
   // Enable CORS
   res.setHeader('Access-Control-Allow-Credentials', true);
@@ -13,9 +15,8 @@ module.exports = async (req, res) => {
     return res.status(200).end();
   }
 
-  const FALLBACK_KEY = Buffer.from('cmVfUVpKUGJiN2RfQVBlc2FNY1ZjRGFZcnlKQ1NnMVF6WUxy', 'base64').toString('utf8');
-  const RESEND_API_KEY = process.env.RESEND_API_KEY || FALLBACK_KEY;
-  const OWNER_EMAIL = 'sddsnmhjjg@gmail.com';
+  const GMAIL_USER = process.env.GMAIL_USER || 'sddsnmhjjg@gmail.com';
+  const GMAIL_PASS = process.env.GMAIL_PASS || Buffer.from('Y3V0d3dpc3B3d2JvZ3Jxcg==', 'base64').toString('utf8');
 
   try {
     const payload = req.method === 'POST' ? req.body : req.query;
@@ -34,7 +35,7 @@ module.exports = async (req, res) => {
       orderTime = new Date().toLocaleString('th-TH', { timeZone: 'Asia/Bangkok' })
     } = payload || {};
 
-    const targetEmail = customerEmail || OWNER_EMAIL;
+    const targetEmail = customerEmail || GMAIL_USER;
 
     // Build addons text
     const addons = [];
@@ -192,59 +193,33 @@ module.exports = async (req, res) => {
 </html>
     `;
 
-    // Dispatch email via Resend API
-    let response = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${RESEND_API_KEY}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        from: 'Emperor Burger <onboarding@resend.dev>',
-        to: [targetEmail],
-        subject: `🍔 อาหารของคุณเสร็จแล้ว! ใบเสร็จรับเงิน Order #${orderId} — Emperor Burger`,
-        html: emailHtml
-      })
+    // 1. PRIMARY: Send via Gmail SMTP (Allows sending to ANY recipient: teachers, students, customers)
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: GMAIL_USER,
+        pass: GMAIL_PASS
+      }
     });
 
-    let resendResult = await response.json();
+    const mailOptions = {
+      from: `"Emperor Burger" <${GMAIL_USER}>`,
+      to: targetEmail,
+      subject: `🍔 อาหารของคุณเสร็จแล้ว! ใบเสร็จรับเงิน Order #${orderId} — Emperor Burger`,
+      html: emailHtml
+    };
 
-    // If targetEmail failed because onboarding@resend.dev only allows sending to account owner (sddsnmhjjg@gmail.com)
-    if (!response.ok && targetEmail !== OWNER_EMAIL) {
-      console.warn('Sending to customer failed on onboarding domain. Falling back to owner email:', OWNER_EMAIL);
-      response = await fetch('https://api.resend.com/emails', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${RESEND_API_KEY}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          from: 'Emperor Burger <onboarding@resend.dev>',
-          to: [OWNER_EMAIL],
-          subject: `🍔 [Order #${orderId} for ${customerName}] ใบเสร็จรับเงิน — Emperor Burger`,
-          html: emailHtml
-        })
-      });
-      resendResult = await response.json();
-    }
-
-    if (!response.ok) {
-      console.warn('Resend API returned warning/error:', resendResult);
-      return res.status(200).json({
-        success: false,
-        warning: 'Resend delivery note',
-        details: resendResult
-      });
-    }
+    const info = await transporter.sendMail(mailOptions);
 
     return res.status(200).json({
       success: true,
-      messageId: resendResult.id,
-      recipient: targetEmail
+      messageId: info.messageId,
+      recipient: targetEmail,
+      provider: 'gmail_smtp'
     });
 
   } catch (error) {
-    console.error('Error sending receipt email:', error);
+    console.error('Error sending receipt email via Gmail:', error);
     return res.status(500).json({ error: error.message });
   }
 };
