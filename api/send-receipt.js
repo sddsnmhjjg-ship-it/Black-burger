@@ -195,7 +195,9 @@ module.exports = async (req, res) => {
 
     // 1. PRIMARY: Send via Gmail SMTP (Allows sending to ANY recipient: teachers, students, customers)
     const transporter = nodemailer.createTransport({
-      service: 'gmail',
+      host: 'smtp.gmail.com',
+      port: 465,
+      secure: true,
       auth: {
         user: GMAIL_USER,
         pass: GMAIL_PASS
@@ -215,7 +217,7 @@ module.exports = async (req, res) => {
       success: true,
       messageId: info.messageId,
       recipient: targetEmail,
-      provider: 'gmail_smtp'
+      engine: 'gmail_smtp_v2'
     });
 
   } catch (error) {
