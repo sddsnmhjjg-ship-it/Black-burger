@@ -1913,6 +1913,10 @@ function updateCustomerGreeting() {
     if (googleSignOutBtn) googleSignOutBtn.classList.add('hidden');
     if (changeNameBtn) changeNameBtn.classList.add('hidden');
   }
+
+  if (typeof updateMembershipCardUi === 'function') {
+    updateMembershipCardUi();
+  }
 }
 
 function getSpecialNote() {
@@ -3445,161 +3449,7 @@ function updateReceiptSummaries() {
         };
         openPaymentPopup(orderPayload, submitBtn, originalText);
       });
-      return;
-
-    } // end _discardedDiscordFallback
-
-      // (dead code below — kept only as reference; execution never reaches here due to return above)
-      const completeOrderSuccess = () => {
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = originalText;
-        
-        // Play triumphant tink sound!
-        playCheckoutTink();
-        
-        // Animate a massive heart/star burst!
-        const rect = document.getElementById('order-pad').getBoundingClientRect();
-        const x = rect.left + rect.width / 2;
-        const y = rect.top + rect.height / 2;
-        
-        for (let i = 0; i < 20; i++) {
-          createSpark({ clientX: x + (Math.random() - 0.5) * 100, clientY: y + (Math.random() - 0.5) * 100 });
-        }
-        
-        // Show cute success popup (Translated dynamically!)
-        const alertMsg = isThai 
-          ? `🍔 ส่งรายการสั่งซื้อเรียบร้อย! [หมายเลขสั่งซื้อ #${orderId}]\n\nชุดคอมโบของคุณ:\n- ${selectedBurgerName} ${selectedBurgerIcon}\n- เนื้อ: ${selectedMeatName} ${selectedMeatIcon}\n\nระบบได้ส่งการแจ้งเตือนไปยังบอท Discord แล้ว! เชฟกำลังเตรียมเบอร์เกอร์แสนอร่อยให้คุณอยู่ครับ! ♥`
-          : `🍔 Order Placed! [Order #${orderId}]\n\nYour combo:\n- ${selectedBurgerName} ${selectedBurgerIcon}\n- Meat: ${selectedMeatName} ${selectedMeatIcon}\n\nOur Discord Bot has been notified! Chef is prepping your charcoal burger now! ♥`;
-        alert(alertMsg);
-        resetOrder();
-      };
-
-      // 1. First try calling the Vercel backend /api/order securely
-      fetch('/api/order', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(orderPayload)
-      })
-      .then(res => {
-        if (!res.ok) throw new Error('Backend function not running or failed');
-        return res.json();
-      })
-      .then(data => {
-        if (data.success) {
-          completeOrderSuccess();
-        } else {
-          throw new Error(data.error || 'Backend failed');
-        }
-      })
-      .catch(err => {
-        console.warn('Backend endpoint unavailable (e.g. running on Live Server). Falling back to direct browser post...', err);
-        
-        let DISCORD_WEBHOOK_URL = localStorage.getItem('bitty-burger-local-webhook');
-        if (!DISCORD_WEBHOOK_URL) {
-          DISCORD_WEBHOOK_URL = prompt(isThai 
-            ? 'กรุณากรอก Discord Webhook URL สำหรับการทดสอบเครื่องของคุณ (จะบันทึกในบราวเซอร์นี้เท่านั้น):' 
-            : 'Please enter your Discord Webhook URL for local testing (this will only be saved in your browser):');
-          if (DISCORD_WEBHOOK_URL) {
-            localStorage.setItem('bitty-burger-local-webhook', DISCORD_WEBHOOK_URL.trim());
-          }
-        }
-        if (!DISCORD_WEBHOOK_URL) {
-          alert(isThai ? 'ไม่ได้ระบุ Webhook ไม่สามารถส่งออเดอร์ไปที่ Discord' : 'Webhook URL not provided. Order could not be sent to Discord.');
-          submitBtn.disabled = false;
-          submitBtn.innerHTML = originalText;
-          return;
-        }
-        const SITE_URL = 'https://emperor-burger-ssnmhjjg.vercel.app';
-        
-        const discordEmbedPayload = {
-          embeds: [
-            {
-              title: "🍔 Big Black Burger 🖤",
-              description: "THERE'S A NEW ORDER!! | ออเดอร์มาเเล้ว!!",
-              color: 14753096, // Hex #e11d48 in decimal (Strawberry Rose Red)
-              fields: [
-                {
-                  name: "👤 Customer Name | ชื่อลูกค้า",
-                  value: `**${customerName  || 'Guest'}**`,
-                  inline: false
-                },
-                {
-                  name: "📋 Value Order | หมายเลขออเดอร์",
-                  value: `\`#${orderId}\``,
-                  inline: true
-                },
-                {
-                  name: "🍔 Burger | เบอร์เกอร์",
-                  value: `**${selectedPattyName} ${selectedPattyIcon}**`,
-                  inline: true
-                },
-                {
-                  name: "🔢 Queue Number | หมายเลขคิว",
-                  value: `**Queue #${orderPayload.queueNumber || 'N/A'}**`,
-                  inline: true
-                },
-                {
-                  name: "🕒 Order Time | เวลาที่สั่ง",
-                  value: `\`${timeStr}\``,
-                  inline: false
-                },
-                {
-                  name: "⏳ Order Status | สถานะออเดอร์",
-                  value: "**PENDING** — Waiting for chef...",
-                  inline: false
-                }
-              ],
-              footer: {
-                text: "ไปรับใช้ชาติได้เเล้วเจ้าพวกไพร่!!!",
-                icon_url: "https://ssnmhjjg-gg.vercel.app/aaaaaa.gif"
-              },
-              timestamp: new Date().toISOString()
-            }
-          ]
-        };
-
-        // Send with ?wait=true to get message ID back
-        fetch(DISCORD_WEBHOOK_URL + '?wait=true', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(discordEmbedPayload)
-        })
-        .then(res => {
-          if (!res.ok) throw new Error('Direct webhook call returned error status');
-          return res.json();
-        })
-        .then(msgData => {
-          // Patch the message to add Cooking/Done/Cancel status links
-          const mid = msgData.id;
-          const cookingLink = `${SITE_URL}/api/status?mid=${mid}&action=cooking&oid=${orderId}`;
-          const doneLink = `${SITE_URL}/api/status?mid=${mid}&action=done&oid=${orderId}`;
-          const cancelLink = `${SITE_URL}/api/status?mid=${mid}&action=cancel&oid=${orderId}`;
-
-          discordEmbedPayload.embeds[0].description += `\n\n**📊 Update Order Status:**\n[🍳 Cooking](${cookingLink}) · [✅ Done](${doneLink}) · [❌ Cancel](${cancelLink})`;
-
-          return fetch(`${DISCORD_WEBHOOK_URL}/messages/${mid}`, {
-            method: 'PATCH',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(discordEmbedPayload)
-          });
-        })
-        .then(() => {
-          completeOrderSuccess();
-        })
-        .catch(fallbackErr => {
-          submitBtn.disabled = false;
-          submitBtn.innerHTML = originalText;
-          console.error('All order dispatch methods failed:', fallbackErr);
-          const errorMsg = isThai 
-            ? '❌ โอ๊ะโอ! อินเทอร์เน็ตในห้องครัวขัดข้อง กรุณาตรวจสอบการเชื่อมต่อของคุณหรือเเจ้งคุณฟ้า Discord Webhook! 📡'
-            : '❌ Oh no! The kitchen wifi is down. Please check your internet connection or Discord Webhook! 📡';
-          alert(errorMsg);
-        });
-      });
+    }
 
     // Custom Cursor & Sparks (Only on Desktop Screens)
     const cursor = document.getElementById('custom-cursor');
