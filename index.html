@@ -583,7 +583,7 @@
     </section>
 
     <!-- MEMBERSHIP & MONTHLY LOYALTY STAMP CARD -->
-    <section id="membership-loyalty-card" class="glass-panel p-5 hidden flex-col gap-3.5 border border-amber-500/30 bg-gradient-to-r from-amber-950/20 via-zinc-900/60 to-black/40 relative overflow-hidden">
+    <section id="membership-loyalty-card" class="glass-panel p-5 flex flex-col gap-3.5 border border-amber-500/30 bg-gradient-to-r from-amber-950/20 via-zinc-900/60 to-black/40 relative overflow-hidden">
       <div class="absolute -top-12 -right-12 w-36 h-36 bg-amber-500/10 rounded-full blur-2xl pointer-events-none"></div>
 
       <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 z-10">
@@ -1089,15 +1089,6 @@
       const card = document.getElementById('membership-loyalty-card');
       if (!card) return;
 
-      if (!currentAuthUser) {
-        card.classList.add('hidden');
-        card.classList.remove('flex');
-        return;
-      }
-
-      card.classList.remove('hidden');
-      card.classList.add('flex');
-
       const isThai = currentLangIdx === 0;
       const count = userMonthlyOrderCount;
       const target = 5;
@@ -1117,7 +1108,9 @@
       // Count text
       const countEl = document.getElementById('membership-count-text');
       if (countEl) {
-        countEl.textContent = `${count} / ${target} ครั้ง (Orders)`;
+        countEl.textContent = currentAuthUser
+          ? `${count} / ${target} ครั้ง (Orders)`
+          : (isThai ? 'เข้าสู่ระบบเพื่อสะสมแต้ม' : 'Sign in to collect stamps');
       }
 
       // VIP active badge
@@ -1136,7 +1129,7 @@
       if (stampsContainer) {
         stampsContainer.innerHTML = '';
         for (let i = 1; i <= target; i++) {
-          const isStamped = i <= count;
+          const isStamped = currentAuthUser && (i <= count);
           const isFifthReward = i === 5;
           const stampDiv = document.createElement('div');
           stampDiv.className = `p-2 sm:p-3 rounded-2xl flex flex-col items-center justify-center gap-1 border transition-all ${
@@ -1158,7 +1151,11 @@
       // Message
       const msgEl = document.getElementById('membership-message');
       if (msgEl) {
-        if (count >= 5) {
+        if (!currentAuthUser) {
+          msgEl.innerHTML = isThai
+            ? `👑 <strong class="text-amber-400">สิทธิพิเศษสมาชิก Emperor VIP:</strong> ซื้อครบ 5 ครั้งในเดือนนี้ รับส่วนลด <strong class="text-white">-10 บาท</strong> ทุกออเดอร์! (เข้าสู่ระบบด้วย Google ด้านบนเพื่อเริ่มสะสมแต้ม)`
+            : `👑 <strong class="text-amber-400">Emperor VIP Perks:</strong> Buy 5 burgers this month to get <strong class="text-white">-10 Baht discount</strong> on all orders! (Sign in with Google above to start)`;
+        } else if (count >= 5) {
           msgEl.innerHTML = isThai
             ? `🎉 <strong class="text-amber-400">ยินดีด้วย! คุณเป็นสมาชิกระดับ VIP</strong> ได้รับส่วนลด <strong class="text-white">-10 บาท</strong> ในทุกออเดอร์ของเดือนนี้!`
             : `🎉 <strong class="text-amber-400">Awesome! VIP Member!</strong> You get a <strong class="text-white">-10 Baht discount</strong> on all orders this month!`;
