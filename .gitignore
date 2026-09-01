@@ -31,3 +31,7 @@ npm-debug.log*
 # Editor
 .vscode/
 .idea/
+
+# Local tools
+push.exe
+
