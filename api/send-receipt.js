@@ -61,7 +61,7 @@ module.exports = async (req, res) => {
     const discountRowHtml = numDiscount > 0
       ? `<tr>
            <td style="font-size: 13px; color: #fbbf24; padding-bottom: 8px;">
-             👑 ส่วนลดสมาชิก VIP (5+ ครั้ง/เดือน):
+             👑 ส่วนลดสมาชิก (สะสมครบ 3 ครั้ง):
            </td>
            <td align="right" style="font-size: 14px; font-weight: 700; color: #fbbf24; padding-bottom: 8px; font-family: monospace;">
              -฿${numDiscount.toFixed(2)}

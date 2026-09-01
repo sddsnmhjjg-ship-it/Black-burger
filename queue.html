@@ -965,7 +965,7 @@
       const discountRowHtml = memberDiscount > 0
         ? `<tr>
              <td style="font-size: 13px; color: #fbbf24; padding-bottom: 8px;">
-               👑 ส่วนลดสมาชิก VIP (5+ ครั้ง/เดือน):
+               👑 ส่วนลดสมาชิก (สะสมครบ 3 ครั้ง):
              </td>
              <td align="right" style="font-size: 14px; font-weight: 700; color: #fbbf24; padding-bottom: 8px; font-family: monospace;">
                -฿${memberDiscount.toFixed(2)}
@@ -1450,7 +1450,7 @@
         : '';
 
       const vipBadge = (o.memberDiscount > 0 || o.isVipMember)
-        ? `<div style="margin-top:3px;"><span style="display:inline-flex;align-items:center;gap:4px;background:rgba(245,158,11,0.2);color:#fbbf24;border:1px solid rgba(245,158,11,0.5);border-radius:99px;padding:2px 8px;font-size:0.68rem;font-weight:700;">👑 สมาชิก VIP (-10฿)</span></div>`
+        ? `<div style="margin-top:3px;"><span style="display:inline-flex;align-items:center;gap:4px;background:rgba(245,158,11,0.2);color:#fbbf24;border:1px solid rgba(245,158,11,0.5);border-radius:99px;padding:2px 8px;font-size:0.68rem;font-weight:700;">👑 ส่วนลดสะสม 3 ครั้ง (-10฿)</span></div>`
         : '';
 
       return `
