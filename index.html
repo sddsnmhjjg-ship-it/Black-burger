@@ -582,6 +582,39 @@
       </div>
     </section>
 
+    <!-- MEMBERSHIP & MONTHLY LOYALTY STAMP CARD -->
+    <section id="membership-loyalty-card" class="glass-panel p-5 hidden flex-col gap-3.5 border border-amber-500/30 bg-gradient-to-r from-amber-950/20 via-zinc-900/60 to-black/40 relative overflow-hidden">
+      <div class="absolute -top-12 -right-12 w-36 h-36 bg-amber-500/10 rounded-full blur-2xl pointer-events-none"></div>
+
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 z-10">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-lg shadow-sm">👑</div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h3 class="text-sm font-bold text-white uppercase tracking-wider">Emperor VIP Club</h3>
+              <span id="vip-active-badge" class="hidden text-[10px] font-mono font-bold bg-amber-400 text-black px-2 py-0.5 rounded-full uppercase tracking-wider shadow-sm">
+                👑 -10฿ VIP Active
+              </span>
+            </div>
+            <p id="membership-month-label" class="text-[11px] text-zinc-400 font-mono">สะสมออเดอร์เดือนนี้</p>
+          </div>
+        </div>
+        <div class="text-left sm:text-right">
+          <span class="text-xs font-mono font-bold text-amber-400" id="membership-count-text">0 / 5 ครั้ง</span>
+        </div>
+      </div>
+
+      <!-- 5 Stamp Circles Tracker -->
+      <div class="grid grid-cols-5 gap-2 sm:gap-3 z-10" id="membership-stamps-container">
+        <!-- Generated dynamically via updateMembershipCardUi -->
+      </div>
+
+      <!-- Motivational Helper Message -->
+      <div id="membership-message" class="text-xs text-zinc-300 bg-black/40 border border-white/5 rounded-xl p-2.5 text-center font-mono">
+        <!-- Updated in JS -->
+      </div>
+    </section>
+
     <!-- DYNAMIC TIME-BASED GREETING CARD -->
     <div id="time-greeting-card" class="glass-panel p-5 text-center flex flex-col items-center gap-2">
       <span class="text-[11px] font-mono uppercase bg-red-950/80 text-red-300 py-1 px-3.5 border border-red-500/30 rounded-full flex items-center gap-1.5" data-i18n="chef-note-badge">
@@ -690,6 +723,14 @@
           <div class="flex justify-between items-center pb-2 border-b border-zinc-800">
             <span class="text-zinc-400 text-xs" data-i18n="summary-meat-label">เนื้อ:</span>
             <span class="font-bold text-emerald-400" id="summary-meat">🐔 ไก่ย่าง (Chicken)</span>
+          </div>
+          <!-- VIP Membership Discount Row (Shown when eligible) -->
+          <div id="summary-discount-row" class="hidden flex justify-between items-center pb-2 border-b border-zinc-800 text-amber-400">
+            <span class="text-xs flex items-center gap-1.5 font-bold">
+              <span>👑</span>
+              <span data-i18n="summary-vip-discount-label">ส่วนลดสมาชิก VIP (ซื้อครบ 5 ครั้ง):</span>
+            </span>
+            <span class="font-bold font-mono">-10.00 บาท</span>
           </div>
           <div class="pt-2 flex justify-between font-bold text-base text-red-400">
             <span data-i18n="summary-total-label">ราคารวมทั้งหมด:</span>
@@ -973,6 +1014,167 @@
     // Alias so legacy or direct calls open the confirmation modal
     const signOutFromGoogle = promptSignOut;
 
+    // ─── MONTHLY MEMBERSHIP LOYALTY (BUY 5 GET -10฿) ───────────────────────────
+    let userMonthlyOrderCount = 0;
+
+    function getCurrentMonthKey() {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      return `${year}-${month}`; // e.g. "2026-09"
+    }
+
+    function isMemberDiscountEligible() {
+      // Eligible if user is signed in with Google AND has 4+ orders (so order #5 and above gets the -10฿ discount)
+      return !!currentAuthUser && userMonthlyOrderCount >= 4;
+    }
+
+    async function fetchUserMonthlyOrders() {
+      if (!currentAuthUser) {
+        userMonthlyOrderCount = 0;
+        updateMembershipCardUi();
+        return;
+      }
+
+      const currentMonth = getCurrentMonthKey();
+      const cachedKey = `eb_monthly_count_${currentAuthUser.uid}_${currentMonth}`;
+      const cached = localStorage.getItem(cachedKey);
+      if (cached !== null) {
+        userMonthlyOrderCount = parseInt(cached, 10) || 0;
+        updateMembershipCardUi();
+      }
+
+      try {
+        const res = await fetch(`${FIREBASE_DATABASE_URL}/orders.json`);
+        if (!res.ok) return;
+        const all = await res.json();
+        if (!all) {
+          userMonthlyOrderCount = 0;
+          updateMembershipCardUi();
+          return;
+        }
+
+        const userOrders = Object.values(all).filter(o => {
+          if (!o) return false;
+          const matchesUser = (o.customerUid && o.customerUid === currentAuthUser.uid) ||
+                              (o.customerEmail && currentAuthUser.email && o.customerEmail.toLowerCase() === currentAuthUser.email.toLowerCase());
+          if (!matchesUser) return false;
+          if (o.status === 'cancelled') return false;
+
+          const orderDateStr = o.createdAt || o.time;
+          if (!orderDateStr) return false;
+          try {
+            const d = new Date(orderDateStr);
+            if (isNaN(d.getTime())) return false;
+            const y = d.getFullYear();
+            const m = String(d.getMonth() + 1).padStart(2, '0');
+            return `${y}-${m}` === currentMonth;
+          } catch (e) {
+            return false;
+          }
+        });
+
+        userMonthlyOrderCount = userOrders.length;
+        localStorage.setItem(cachedKey, userMonthlyOrderCount);
+        updateMembershipCardUi();
+        if (typeof updateReceiptSummaries === 'function') {
+          updateReceiptSummaries();
+        }
+      } catch (err) {
+        console.warn('Could not fetch user monthly orders:', err);
+      }
+    }
+
+    function updateMembershipCardUi() {
+      const card = document.getElementById('membership-loyalty-card');
+      if (!card) return;
+
+      if (!currentAuthUser) {
+        card.classList.add('hidden');
+        card.classList.remove('flex');
+        return;
+      }
+
+      card.classList.remove('hidden');
+      card.classList.add('flex');
+
+      const isThai = currentLangIdx === 0;
+      const count = userMonthlyOrderCount;
+      const target = 5;
+      const isVip = isMemberDiscountEligible();
+
+      // Month name
+      const now = new Date();
+      const monthNamesTh = ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'];
+      const monthNamesEn = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+      const monthLabel = isThai 
+        ? `สะสมออเดอร์เดือนนี้ (${monthNamesTh[now.getMonth()]} ${now.getFullYear() + 543})`
+        : `Orders this month (${monthNamesEn[now.getMonth()]} ${now.getFullYear()})`;
+
+      const monthLabelEl = document.getElementById('membership-month-label');
+      if (monthLabelEl) monthLabelEl.textContent = monthLabel;
+
+      // Count text
+      const countEl = document.getElementById('membership-count-text');
+      if (countEl) {
+        countEl.textContent = `${count} / ${target} ครั้ง (Orders)`;
+      }
+
+      // VIP active badge
+      const vipBadge = document.getElementById('vip-active-badge');
+      if (vipBadge) {
+        if (isVip) {
+          vipBadge.classList.remove('hidden');
+          vipBadge.textContent = isThai ? '👑 ได้รับส่วนลด 10฿' : '👑 -10฿ VIP Active';
+        } else {
+          vipBadge.classList.add('hidden');
+        }
+      }
+
+      // Render 5 stamps
+      const stampsContainer = document.getElementById('membership-stamps-container');
+      if (stampsContainer) {
+        stampsContainer.innerHTML = '';
+        for (let i = 1; i <= target; i++) {
+          const isStamped = i <= count;
+          const isFifthReward = i === 5;
+          const stampDiv = document.createElement('div');
+          stampDiv.className = `p-2 sm:p-3 rounded-2xl flex flex-col items-center justify-center gap-1 border transition-all ${
+            isStamped 
+              ? 'bg-amber-500/20 border-amber-500 shadow-lg shadow-amber-500/20' 
+              : 'bg-zinc-900/60 border-white/10'
+          } ${isFifthReward && isStamped ? 'border-yellow-400 bg-gradient-to-tr from-amber-500/30 to-red-500/20' : ''}`;
+
+          stampDiv.innerHTML = `
+            <span class="text-xl sm:text-2xl">${isStamped ? '🍔' : (isFifthReward ? '🎁' : '⭕')}</span>
+            <span class="text-[10px] font-mono font-bold ${isStamped ? 'text-amber-400' : 'text-zinc-500'}">
+              ${isFifthReward ? (isStamped ? 'VIP -10฿' : 'รับ -10฿') : '#' + i}
+            </span>
+          `;
+          stampsContainer.appendChild(stampDiv);
+        }
+      }
+
+      // Message
+      const msgEl = document.getElementById('membership-message');
+      if (msgEl) {
+        if (count >= 5) {
+          msgEl.innerHTML = isThai
+            ? `🎉 <strong class="text-amber-400">ยินดีด้วย! คุณเป็นสมาชิกระดับ VIP</strong> ได้รับส่วนลด <strong class="text-white">-10 บาท</strong> ในทุกออเดอร์ของเดือนนี้!`
+            : `🎉 <strong class="text-amber-400">Awesome! VIP Member!</strong> You get a <strong class="text-white">-10 Baht discount</strong> on all orders this month!`;
+        } else if (count === 4) {
+          msgEl.innerHTML = isThai
+            ? `🔥 <strong class="text-amber-400">ออเดอร์ถัดไปคือครั้งที่ 5!</strong> สั่งตอนนี้รับส่วนลด <strong class="text-white">-10 บาท</strong> ทันที!`
+            : `🔥 <strong class="text-amber-400">Your next order is #5!</strong> Order now and get <strong class="text-white">-10 Baht OFF</strong> instantly!`;
+        } else {
+          const remaining = target - count;
+          msgEl.innerHTML = isThai
+            ? `สะสมอีกเพียง <strong class="text-amber-400">${remaining} ออเดอร์</strong> ในเดือนนี้ เพื่อปลดล็อคส่วนลด <strong class="text-white">-10 บาท</strong> ทุกออเดอร์!`
+            : `Only <strong class="text-amber-400">${remaining} more orders</strong> this month to unlock <strong class="text-white">-10 Baht discount</strong>!`;
+        }
+      }
+    }
+
     if (auth) {
       auth.onAuthStateChanged(user => {
         currentAuthUser = user;
@@ -981,6 +1183,7 @@
           customerName = savedName;
         }
         updateCustomerGreeting();
+        fetchUserMonthlyOrders();
       });
     }
 
@@ -2099,11 +2302,21 @@ function updateReceiptSummaries() {
     meatEl.textContent = `${meatDisplayMap[selectedMeatName][lang]} ${selectedMeatIcon}`;
   }
 
-  // 3. Calculate total price (burger base price + meat price + add-ons)
-  let totalPrice = selectedBurgerPrice || 0;
-  if (selectedMeatName === 'Pork') totalPrice += 10;
-  if (selectedExtraMeat) totalPrice += 15;
-  if (selectedExtraCheese) totalPrice += 10;
+  // 3. Calculate subtotal and VIP discount
+  const subtotal = calculateOrderSubtotal();
+  const isVip = isMemberDiscountEligible();
+  const discount = isVip ? 10 : 0;
+  const totalPrice = Math.max(0, subtotal - discount);
+
+  // VIP Membership discount row
+  const discountRow = document.getElementById('summary-discount-row');
+  if (discountRow) {
+    if (isVip) {
+      discountRow.classList.remove('hidden');
+    } else {
+      discountRow.classList.add('hidden');
+    }
+  }
 
   // 4. Display total price
   const totalValEl = document.getElementById('summary-total-val');
@@ -2114,12 +2327,18 @@ function updateReceiptSummaries() {
   }
 }
 
+    function calculateOrderSubtotal() {
+      let subtotal = selectedBurgerPrice || 0;
+      if (selectedMeatName === 'Pork') subtotal += 10;
+      if (selectedExtraMeat) subtotal += 15;
+      if (selectedExtraCheese) subtotal += 10;
+      return subtotal;
+    }
+
     function calculateOrderTotal() {
-      let totalPrice = selectedBurgerPrice || 0;
-      if (selectedMeatName === 'Pork') totalPrice += 10;
-      if (selectedExtraMeat) totalPrice += 15;
-      if (selectedExtraCheese) totalPrice += 10;
-      return totalPrice;
+      const subtotal = calculateOrderSubtotal();
+      const discount = isMemberDiscountEligible() ? 10 : 0;
+      return Math.max(0, subtotal - discount);
     }
 
     function getPromptPayIdDigits() {
@@ -2865,6 +3084,14 @@ function updateReceiptSummaries() {
         saveRecentOrder(orderPayload);
         playCheckoutTink();
 
+        // Increment monthly order count and update stamp card
+        userMonthlyOrderCount++;
+        if (currentAuthUser) {
+          const currentMonth = getCurrentMonthKey();
+          localStorage.setItem(`eb_monthly_count_${currentAuthUser.uid}_${currentMonth}`, userMonthlyOrderCount);
+        }
+        updateMembershipCardUi();
+
         const rect = document.getElementById('order-pad').getBoundingClientRect();
         const x = rect.left + rect.width / 2;
         const y = rect.top + rect.height / 2;
@@ -3189,6 +3416,10 @@ function updateReceiptSummaries() {
       }
       
       getNextQueueNumber().then(queueNumber => {
+        const isVip = isMemberDiscountEligible();
+        const subtotal = calculateOrderSubtotal();
+        const finalTotal = calculateOrderTotal();
+
         const orderPayload = {
           orderId: orderId,
           customerClientId: getOrCreateCustomerClientId(),
@@ -3205,7 +3436,10 @@ function updateReceiptSummaries() {
           patty: `${selectedBurgerName} ${selectedBurgerIcon}`,
           specialNote: getSpecialNote(),
           time: timeStr,
-          total: calculateOrderTotal(),
+          subtotal: subtotal,
+          memberDiscount: isVip ? 10 : 0,
+          isVipMember: isVip,
+          total: finalTotal,
           queueNumber: queueNumber,
           createdAt: new Date().toISOString()
         };

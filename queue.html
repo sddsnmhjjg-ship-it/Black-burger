@@ -961,6 +961,18 @@
         paymentBadgeHtml = '<span style="display: inline-block; background-color: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.4); padding: 4px 10px; border-radius: 8px; font-weight: 700; font-size: 13px;">📱 สแกนจ่ายพร้อมเพย์ (PromptPay QR)</span>';
       }
 
+      const memberDiscount = Number(order.memberDiscount || (order.isVipMember ? 10 : 0));
+      const discountRowHtml = memberDiscount > 0
+        ? `<tr>
+             <td style="font-size: 13px; color: #fbbf24; padding-bottom: 8px;">
+               👑 ส่วนลดสมาชิก VIP (5+ ครั้ง/เดือน):
+             </td>
+             <td align="right" style="font-size: 14px; font-weight: 700; color: #fbbf24; padding-bottom: 8px; font-family: monospace;">
+               -฿${memberDiscount.toFixed(2)}
+             </td>
+           </tr>`
+        : '';
+
       const emailHtml = `
 <!DOCTYPE html>
 <html lang="th">
@@ -1043,12 +1055,13 @@
                       ${noteHtml}
                     </td>
                     <td align="right" valign="top" style="font-size: 16px; font-weight: 700; color: #f59e0b; font-family: monospace; white-space: nowrap;">
-                      ฿${total}
+                      ฿${Number(order.subtotal || total).toFixed(2)}
                     </td>
                   </tr>
                 </table>
                 <div style="border-top: 1px dashed rgba(255,255,255,0.15); margin: 16px 0 12px 0;"></div>
                 <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
+                  ${discountRowHtml}
                   <tr>
                     <td style="font-size: 16px; font-weight: 800; color: #ffffff;">ยอดชำระสุทธิ (Total):</td>
                     <td align="right" style="font-size: 22px; font-weight: 800; color: #fbbf24; font-family: monospace;">
@@ -1436,6 +1449,10 @@
            </div>` 
         : '';
 
+      const vipBadge = (o.memberDiscount > 0 || o.isVipMember)
+        ? `<div style="margin-top:3px;"><span style="display:inline-flex;align-items:center;gap:4px;background:rgba(245,158,11,0.2);color:#fbbf24;border:1px solid rgba(245,158,11,0.5);border-radius:99px;padding:2px 8px;font-size:0.68rem;font-weight:700;">👑 สมาชิก VIP (-10฿)</span></div>`
+        : '';
+
       return `
         <div class="order-card" data-status="${status}" data-id="${fbKey}">
           <div class="card-head">
@@ -1443,6 +1460,7 @@
               <div class="queue-num">${queueDisplay}</div>
               <div class="customer-name">คุณ ${escHtml(o.customerName || 'Guest')}</div>
               ${googleBadge}
+              ${vipBadge}
               <span class="order-id-tag">Order #${escHtml(String(orderNum))}</span>
             </div>
             <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">

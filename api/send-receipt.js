@@ -33,6 +33,8 @@ module.exports = async (req, res) => {
       extraMeat = false,
       extraCheese = false,
       specialNote = '',
+      memberDiscount = 0,
+      subtotal = 0,
       total = 0,
       paymentMethod = 'PromptPay QR',
       orderTime = new Date().toLocaleString('th-TH', { timeZone: 'Asia/Bangkok' })
@@ -53,6 +55,19 @@ module.exports = async (req, res) => {
       : '';
 
     const formattedTotal = Number(total).toFixed(2);
+    const formattedItemTotal = Number(subtotal || total).toFixed(2);
+    const numDiscount = Number(memberDiscount || 0);
+
+    const discountRowHtml = numDiscount > 0
+      ? `<tr>
+           <td style="font-size: 13px; color: #fbbf24; padding-bottom: 8px;">
+             👑 ส่วนลดสมาชิก VIP (5+ ครั้ง/เดือน):
+           </td>
+           <td align="right" style="font-size: 14px; font-weight: 700; color: #fbbf24; padding-bottom: 8px; font-family: monospace;">
+             -฿${numDiscount.toFixed(2)}
+           </td>
+         </tr>`
+      : '';
 
     // Build payment method badge
     let paymentBadgeHtml = '';
@@ -154,7 +169,7 @@ module.exports = async (req, res) => {
                       ${noteHtml}
                     </td>
                     <td align="right" valign="top" style="font-size: 16px; font-weight: 700; color: #f59e0b; font-family: monospace; white-space: nowrap;">
-                      ฿${formattedTotal}
+                      ฿${formattedItemTotal}
                     </td>
                   </tr>
                 </table>
@@ -162,6 +177,7 @@ module.exports = async (req, res) => {
                 <div style="border-top: 1px dashed rgba(255,255,255,0.15); margin: 16px 0 12px 0;"></div>
 
                 <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
+                  ${discountRowHtml}
                   <tr>
                     <td style="font-size: 16px; font-weight: 800; color: #ffffff;">ยอดชำระสุทธิ (Total):</td>
                     <td align="right" style="font-size: 22px; font-weight: 800; color: #fbbf24; font-family: monospace;">
