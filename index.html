@@ -576,6 +576,10 @@
         <button type="button" id="change-name-btn" onclick="changeName()" class="btn-glass px-3.5 py-2 text-xs font-bold uppercase tracking-wider" data-i18n="greeting-change-name">
           Change name
         </button>
+        <!-- Sound Test Button for iPhone & Mobile -->
+        <button type="button" id="sound-test-btn" onclick="testSoundWithFeedback()" class="btn-glass px-2.5 py-2 text-xs font-bold flex items-center gap-1 text-zinc-300 hover:text-amber-400 active:scale-95 transition-all" title="ทดสอบเสียง / Test sound">
+          <span>🔊</span>
+        </button>
         <button type="button" id="google-signout-btn" onclick="signOutFromGoogle()" class="btn-glass px-3 py-2 text-xs font-bold text-zinc-400 hover:text-red-400 hidden" title="ออกจากระบบ">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
         </button>
@@ -2655,180 +2659,217 @@ function updateReceiptSummaries() {
         setPaymentControlsEnabled(true);
       });
     }
-    // Core Web Audio API Sound Synthesizer (Instant & Dependency-Free!)
+    // ── Core Web Audio API Sound Synthesizer (iOS & Mobile Optimized!) ───────
     let audioCtx = null;
     let audioPlaybackUnlocked = false;
-    let audioUnlockTester = null;
 
     function getAudioContext() {
       if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (AudioContextClass) {
+          audioCtx = new AudioContextClass();
+        }
+      }
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume().catch(() => {});
       }
       return audioCtx;
     }
 
+    // Warm up and unlock audio hardware on very first touch or click (Required by iOS WebKit)
     function unlockAudioPlayback() {
-      if (audioPlaybackUnlocked) return;
-      audioPlaybackUnlocked = true;
       const ctx = getAudioContext();
       if (ctx && ctx.state === 'suspended') {
         ctx.resume().catch(() => {});
       }
+
+      if (audioPlaybackUnlocked) return;
+      audioPlaybackUnlocked = true;
+
+      // Play 1-sample buffer to warm up iOS hardware audio route
       try {
-        audioUnlockTester = new Audio();
-        audioUnlockTester.preload = 'auto';
-        audioUnlockTester.muted = true;
-        audioUnlockTester.playsInline = true;
-        audioUnlockTester.setAttribute('playsinline', 'true');
-        audioUnlockTester.src = new URL('alert.mp3', location.href).href;
-        audioUnlockTester.load();
-        audioUnlockTester.play().then(() => {
-          audioUnlockTester.pause();
-          audioUnlockTester.src = '';
-        }).catch(() => {
-          // ignore failures from preview/play policies; we only need the gesture to unlock
+        if (ctx) {
+          const buffer = ctx.createBuffer(1, 1, 22050);
+          const source = ctx.createBufferSource();
+          source.buffer = buffer;
+          source.connect(ctx.destination);
+          source.start(0);
+        }
+      } catch (e) {}
+
+      // Preload MP3s
+      try {
+        ['sound-order-ready', 'sound-alert'].forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.load();
         });
-      } catch (err) {
-        console.warn('Audio unlock fallback failed:', err);
-      }
+      } catch (e) {}
     }
+
+    // Attach unlock listener to touch and pointer events
+    ['touchstart', 'touchend', 'pointerdown', 'click'].forEach(evt => {
+      window.addEventListener(evt, unlockAudioPlayback, { passive: true });
+    });
 
     // Play synthesized high-quality cute hover tick
     function playHoverTick() {
       try {
         const ctx = getAudioContext();
-        if (ctx.state === 'suspended') return; // Browser security lock
-        
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        const filter = ctx.createBiquadFilter();
-        
-        filter.type = 'bandpass';
-        filter.frequency.value = 1400;
-        filter.Q.value = 1.0;
-        
-        osc.connect(filter);
-        filter.connect(gain);
-        gain.connect(ctx.destination);
-        
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(1000, ctx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(500, ctx.currentTime + 0.05);
-        
-        gain.gain.setValueAtTime(0, ctx.currentTime);
-        gain.gain.linearRampToValueAtTime(0.06, ctx.currentTime + 0.005);
-        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.05);
-        
-        osc.start(ctx.currentTime);
-        osc.stop(ctx.currentTime + 0.055);
-      } catch (e) {
-        console.log("Audio synthesis error:", e);
-      }
+        if (!ctx) return;
+        const playSynth = () => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          const now = ctx.currentTime;
+
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(1200, now);
+          osc.frequency.exponentialRampToValueAtTime(600, now + 0.04);
+
+          gain.gain.setValueAtTime(0, now);
+          gain.gain.linearRampToValueAtTime(0.12, now + 0.005);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.045);
+        };
+
+        if (ctx.state === 'suspended') {
+          ctx.resume().then(playSynth).catch(() => {});
+        } else {
+          playSynth();
+        }
+      } catch (e) {}
     }
 
-    // Play synthesized cute pop sound for click
+    // Play synthesized cute pop sound for click (Direct & Reliable on iOS)
     function playClickPop() {
       try {
         const ctx = getAudioContext();
-        if (ctx.state === 'suspended') return;
-        
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(350, ctx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(1200, ctx.currentTime + 0.12);
-        
-        gain.gain.setValueAtTime(0, ctx.currentTime);
-        gain.gain.linearRampToValueAtTime(0.15, ctx.currentTime + 0.01);
-        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.15);
-        
-        osc.start(ctx.currentTime);
-        osc.stop(ctx.currentTime + 0.16);
+        if (!ctx) return;
+        const playSynth = () => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          const now = ctx.currentTime;
+
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(550, now);
+          osc.frequency.exponentialRampToValueAtTime(1100, now + 0.06);
+
+          gain.gain.setValueAtTime(0, now);
+          gain.gain.linearRampToValueAtTime(0.35, now + 0.005);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.065);
+        };
+
+        if (ctx.state === 'suspended') {
+          ctx.resume().then(playSynth).catch(() => {});
+        } else {
+          playSynth();
+        }
       } catch (e) {}
     }
 
-    // Play synthesized success sound for checkout
+    // Play synthesized celebratory success sound for checkout (Triumphant Chord)
     function playCheckoutTink() {
       try {
         const ctx = getAudioContext();
-        if (ctx.state === 'suspended') return;
-        
-        const now = ctx.currentTime;
-        
-        // Quick dual-note melody
-        [440, 554, 659, 880].forEach((freq, index) => {
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-          
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-          
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(freq, now + index * 0.08);
-          
-          gain.gain.setValueAtTime(0, now + index * 0.08);
-          gain.gain.linearRampToValueAtTime(0.12, now + index * 0.08 + 0.01);
-          gain.gain.exponentialRampToValueAtTime(0.0001, now + index * 0.08 + 0.2);
-          
-          osc.start(now + index * 0.08);
-          osc.stop(now + index * 0.08 + 0.22);
-        });
+        if (!ctx) return;
+        const playSynth = () => {
+          const now = ctx.currentTime;
+          // C5, E5, G5, C6
+          [523.25, 659.25, 783.99, 1046.50].forEach((freq, index) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            const noteStart = now + index * 0.07;
+
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, noteStart);
+
+            gain.gain.setValueAtTime(0, noteStart);
+            gain.gain.linearRampToValueAtTime(0.35, noteStart + 0.015);
+            gain.gain.exponentialRampToValueAtTime(0.0001, noteStart + 0.25);
+
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(noteStart);
+            osc.stop(noteStart + 0.28);
+          });
+        };
+
+        if (ctx.state === 'suspended') {
+          ctx.resume().then(playSynth).catch(() => {});
+        } else {
+          playSynth();
+        }
       } catch (e) {}
     }
 
-    // Attempt to play local mp3 sounds with synthesized audio as bulletproof fallback
     function triggerClickSound() {
-      try {
-        let audio = document.getElementById('sound-click');
-        if (!audio) {
-          audio = document.createElement('audio');
-          audio.id = 'sound-click';
-          audio.preload = 'auto';
-          audio.playsInline = true;
-          audio.setAttribute('playsinline', 'true');
-          audio.src = new URL('click.mp3', location.href).href;
-          document.body.appendChild(audio);
-        }
-        audio.volume = 0.4;
-        audio.currentTime = 0;
-        audio.play().catch(() => {
-          playClickPop();
-        });
-      } catch (err) {
-        console.warn('Click sound failed:', err);
-        playClickPop();
-      }
+      unlockAudioPlayback();
+      playClickPop();
     }
 
     function triggerHoverSound() {
+      playHoverTick();
+    }
+
+    // Loud, clear 2-tone melodic doorbell chime (Ding-Dong 🔔)
+    function playOrderReadySynth() {
       try {
-        let audio = document.getElementById('sound-hover');
-        if (!audio) {
-          audio = document.createElement('audio');
-          audio.id = 'sound-hover';
-          audio.preload = 'auto';
-          audio.playsInline = true;
-          audio.setAttribute('playsinline', 'true');
-          audio.src = new URL('hover.mp3', location.href).href;
-          document.body.appendChild(audio);
+        const ctx = getAudioContext();
+        if (!ctx) return;
+        const playChime = () => {
+          const now = ctx.currentTime;
+          // Tone 1: High Bell "Ding" (G5 - 783.99 Hz)
+          const osc1 = ctx.createOscillator();
+          const gain1 = ctx.createGain();
+          osc1.type = 'sine';
+          osc1.frequency.setValueAtTime(783.99, now);
+          gain1.gain.setValueAtTime(0, now);
+          gain1.gain.linearRampToValueAtTime(0.45, now + 0.02);
+          gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+          osc1.connect(gain1);
+          gain1.connect(ctx.destination);
+          osc1.start(now);
+          osc1.stop(now + 0.55);
+
+          // Tone 2: Low Bell "Dong" (E5 - 659.25 Hz)
+          const osc2 = ctx.createOscillator();
+          const gain2 = ctx.createGain();
+          const start2 = now + 0.35;
+          osc2.type = 'sine';
+          osc2.frequency.setValueAtTime(659.25, start2);
+          gain2.gain.setValueAtTime(0, start2);
+          gain2.gain.linearRampToValueAtTime(0.5, start2 + 0.02);
+          gain2.gain.exponentialRampToValueAtTime(0.001, start2 + 0.8);
+          osc2.connect(gain2);
+          gain2.connect(ctx.destination);
+          osc2.start(start2);
+          osc2.stop(start2 + 0.85);
+        };
+
+        if (ctx.state === 'suspended') {
+          ctx.resume().then(playChime).catch(() => {});
+        } else {
+          playChime();
         }
-        audio.volume = 0.2;
-        audio.currentTime = 0;
-        audio.play().catch(() => {
-          playHoverTick();
-        });
       } catch (err) {
-        console.warn('Hover sound failed:', err);
-        playHoverTick();
+        console.warn('Order ready synth error:', err);
       }
     }
 
     function playOrderReadySounds() {
       unlockAudioPlayback();
+      // Always play synthesized chime for 100% guarantee on mobile
+      playOrderReadySynth();
+
+      // Also attempt native audio element if permitted by browser
       try {
         let mySound = document.getElementById('sound-order-ready');
         if (!mySound) {
@@ -2840,81 +2881,23 @@ function updateReceiptSummaries() {
           mySound.src = new URL('My sound.mp3', location.href).href;
           document.body.appendChild(mySound);
         }
-        mySound.volume = 0.7;
+        mySound.volume = 0.8;
         mySound.currentTime = 0;
-
-        let alertSound = document.getElementById('sound-alert');
-        if (!alertSound) {
-          alertSound = document.createElement('audio');
-          alertSound.id = 'sound-alert';
-          alertSound.preload = 'auto';
-          alertSound.playsInline = true;
-          alertSound.setAttribute('playsinline', 'true');
-          alertSound.src = new URL('alert.mp3', location.href).href;
-          document.body.appendChild(alertSound);
-        }
-        alertSound.volume = 0.7;
-        alertSound.currentTime = 0;
-
-        let alertPlayed = false;
-        const playAlert = () => {
-          if (alertPlayed) return;
-          alertPlayed = true;
-          alertSound.play().catch(err => {
-            console.warn('alert.mp3 playback failed:', err);
-            playOrderReadySynth();
-          });
-        };
-
-        mySound.addEventListener('ended', playAlert, { once: true });
-        mySound.play()
-          .then(() => {
-            console.log('My sound.mp3 playing successfully');
-          })
-          .catch(err => {
-            console.warn('My sound.mp3 playback failed, falling back to alert.mp3:', err);
-            playAlert();
-          });
-
-        // Safety fallback to ensure alert.mp3 plays even if My sound.mp3 hangs or fails silently
-        setTimeout(playAlert, 3000);
-      } catch (err) {
-        console.warn('Order ready sound setup failed:', err);
-        playOrderReadySynth();
-      }
+        mySound.play().catch(() => {});
+      } catch (err) {}
     }
 
-    function playOrderReadySynth() {
-      try {
-        const ctx = getAudioContext();
-        if (!ctx) return;
-        const startSynth = () => {
-          try {
-            const osc = ctx.createOscillator();
-            const gain = ctx.createGain();
-            osc.type = 'triangle';
-            osc.frequency.setValueAtTime(880, ctx.currentTime);
-            gain.gain.setValueAtTime(0.04, ctx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.4);
-            osc.connect(gain);
-            gain.connect(ctx.destination);
-            osc.start(ctx.currentTime);
-            osc.stop(ctx.currentTime + 0.4);
-          } catch (innerErr) {
-            console.warn('Order ready synth inner play failed:', innerErr);
-          }
-        };
-
-        if (ctx.state === 'suspended') {
-          ctx.resume().then(startSynth).catch(err => {
-            console.warn('AudioContext resume failed:', err);
-          });
-        } else {
-          startSynth();
-        }
-      } catch (err) {
-        console.warn('Order ready synth fallback failed:', err);
-      }
+    // Interactive sound test with iPhone tips
+    function testSoundWithFeedback() {
+      unlockAudioPlayback();
+      playOrderReadySynth();
+      const isThai = currentLangIdx === 0;
+      siteAlert(
+        isThai
+          ? '🔊 กำลังเล่นเสียงทดสอบ!\n\n📱 ข้อแนะนำสำหรับ iPhone:\n1. ตรวจสอบว่าปุ่ม Action Button หรือ Silent Switch ด้านข้างไม่ได้ตั้งเป็นโหมดปิดเสียง (Silent Mode 🔕)\n2. เลื่อนเปิด Control Center และเร่งระดับเสียงสื่อ (Media Volume)'
+          : '🔊 Playing test sound!\n\n📱 iPhone Tip:\n1. Ensure Action Button / Silent Switch is not on Silent Mode (🔕)\n2. Check Media Volume in Control Center.',
+        isThai ? 'ทดสอบเสียง 🔊' : 'Sound Test 🔊'
+      );
     }
 
     // (Theme Switcher Logic removed)
