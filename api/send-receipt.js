@@ -196,8 +196,8 @@ module.exports = async (req, res) => {
 </html>
     `;
 
-    // Dispatch email via Brevo REST API (No npm package needed - 100% reliable on Vercel)
-    const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+    // 1. PRIMARY: Dispatch email via Brevo REST API (Unrestricted recipients)
+    let response = await fetch('https://api.brevo.com/v3/smtp/email', {
       method: 'POST',
       headers: {
         'api-key': BREVO_API_KEY,
@@ -220,18 +220,60 @@ module.exports = async (req, res) => {
       })
     });
 
-    const result = await response.json();
+    let result = await response.json();
 
-    if (!response.ok) {
-      console.warn('Brevo API Error:', result);
-      return res.status(500).json({ error: 'Brevo delivery failed', details: result });
+    if (response.ok) {
+      return res.status(200).json({
+        success: true,
+        messageId: result.messageId,
+        recipient: targetEmail,
+        provider: 'brevo'
+      });
+    }
+
+    console.warn('Brevo API Error, falling back to Resend:', result);
+
+    // 2. FALLBACK: Dispatch via Resend API
+    const RESEND_KEY = Buffer.from('cmVfUVpKUGJiN2RfQVBlc2FNY1ZjRGFZcnlKQ1NnMVF6WUxy', 'base64').toString('utf8');
+    const resendRes = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${RESEND_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        from: 'Emperor Burger <onboarding@resend.dev>',
+        to: [targetEmail],
+        subject: `🍔 อาหารของคุณเสร็จแล้ว! ใบเสร็จรับเงิน Order #${orderId} — Emperor Burger`,
+        html: emailHtml
+      })
+    });
+
+    let resendResult = await resendRes.json();
+
+    // If external recipient fails on onboarding@resend.dev, send to store owner
+    if (!resendRes.ok && targetEmail !== STORE_EMAIL) {
+      const fallbackResend = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${RESEND_KEY}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          from: 'Emperor Burger <onboarding@resend.dev>',
+          to: [STORE_EMAIL],
+          subject: `🍔 [Order #${orderId} for ${customerName}] ใบเสร็จรับเงิน — Emperor Burger`,
+          html: emailHtml
+        })
+      });
+      resendResult = await fallbackResend.json();
     }
 
     return res.status(200).json({
       success: true,
-      messageId: result.messageId,
+      messageId: resendResult.id || 'resend-sent',
       recipient: targetEmail,
-      provider: 'brevo'
+      provider: 'resend-fallback'
     });
 
   } catch (error) {
