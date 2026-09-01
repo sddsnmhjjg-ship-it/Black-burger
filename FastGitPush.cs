@@ -7,6 +7,8 @@ namespace FastGitPush
     {
         static void Main(string[] args)
         {
+            try { Console.OutputEncoding = System.Text.Encoding.UTF8; } catch { }
+
             Console.Title = "🚀 Emperor Burger — Fast Git Push";
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine("=================================================");
@@ -26,7 +28,11 @@ namespace FastGitPush
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.Write("Enter commit message (Press ENTER for auto-timestamp): ");
                 Console.ResetColor();
-                commitMsg = Console.ReadLine();
+                try
+                {
+                    commitMsg = Console.ReadLine();
+                }
+                catch { }
             }
 
             if (string.IsNullOrWhiteSpace(commitMsg))
@@ -68,7 +74,14 @@ namespace FastGitPush
             Console.ForegroundColor = ConsoleColor.Gray;
             Console.WriteLine("Press any key to close this window...");
             Console.ResetColor();
-            Console.ReadKey();
+            try
+            {
+                if (Environment.UserInteractive && !Console.IsInputRedirected)
+                {
+                    Console.ReadKey();
+                }
+            }
+            catch { }
         }
 
         static void RunStep(string label, string cmd, string args)
