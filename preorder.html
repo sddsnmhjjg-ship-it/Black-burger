@@ -259,16 +259,16 @@
       <div class="flex items-center gap-2.5 pb-2 border-b border-white/10">
         <span class="w-7 h-7 rounded-lg bg-purple-500/20 border border-purple-500/40 flex items-center justify-center text-sm font-bold text-purple-300">1</span>
         <div>
-          <h2 class="text-sm sm:text-base font-bold text-white" id="step1-title">เลือกวันและเวลานัดรับเบอร์เกอร์ 📅</h2>
-          <p class="text-xs text-zinc-400" id="step1-desc">กรุณาสั่งล่วงหน้าอย่างน้อย 30 นาที เพื่อให้เชฟเตรียมอาหารสดใหม่</p>
+          <h2 class="text-sm sm:text-base font-bold text-white" id="step1-title">เลือกวันศุกร์และเวลานัดรับเบอร์เกอร์ 📅</h2>
+          <p class="text-xs text-zinc-400" id="step1-desc">ร้านเปิดรับออเดอร์นัดรับเฉพาะวันศุกร์ เวลา 10:00 - 11:00 น. ย่างสดใหม่พร้อมเสิร์ฟ</p>
         </div>
       </div>
 
       <!-- Date Selection -->
       <div class="flex flex-col gap-2">
-        <label class="text-xs font-bold text-zinc-300 uppercase tracking-wider" id="label-pickup-date">วันที่ต้องการรับ (Pickup Date)</label>
-        <div class="grid grid-cols-3 sm:grid-cols-4 gap-2" id="date-chips-container">
-          <!-- Populated by JS: Today, Tomorrow, Day+2, etc. -->
+        <label class="text-xs font-bold text-zinc-300 uppercase tracking-wider" id="label-pickup-date">วันศุกร์ที่ต้องการรับ (Pickup Friday)</label>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2" id="date-chips-container">
+          <!-- Populated by JS: Upcoming Fridays -->
         </div>
       </div>
 
@@ -276,10 +276,10 @@
       <div class="flex flex-col gap-2 pt-2">
         <div class="flex items-center justify-between">
           <label class="text-xs font-bold text-zinc-300 uppercase tracking-wider" id="label-pickup-time">เวลาที่นัดรับ (Pickup Time)</label>
-          <span class="text-[11px] font-mono text-purple-400" id="selected-time-notice">ร้านเปิด 10:00 - 21:00</span>
+          <span class="text-[11px] font-mono font-bold text-purple-400" id="selected-time-notice">ร้านเปิดเฉพาะวันศุกร์ 10:00 - 11:00 น.</span>
         </div>
-        <div class="grid grid-cols-4 sm:grid-cols-6 gap-2 max-h-48 overflow-y-auto pr-1" id="time-slots-container">
-          <!-- Populated by JS -->
+        <div class="grid grid-cols-5 gap-2" id="time-slots-container">
+          <!-- Populated by JS: 10:00 to 11:00 AM -->
         </div>
       </div>
 
@@ -632,7 +632,7 @@
       }
     }
 
-    // ══ DATE & TIME SLOTS SCHEDULER ══
+    // ══ DATE & TIME SLOTS SCHEDULER (FRIDAYS 10:00 - 11:00 AM) ══
     function initDates() {
       const container = document.getElementById('date-chips-container');
       if (!container) return;
@@ -641,32 +641,50 @@
       const now = new Date();
       const monthNamesTh = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
       const monthNamesEn = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-      const daysTh = ['อา.', 'จ.', 'อ.', 'พ.', 'พฤ.', 'ศ.', 'ส.'];
-      const daysEn = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-      // Generate next 6 days
-      for (let i = 0; i < 6; i++) {
-        const d = new Date();
-        d.setDate(now.getDate() + i);
-        const yyyy = d.getFullYear();
-        const mm = String(d.getMonth() + 1).padStart(2, '0');
-        const dd = String(d.getDate()).padStart(2, '0');
+      // Generate next 4 upcoming Fridays
+      const fridays = [];
+      let d = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+      const currentMinutesToday = now.getHours() * 60 + now.getMinutes();
+      // If today is Friday and already past 11:00 AM, advance to next Friday
+      const isPastClosing = d.getDay() === 5 && currentMinutesToday >= (11 * 60);
+
+      if (isPastClosing || d.getDay() !== 5) {
+        if (isPastClosing) d.setDate(d.getDate() + 1);
+        while (d.getDay() !== 5) {
+          d.setDate(d.getDate() + 1);
+        }
+      }
+
+      for (let i = 0; i < 4; i++) {
+        fridays.push(new Date(d));
+        d.setDate(d.getDate() + 7);
+      }
+
+      fridays.forEach((f, idx) => {
+        const yyyy = f.getFullYear();
+        const mm = String(f.getMonth() + 1).padStart(2, '0');
+        const dd = String(f.getDate()).padStart(2, '0');
         const dateKey = `${yyyy}-${mm}-${dd}`;
 
+        const isToday = f.toDateString() === now.toDateString();
         let label = '';
-        if (i === 0) {
+        if (isToday) {
           label = currentLang === 'th' ? 'วันนี้ (Today)' : 'Today';
-        } else if (i === 1) {
-          label = currentLang === 'th' ? 'พรุ่งนี้ (Tmrw)' : 'Tomorrow';
+        } else if (idx === 0) {
+          label = currentLang === 'th' ? 'ศุกร์นี้ (This Fri)' : 'This Friday';
+        } else if (idx === 1) {
+          label = currentLang === 'th' ? 'ศุกร์หน้า (Next Fri)' : 'Next Friday';
         } else {
           label = currentLang === 'th'
-            ? `${daysTh[d.getDay()]} ${d.getDate()} ${monthNamesTh[d.getMonth()]}`
-            : `${daysEn[d.getDay()]} ${d.getDate()} ${monthNamesEn[d.getMonth()]}`;
+            ? `ศุกร์ ${f.getDate()} ${monthNamesTh[f.getMonth()]}`
+            : `Fri ${f.getDate()} ${monthNamesEn[f.getMonth()]}`;
         }
 
         const chip = document.createElement('button');
         chip.type = 'button';
-        chip.className = `btn-glass p-2.5 text-center flex flex-col items-center justify-center gap-0.5 text-xs transition-all ${i === 0 ? 'border-purple-500 bg-purple-500/20 text-purple-300 font-bold' : ''}`;
+        chip.className = `btn-glass p-2.5 text-center flex flex-col items-center justify-center gap-0.5 text-xs transition-all ${idx === 0 ? 'border-purple-500 bg-purple-500/20 text-purple-300 font-bold' : ''}`;
         chip.dataset.date = dateKey;
         chip.innerHTML = `
           <span class="font-bold text-xs">${label}</span>
@@ -685,8 +703,8 @@
         };
 
         container.appendChild(chip);
-        if (i === 0) selectedDate = dateKey;
-      }
+        if (idx === 0) selectedDate = dateKey;
+      });
 
       renderTimeSlots();
     }
@@ -700,10 +718,10 @@
       const isToday = selectedDate === `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
       const currentMinutesToday = now.getHours() * 60 + now.getMinutes();
 
-      // Operating hours: 10:00 to 21:00 (600 to 1260 minutes), 15 min intervals
-      const startMin = 10 * 60;
-      const endMin = 21 * 60;
-      const minBufferMin = 30; // Minimum 30 mins buffer for preparation
+      // Operating hours: Friday 10:00 to 11:00 AM, 15 min intervals
+      const startMin = 10 * 60; // 10:00 AM
+      const endMin = 11 * 60;   // 11:00 AM
+      const minBufferMin = 15;  // 15 mins prep buffer if ordering on Friday morning
 
       let firstValidSlot = null;
 
@@ -1142,10 +1160,11 @@
       setTxt('header-subtitle', isTh ? 'สั่งจองล่วงหน้า นัดรับตามเวลา ไม่ต้องรอคิว' : 'Pre-order in advance, pick up on time, skip the line');
       setTxt('nav-live-order-btn', isTh ? 'สั่งทานทันที' : 'Live Order');
       setTxt('change-name-btn', isTh ? 'เปลี่ยนชื่อ' : 'Rename');
-      setTxt('step1-title', isTh ? 'เลือกวันและเวลานัดรับเบอร์เกอร์ 📅' : 'Pick Pickup Date & Time 📅');
-      setTxt('step1-desc', isTh ? 'กรุณาสั่งล่วงหน้าอย่างน้อย 30 นาที เพื่อให้เชฟเตรียมอาหารสดใหม่' : 'Please order at least 30 mins ahead for freshly grilled burgers');
-      setTxt('label-pickup-date', isTh ? 'วันที่ต้องการรับ (Pickup Date)' : 'Pickup Date');
+      setTxt('step1-title', isTh ? 'เลือกวันศุกร์และเวลานัดรับเบอร์เกอร์ 📅' : 'Pick Friday & Pickup Time 📅');
+      setTxt('step1-desc', isTh ? 'ร้านเปิดรับออเดอร์นัดรับเฉพาะวันศุกร์ เวลา 10:00 - 11:00 น. ย่างสดใหม่พร้อมเสิร์ฟ' : 'Open for pickup on Fridays only, 10:00 - 11:00 AM. Freshly flame-grilled.');
+      setTxt('label-pickup-date', isTh ? 'วันศุกร์ที่ต้องการรับ (Pickup Friday)' : 'Pickup Friday');
       setTxt('label-pickup-time', isTh ? 'เวลาที่นัดรับ (Pickup Time)' : 'Pickup Time');
+      setTxt('selected-time-notice', isTh ? 'ร้านเปิดเฉพาะวันศุกร์ 10:00 - 11:00 น.' : 'Open Friday only 10:00 - 11:00 AM');
       setTxt('label-phone', isTh ? 'เบอร์โทรศัพท์สำหรับติดต่อรับอาหาร (Phone Number) *' : 'Phone Number for Pickup Alert *');
       setTxt('step2-title', isTh ? 'เลือกเบอร์เกอร์ 🍔' : 'Select Burger 🍔');
       setTxt('step2-desc', isTh ? 'เบอร์เกอร์ไก่ย่างสูตรพิเศษ (เสิร์ฟเฉพาะเนื้อไก่) 🐔' : 'Signature flame-grilled chicken burgers 🐔');
