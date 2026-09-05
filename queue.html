@@ -1024,6 +1024,13 @@
                     #${escapeHtml(String(orderId))} (คิว #${escapeHtml(String(queueNumber))})
                   </td>
                 </tr>
+                ${(order.isPreOrder || order.pickupSchedule || order.pickupDate) ? `
+                <tr>
+                  <td style="font-size: 14px; color: #c084fc; font-weight: 700; padding-bottom: 6px;">📅 เวลานัดรับ:</td>
+                  <td align="right" style="font-size: 14px; font-weight: 700; color: #c084fc; padding-bottom: 6px; font-family: monospace;">
+                    ${escapeHtml(order.pickupDate || '')} เวลา ${escapeHtml(order.pickupTime || '')} น.
+                  </td>
+                </tr>` : ''}
                 <tr>
                   <td style="font-size: 14px; color: #a1a1aa; padding-bottom: 6px;">วันที่สั่งซื้อ:</td>
                   <td align="right" style="font-size: 13px; color: #d4d4d8; padding-bottom: 6px; font-family: monospace;">
