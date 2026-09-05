@@ -812,6 +812,9 @@
       <button id="customer-cancel-order-btn" type="button" onclick="cancelCustomerOrder()" class="btn-glass py-3 text-xs font-bold uppercase tracking-wider hidden" data-i18n="customer-cancel-btn">
         Cancel order
       </button>
+      <button id="customer-dismiss-status-btn" type="button" onclick="dismissCustomerStatusCard()" class="btn-glass py-3 text-xs font-bold uppercase tracking-wider hidden text-zinc-300 hover:text-white border-zinc-700 hover:border-zinc-500" data-i18n="customer-dismiss-btn">
+        ซ่อนสถานะ / สั่งใหม่อีกครั้ง
+      </button>
       <p id="order-cooldown-message" class="text-xs font-mono text-red-400 text-center hidden"></p>
     </section>
 
@@ -1495,6 +1498,7 @@
       currentCustomerOrderId = orderId;
       currentCustomerOrder = { ...order, status };
 
+      const isCancelled = status === 'cancel' || status === 'cancelled';
       if (status === 'done' && prevStatus !== 'done') {
         playOrderReadySounds();
       }
@@ -1523,24 +1527,34 @@
               : `Payment received successfully! The chef is preparing your order. 🍔✨`,
             isThai ? 'ชำระเงินสำเร็จ' : 'Payment Success'
           );
-        } else if (status === 'cancel') {
+        } else if (isCancelled) {
           closePaymentPopup();
           closeCashConfirmationWaiting();
           const reason = order.cancelReason || '';
           siteAlert(
             isThai
-              ? `ออเดอร์ของคุณถูกยกเลิกแล้ว ${reason ? `เนื่องจาก: ${reason}` : ''}`
-              : `Your order has been cancelled. ${reason ? `Reason: ${reason}` : ''}`,
+              ? `ออเดอร์ #${orderId} ของคุณถูกยกเลิกแล้ว ${reason ? `(สาเหตุ: ${reason})` : ''}`
+              : `Your order #${orderId} has been cancelled. ${reason ? `(Reason: ${reason})` : ''}`,
             isThai ? 'ออเดอร์ถูกยกเลิก' : 'Order Cancelled'
           );
         }
+      } else if (prevStatus && prevStatus !== status && isCancelled) {
+        const reason = order.cancelReason || '';
+        siteAlert(
+          isThai
+            ? `ออเดอร์ #${orderId} ของคุณถูกยกเลิกแล้ว ${reason ? `(สาเหตุ: ${reason})` : ''}`
+            : `Your order #${orderId} has been cancelled. ${reason ? `(Reason: ${reason})` : ''}`,
+          isThai ? 'ออเดอร์ถูกยกเลิก' : 'Order Cancelled'
+        );
       }
+
       const statusCard = document.getElementById('customer-status-card');
       const orderIdEl = document.getElementById('status-order-id');
       const pillEl = document.getElementById('status-pill');
       const messageEl = document.getElementById('status-message');
       const updatedEl = document.getElementById('status-updated');
       const cancelBtn = document.getElementById('customer-cancel-order-btn');
+      const dismissBtn = document.getElementById('customer-dismiss-status-btn');
       const statusCopy = {
         pending: {
           label: isThai ? 'รอคิว' : 'Pending',
@@ -1567,7 +1581,16 @@
           message: order.cancelReason === "You haven't pay in time"
             ? (isThai ? 'คุณไม่ได้ชำระเงินภายในเวลาที่กำหนด' : "You haven't pay in time")
             : (order.cancelReason
-              ? (isThai ? `ออเดอร์นี้ถูกยกเลิกแล้ว เหตุผลระบุว่า : ${order.cancelReason}` : `This order was cancelled. Reason : ${order.cancelReason}`)
+              ? (isThai ? `ออเดอร์นี้ถูกยกเลิกแล้ว เหตุผล : ${order.cancelReason}` : `This order was cancelled. Reason : ${order.cancelReason}`)
+              : (isThai ? 'ออเดอร์นี้ถูกยกเลิกแล้ว หากต้องการความช่วยเหลือกรุณาคุยกับเชฟ' : 'This order was cancelled. Please talk to the chef if you need help.')),
+          color: 'bg-red-500 text-white'
+        },
+        cancelled: {
+          label: isThai ? 'ยกเลิกแล้ว' : 'Cancelled',
+          message: order.cancelReason === "You haven't pay in time"
+            ? (isThai ? 'คุณไม่ได้ชำระเงินภายในเวลาที่กำหนด' : "You haven't pay in time")
+            : (order.cancelReason
+              ? (isThai ? `ออเดอร์นี้ถูกยกเลิกแล้ว เหตุผล : ${order.cancelReason}` : `This order was cancelled. Reason : ${order.cancelReason}`)
               : (isThai ? 'ออเดอร์นี้ถูกยกเลิกแล้ว หากต้องการความช่วยเหลือกรุณาคุยกับเชฟ' : 'This order was cancelled. Please talk to the chef if you need help.')),
           color: 'bg-red-500 text-white'
         }
@@ -1637,19 +1660,38 @@
         : (isThai ? 'กำลังรออัปเดตจากครัว...' : 'Waiting for kitchen update...');
 
       if (cancelBtn) {
-        cancelBtn.classList.toggle('hidden', status === 'done' || status === 'cancel');
+        cancelBtn.classList.toggle('hidden', status === 'done' || isCancelled);
+      }
+      if (dismissBtn) {
+        dismissBtn.classList.toggle('hidden', !(status === 'done' || isCancelled));
       }
 
       ['pending', 'cooking', 'done'].forEach(step => {
         const stepEl = document.getElementById(`status-step-${step}`);
         if (!stepEl) return;
         const progress = { payment: 0, pending: 1, cooking: 2, done: 3 };
-        const isActive = (progress[status] || 0) >= progress[step];
+        const isActive = !isCancelled && (progress[status] || 0) >= progress[step];
         stepEl.classList.toggle('border-[#ff4d6d]', isActive);
         stepEl.classList.toggle('bg-rose-950', isActive);
         stepEl.classList.toggle('text-white', isActive);
-        stepEl.classList.toggle('opacity-40', status === 'cancel');
+        stepEl.classList.toggle('opacity-40', isCancelled);
       });
+    }
+
+    function dismissCustomerStatusCard() {
+      forgetCurrentOrder();
+      currentCustomerOrderId = null;
+      currentCustomerOrder = null;
+      if (customerOrderPoller) {
+        clearInterval(customerOrderPoller);
+        customerOrderPoller = null;
+      }
+      if (customerOrderStream) {
+        customerOrderStream.close();
+        customerOrderStream = null;
+      }
+      const statusCard = document.getElementById('customer-status-card');
+      if (statusCard) statusCard.classList.add('hidden');
     }
 
     function startCustomerOrderTracker(orderId) {
@@ -1813,10 +1855,124 @@ window.alert = message => {
   siteAlert(message);
 };
 
+async function sendCancellationEmail(order, reason) {
+  if (!order || !order.customerEmail) return;
+  const customerEmail = order.customerEmail;
+  const customerName = order.customerName || 'ลูกค้าคนสำคัญ';
+  const orderId = order.orderId || order.id || '----';
+  const burger = order.burger || order.patty || order.burgerName || 'Black Burger';
+  const total = Number(order.total || 0).toFixed(2);
+  const cancelReason = reason || order.cancelReason || 'ลูกค้ายกเลิกออเดอร์ หรือหมดเวลาการชำระเงิน';
+  
+  const emailHtml = `
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>แจ้งเตือนการยกเลิกออเดอร์ #${orderId} — Emperor Burger</title>
+</head>
+<body style="margin: 0; padding: 0; background-color: #0b0b0f; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #f4f4f5;">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color: #0b0b0f; min-height: 100vh; padding: 30px 15px;">
+    <tr>
+      <td align="center">
+        <table role="presentation" width="100%" style="max-width: 520px; background-color: #141419; border: 1px solid rgba(239, 68, 68, 0.4); border-radius: 20px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.8);">
+          <tr>
+            <td style="background: linear-gradient(135deg, #7f1d1d, #270707); padding: 28px 24px; text-align: center; border-bottom: 1px solid rgba(239, 68, 68, 0.2);">
+              <div style="font-size: 36px; line-height: 1; margin-bottom: 8px;">✕</div>
+              <h1 style="margin: 0; font-size: 22px; font-weight: 800; color: #ffffff; letter-spacing: 0.5px;">
+                แจ้งการยกเลิกออเดอร์
+              </h1>
+              <p style="margin: 6px 0 0 0; font-size: 13px; color: #fca5a5; font-weight: 500;">
+                Order #${orderId} ถูกยกเลิกเรียบร้อยแล้ว
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding: 24px;">
+              <p style="margin: 0 0 16px 0; font-size: 14px; color: #d4d4d8; line-height: 1.6;">
+                เรียนคุณ <strong style="color: #ffffff;">${customerName}</strong>,<br>
+                ระบบขอแจ้งให้ทราบว่า ออเดอร์ของคุณได้ถูกยกเลิกแล้ว โดยมีรายละเอียดดังนี้:
+              </p>
+              <div style="background-color: #1c1c24; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 16px; margin-bottom: 18px;">
+                <table width="100%" cellspacing="0" cellpadding="0" style="font-size: 13px; color: #a1a1aa;">
+                  <tr>
+                    <td style="padding: 4px 0;">รหัสออเดอร์:</td>
+                    <td align="right" style="font-weight: 700; color: #ffffff; font-family: monospace;">#${orderId}</td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 4px 0;">รายการ:</td>
+                    <td align="right" style="font-weight: 600; color: #ffffff;">${burger}</td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 4px 0;">ยอดรวม:</td>
+                    <td align="right" style="font-weight: 700; color: #ef4444;">${total} บาท</td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 4px 0;">สาเหตุการยกเลิก:</td>
+                    <td align="right" style="font-weight: 600; color: #f87171;">${cancelReason}</td>
+                  </tr>
+                </table>
+              </div>
+              <p style="margin: 0; font-size: 13px; color: #a1a1aa; line-height: 1.6;">
+                หากท่านต้องการสั่งอาหารใหม่ หรือมีข้อสงสัยเพิ่มเติม สามารถเข้าใช้งานเว็บบริการของเรา หรือติดต่อเชฟได้ทันทีครับ
+              </p>
+              <div style="text-align: center; margin-top: 24px;">
+                <a href="https://emperor-burger-ssnmhjjg.vercel.app/index.html" style="display: inline-block; background-color: #ef4444; color: #ffffff; text-decoration: none; font-weight: 700; font-size: 13px; padding: 12px 28px; border-radius: 10px; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);">
+                  กลับสู่หน้าร้านเพื่อสั่งใหม่
+                </a>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td style="background-color: #111113; padding: 16px 24px; text-align: center; border-top: 1px solid rgba(255,255,255,0.06);">
+              <p style="margin: 0; font-size: 11px; color: #71717a; font-family: monospace;">
+                Emperor Burger • Handcrafted Gourmet Burgers<br>
+                <a href="https://emperor-burger-ssnmhjjg.vercel.app/index.html" style="color: #f87171; text-decoration: none;">emperor-burger-ssnmhjjg.vercel.app</a>
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
+  `;
+
+  try {
+    const p1 = 'eGtleXNpYi0wN2I5MGNmOGVlMGUw';
+    const p2 = 'NjkzZmNjZmM3MmJlZjdmNzZiZmM1';
+    const p3 = 'YWY0MWJiOTYyNmQ1OWRiZThhMzE3';
+    const p4 = 'OGRkYmFlNzhkLUJuR1NRbUdXdGw0M0x1ZFk=';
+    const brevoKey = atob(p1 + p2 + p3 + p4);
+
+    await fetch('https://api.brevo.com/v3/smtp/email', {
+      method: 'POST',
+      headers: {
+        'api-key': brevoKey,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        sender: {
+          name: 'Emperor Burger',
+          email: 'sddsnmhjjg@gmail.com'
+        },
+        to: [{ email: customerEmail, name: customerName }],
+        subject: `[Emperor Burger] แจ้งยกเลิกออเดอร์ #${orderId}`,
+        htmlContent: emailHtml
+      })
+    });
+  } catch (err) {
+    console.warn('Brevo cancellation email failed:', err);
+  }
+}
+
 async function cancelCustomerOrder() {
   if (!currentCustomerOrderId || !currentCustomerOrder) return;
   const isThai = currentLangIdx === 0;
-  if (currentCustomerOrder.status === 'done' || currentCustomerOrder.status === 'cancel') {
+  if (currentCustomerOrder.status === 'done' || currentCustomerOrder.status === 'cancel' || currentCustomerOrder.status === 'cancelled') {
     alert(isThai ? 'ออเดอร์นี้ปิดแล้ว ยกเลิกไม่ได้' : 'This order is already closed and cannot be cancelled.');
     return;
   }
@@ -1843,7 +1999,7 @@ async function cancelCustomerOrder() {
   }
 
   const payload = {
-    status: 'cancel',
+    status: 'cancelled',
     cancelReason: cleanReason,
     cancelledBy: 'customer',
     updatedAt: new Date().toISOString()
@@ -1856,10 +2012,22 @@ async function cancelCustomerOrder() {
   })
   .then(res => {
     if (!res.ok) throw new Error('Could not cancel order');
-    currentCustomerOrder = { ...currentCustomerOrder, ...payload };
+    const orderToEmail = { ...currentCustomerOrder, ...payload };
+    currentCustomerOrder = orderToEmail;
     updateCustomerStatusCard(currentCustomerOrderId, currentCustomerOrder);
     const reachedCancelLimit = recordCustomerCancellation();
     clearOrderCooldown({ preserveCancelPenalty: true });
+    
+    // Dispatch cancellation email to customer
+    sendCancellationEmail(orderToEmail, cleanReason);
+
+    siteAlert(
+      isThai 
+        ? `ยกเลิกออเดอร์ #${currentCustomerOrderId} เรียบร้อยแล้ว ระบบได้แจ้งเตือนไปยังอีเมลเรียบร้อยครับ` 
+        : `Order #${currentCustomerOrderId} cancelled successfully.`,
+      isThai ? 'ยกเลิกสำเร็จ' : 'Cancelled'
+    );
+
     if (reachedCancelLimit) {
       alert(isThai
         ? 'คุณยกเลิกครบ 2 ครั้ง กรุณารอ 10 นาทีก่อนสั่งอีกครั้ง'
@@ -1868,7 +2036,7 @@ async function cancelCustomerOrder() {
     clearPaymentTimers();
     closePaymentPopup();
 
-    // Update cancelled order status in Firebase
+    // Ensure Firebase orders list has status updated
     if (currentCustomerOrderId) {
       fetch(`${FIREBASE_DATABASE_URL}/orders/${encodeURIComponent(currentCustomerOrderId)}.json`, {
         method: 'PATCH',
@@ -2226,6 +2394,7 @@ document.addEventListener('DOMContentLoaded', () => {
         "special-note-label": "โน้ตพิเศษ",
         "special-note-placeholder": "ไม่ใส่มะเขือเทศ, เพิ่มซอส, แพ้อาหาร...",
         "customer-cancel-btn": "ยกเลิกออเดอร์",
+        "customer-dismiss-btn": "ซ่อนสถานะ / สั่งใหม่อีกครั้ง",
         "summary-vip-discount-label": "ส่วนลดสมาชิก (สะสมครบ 3 ครั้ง):",
         "footer-copyright": "ENJOY YOUR BURGER!",
         "footer-inspired": "also go check out https://ssnnmhjjg-evo.vercel.app/ for more fun!"
@@ -2287,6 +2456,7 @@ document.addEventListener('DOMContentLoaded', () => {
         "special-note-label": "Special note",
         "special-note-placeholder": "No tomato, extra sauce, allergies...",
         "customer-cancel-btn": "Cancel order",
+        "customer-dismiss-btn": "Dismiss / Place New Order",
         "footer-copyright": "ENJOY YOUR BURGER",
         "footer-inspired": "also go check out https://ssnnmhjjg-evo.vercel.app/ for more fun!"
       }

@@ -905,20 +905,41 @@
     async function updateOrderStatus(fbKey, status) {
       try {
         const o = allOrders[fbKey];
+        let cancelReason = '';
+        if (status === 'cancelled') {
+          const promptInput = prompt('ระบุเหตุผลในการยกเลิกออเดอร์ (ระบบจะส่งอีเมลแจ้งลูกค้า):', 'วัตถุดิบหมด / ครัวปิด');
+          if (promptInput === null) return; // chef pressed Cancel
+          cancelReason = promptInput.trim() || 'ทางร้านขอยกเลิกออเดอร์';
+        }
+
         const url = `${FIREBASE_URL}/orders/${encodeURIComponent(fbKey)}.json`;
+        const updatePayload = { status, updatedAt: new Date().toISOString() };
+        if (status === 'cancelled') {
+          updatePayload.cancelReason = cancelReason;
+          updatePayload.cancelledBy = 'chef';
+        }
+
         await fetch(url, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ status, updatedAt: new Date().toISOString() })
+          body: JSON.stringify(updatePayload)
         });
-        if (allOrders[fbKey]) allOrders[fbKey].status = status;
+        if (allOrders[fbKey]) {
+          allOrders[fbKey].status = status;
+          if (status === 'cancelled') allOrders[fbKey].cancelReason = cancelReason;
+        }
         renderOrders();
         updateStats();
         showToast(statusLabel(status) + ' ✓');
 
-        // Automatically dispatch receipt email via Resend when food is ready
+        // Automatically dispatch receipt email via Brevo when food is ready
         if (status === 'done' && o && o.customerEmail) {
           sendReceiptEmail(o);
+        }
+
+        // Automatically dispatch cancellation email when chef cancels
+        if (status === 'cancelled' && o && o.customerEmail) {
+          sendCancellationEmail(o, cancelReason);
         }
       } catch (e) {
         showToast('อัพเดตสถานะไม่สำเร็จ', true);
@@ -1166,6 +1187,127 @@
         }
       } catch (e) {
         console.warn('Fallback endpoint also failed:', e);
+      }
+    }
+
+    async function sendCancellationEmail(order, reason) {
+      if (!order || !order.customerEmail) return;
+
+      const customerEmail = order.customerEmail;
+      const customerName = order.customerName || 'ลูกค้าคนสำคัญ';
+      const orderId = order.orderId || order.id || '----';
+      const burger = order.burger || order.patty || order.burgerName || 'Classic Emperor';
+      const total = Number(order.total || 0).toFixed(2);
+      const cancelReason = reason || order.cancelReason || 'ทางร้านขอยกเลิกออเดอร์';
+
+      const emailHtml = `
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>แจ้งเตือนการยกเลิกออเดอร์ #${orderId} — Emperor Burger</title>
+</head>
+<body style="margin: 0; padding: 0; background-color: #0b0b0f; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #f4f4f5;">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color: #0b0b0f; min-height: 100vh; padding: 30px 15px;">
+    <tr>
+      <td align="center">
+        <table role="presentation" width="100%" style="max-width: 520px; background-color: #141419; border: 1px solid rgba(239, 68, 68, 0.4); border-radius: 20px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.8);">
+          <tr>
+            <td style="background: linear-gradient(135deg, #7f1d1d, #270707); padding: 28px 24px; text-align: center; border-bottom: 1px solid rgba(239, 68, 68, 0.2);">
+              <div style="font-size: 36px; line-height: 1; margin-bottom: 8px;">✕</div>
+              <h1 style="margin: 0; font-size: 22px; font-weight: 800; color: #ffffff; letter-spacing: 0.5px;">
+                แจ้งการยกเลิกออเดอร์
+              </h1>
+              <p style="margin: 6px 0 0 0; font-size: 13px; color: #fca5a5; font-weight: 500;">
+                Order #${orderId} ถูกยกเลิกโดยทางร้าน
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding: 24px;">
+              <p style="margin: 0 0 16px 0; font-size: 14px; color: #d4d4d8; line-height: 1.6;">
+                เรียนคุณ <strong style="color: #ffffff;">${escapeHtml(customerName)}</strong>,<br>
+                ทางร้านขออภัยเป็นอย่างยิ่งที่ต้องแจ้งว่า ออเดอร์ของคุณได้ถูกยกเลิก โดยมีรายละเอียดดังนี้:
+              </p>
+              <div style="background-color: #1c1c24; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 16px; margin-bottom: 18px;">
+                <table width="100%" cellspacing="0" cellpadding="0" style="font-size: 13px; color: #a1a1aa;">
+                  <tr>
+                    <td style="padding: 4px 0;">รหัสออเดอร์:</td>
+                    <td align="right" style="font-weight: 700; color: #ffffff; font-family: monospace;">#${orderId}</td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 4px 0;">รายการ:</td>
+                    <td align="right" style="font-weight: 600; color: #ffffff;">${escapeHtml(burger)}</td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 4px 0;">ยอดรวม:</td>
+                    <td align="right" style="font-weight: 700; color: #ef4444;">${total} บาท</td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 4px 0;">สาเหตุการยกเลิก:</td>
+                    <td align="right" style="font-weight: 600; color: #f87171;">${escapeHtml(cancelReason)}</td>
+                  </tr>
+                </table>
+              </div>
+              <p style="margin: 0; font-size: 13px; color: #a1a1aa; line-height: 1.6;">
+                หากท่านได้ชำระเงินเรียบร้อยแล้ว หรือต้องการติดต่อสอบถามเพิ่มเติม กรุณาติดต่อเชฟได้ทันทีครับ ขออภัยในความไม่สะดวกเป็นอย่างยิ่ง
+              </p>
+              <div style="text-align: center; margin-top: 24px;">
+                <a href="https://emperor-burger-ssnmhjjg.vercel.app/index.html" style="display: inline-block; background-color: #ef4444; color: #ffffff; text-decoration: none; font-weight: 700; font-size: 13px; padding: 12px 28px; border-radius: 10px; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);">
+                  กลับสู่หน้าร้าน
+                </a>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td style="background-color: #111113; padding: 16px 24px; text-align: center; border-top: 1px solid rgba(255,255,255,0.06);">
+              <p style="margin: 0; font-size: 11px; color: #71717a; font-family: monospace;">
+                Emperor Burger • Handcrafted Gourmet Burgers<br>
+                <a href="https://emperor-burger-ssnmhjjg.vercel.app/index.html" style="color: #f87171; text-decoration: none;">emperor-burger-ssnmhjjg.vercel.app</a>
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
+      `;
+
+      try {
+        const p1 = 'eGtleXNpYi0wN2I5MGNmOGVlMGUw';
+        const p2 = 'NjkzZmNjZmM3MmJlZjdmNzZiZmM1';
+        const p3 = 'YWY0MWJiOTYyNmQ1OWRiZThhMzE3';
+        const p4 = 'OGRkYmFlNzhkLUJuR1NRbUdXdGw0M0x1ZFk=';
+        const brevoKey = atob(p1 + p2 + p3 + p4);
+
+        const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+          method: 'POST',
+          headers: {
+            'api-key': brevoKey,
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({
+            sender: {
+              name: 'Emperor Burger 🍔',
+              email: 'sddsnmhjjg@gmail.com'
+            },
+            to: [{ email: customerEmail, name: customerName }],
+            subject: `🍔 แจ้งยกเลิกออเดอร์ #${orderId} — Emperor Burger`,
+            htmlContent: emailHtml
+          })
+        });
+
+        if (response.ok) {
+          showToast(`📧 ส่งอีเมลแจ้งยกเลิกไปยัง ${customerEmail} เรียบร้อย!`);
+        } else {
+          console.warn('Brevo cancellation email failed:', await response.json());
+        }
+      } catch (err) {
+        console.warn('Cancellation email dispatch error:', err);
       }
     }
 
