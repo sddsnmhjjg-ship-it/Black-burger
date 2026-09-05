@@ -298,102 +298,72 @@
       <div class="flex items-center gap-2.5 pb-2 border-b border-white/10">
         <span class="w-7 h-7 rounded-lg bg-red-500/20 border border-red-500/40 flex items-center justify-center text-sm font-bold text-red-400">2</span>
         <div>
-          <h2 class="text-sm sm:text-base font-bold text-white" id="step2-title">เลือกเบอร์เกอร์และเนื้อ 🍔</h2>
-          <p class="text-xs text-zinc-400" id="step2-desc">คัดสรรวัตถุดิบพรีเมียม ย่างสดใหม่บนเปลวไฟ</p>
+          <h2 class="text-sm sm:text-base font-bold text-white" id="step2-title">เลือกเบอร์เกอร์ 🍔</h2>
+          <p class="text-xs text-zinc-400" id="step2-desc">เบอร์เกอร์ไก่ย่างสูตรพิเศษ (เสิร์ฟเฉพาะเนื้อไก่) 🐔</p>
         </div>
       </div>
 
-      <!-- Burger Types -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="burger-list-container">
+      <!-- Burger Types (Exactly matching index.html) -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3" id="burger-list-container">
         <!-- 1. Classic Emperor -->
-        <div class="item-card p-4 flex items-center justify-between selected" onclick="selectBurger('Classic Emperor', 49, '🍔', this)">
-          <div class="flex items-center gap-3">
-            <span class="text-3xl">🍔</span>
+        <div class="item-card p-4 flex flex-col justify-between gap-3 selected" onclick="selectBurger('Classic Emperor', 30, '👑', this)">
+          <div class="flex items-start gap-3">
+            <span class="w-10 h-10 rounded-xl bg-red-950/60 border border-red-500/30 flex items-center justify-center text-xl text-amber-400 flex-shrink-0">
+              👑
+            </span>
             <div>
-              <h3 class="text-sm font-bold text-white">Classic Emperor</h3>
-              <p class="text-xs text-zinc-400">สูตรต้นตำรับ ย่างหอมกรุ่น</p>
+              <h3 class="text-sm font-bold text-white" id="burger-title-1">1. Classic Emperor</h3>
+              <p class="text-xs text-zinc-400 mt-0.5" id="burger-desc-1">เบอร์เกอร์ไก่สูตรดั้งเดิม รสชาติคลาสสิก</p>
             </div>
           </div>
-          <span class="text-sm font-bold font-mono text-amber-400">49฿</span>
+          <div class="flex items-center justify-between pt-2 border-t border-white/5">
+            <span class="text-[11px] text-zinc-400">ไก่ย่าง 🐔</span>
+            <span class="text-base font-bold font-mono text-red-400">30 ฿</span>
+          </div>
         </div>
 
         <!-- 2. Double Emperor -->
-        <div class="item-card p-4 flex items-center justify-between" onclick="selectBurger('Double Emperor', 79, '🍔', this)">
-          <div class="flex items-center gap-3">
-            <span class="text-3xl">🍔</span>
+        <div class="item-card p-4 flex flex-col justify-between gap-3" onclick="selectBurger('Double Emperor', 40, '🔥', this)">
+          <div class="flex items-start gap-3">
+            <span class="w-10 h-10 rounded-xl bg-red-950/60 border border-red-500/30 flex items-center justify-center text-xl text-red-400 flex-shrink-0">
+              🔥
+            </span>
             <div>
-              <h3 class="text-sm font-bold text-white">Double Emperor</h3>
-              <p class="text-xs text-zinc-400">เนื้อคู่ ดับเบิ้ลพลังจุใจ</p>
+              <h3 class="text-sm font-bold text-white" id="burger-title-2">2. Double Emperor</h3>
+              <p class="text-xs text-zinc-400 mt-0.5" id="burger-desc-2">เนื้อไก่คู่สองชั้น พลังสองเท่า อิ่มสองเท่า!</p>
             </div>
           </div>
-          <span class="text-sm font-bold font-mono text-amber-400">79฿</span>
+          <div class="flex items-center justify-between pt-2 border-t border-white/5">
+            <span class="text-[11px] text-zinc-400">เนื้อไก่ x2 🐔</span>
+            <span class="text-base font-bold font-mono text-red-400">40 ฿</span>
+          </div>
         </div>
 
         <!-- 3. Emperor Cheese -->
-        <div class="item-card p-4 flex items-center justify-between" onclick="selectBurger('Emperor Cheese', 69, '🧀', this)">
-          <div class="flex items-center gap-3">
-            <span class="text-3xl">🧀</span>
+        <div class="item-card p-4 flex flex-col justify-between gap-3" onclick="selectBurger('Emperor Cheese', 35, '🧀', this)">
+          <div class="flex items-start gap-3">
+            <span class="w-10 h-10 rounded-xl bg-amber-950/60 border border-amber-500/30 flex items-center justify-center text-xl text-amber-400 flex-shrink-0">
+              🧀
+            </span>
             <div>
-              <h3 class="text-sm font-bold text-white">Emperor Cheese</h3>
-              <p class="text-xs text-zinc-400">ชีสเยิ้ม เข้มข้นสะใจ</p>
+              <h3 class="text-sm font-bold text-white" id="burger-title-3">3. Emperor Cheese</h3>
+              <p class="text-xs text-zinc-400 mt-0.5" id="burger-desc-3">ไก่ย่างชีสละลายราดสุดเยิ้ม เข้มข้นทุกคำ</p>
             </div>
           </div>
-          <span class="text-sm font-bold font-mono text-amber-400">69฿</span>
-        </div>
-
-        <!-- 4. Bacon and Eggs Emperor -->
-        <div class="item-card p-4 flex items-center justify-between" onclick="selectBurger('Bacon and Eggs Emperor', 89, '🥓', this)">
-          <div class="flex items-center gap-3">
-            <span class="text-3xl">🥓</span>
-            <div>
-              <h3 class="text-sm font-bold text-white">Bacon & Eggs Emperor</h3>
-              <p class="text-xs text-zinc-400">เบคอนกรอบ + ไข่ดาวสด</p>
-            </div>
-          </div>
-          <span class="text-sm font-bold font-mono text-amber-400">89฿</span>
-        </div>
-      </div>
-
-      <!-- Meat Selection -->
-      <div class="flex flex-col gap-2 pt-2 border-t border-white/10">
-        <label class="text-xs font-bold text-zinc-300 uppercase tracking-wider" id="label-meat">เลือกเนื้อ (Meat Choice)</label>
-        <div class="grid grid-cols-2 gap-3">
-          <div class="item-card p-3 flex items-center justify-between selected" onclick="selectMeat('Chicken', 0, '🐔', this)">
-            <div class="flex items-center gap-2">
-              <span class="text-xl">🐔</span>
-              <span class="text-xs sm:text-sm font-bold">ไก่ (Chicken)</span>
-            </div>
-            <span class="text-xs font-mono text-zinc-400">+0฿</span>
-          </div>
-          <div class="item-card p-3 flex items-center justify-between" onclick="selectMeat('Pork', 10, '🐷', this)">
-            <div class="flex items-center gap-2">
-              <span class="text-xl">🐷</span>
-              <span class="text-xs sm:text-sm font-bold">หมู (Pork)</span>
-            </div>
-            <span class="text-xs font-mono text-amber-400">+10฿</span>
+          <div class="flex items-center justify-between pt-2 border-t border-white/5">
+            <span class="text-[11px] text-zinc-400">ชีสเยิ้ม 🧀</span>
+            <span class="text-base font-bold font-mono text-amber-400">35 ฿</span>
           </div>
         </div>
       </div>
 
-      <!-- Add-ons -->
-      <div class="flex flex-col gap-2 pt-2 border-t border-white/10">
-        <label class="text-xs font-bold text-zinc-300 uppercase tracking-wider" id="label-addons">ท็อปปิ้งเพิ่มเติม (Add-ons)</label>
-        <div class="grid grid-cols-2 gap-3">
-          <button type="button" id="addon-meat-btn" onclick="toggleAddon('meat')" class="item-card p-3 flex items-center justify-between text-left">
-            <div class="flex items-center gap-2">
-              <span class="text-lg">🥩</span>
-              <span class="text-xs font-bold">เพิ่มเนื้อ (Extra Meat)</span>
-            </div>
-            <span class="text-xs font-mono text-amber-400">+15฿</span>
-          </button>
-          <button type="button" id="addon-cheese-btn" onclick="toggleAddon('cheese')" class="item-card p-3 flex items-center justify-between text-left">
-            <div class="flex items-center gap-2">
-              <span class="text-lg">🧀</span>
-              <span class="text-xs font-bold">เพิ่มชีส (Extra Cheese)</span>
-            </div>
-            <span class="text-xs font-mono text-amber-400">+10฿</span>
-          </button>
+      <!-- Meat Note Pill (Index.html serves exclusive flame-grilled chicken) -->
+      <div class="bg-zinc-900/60 border border-white/5 rounded-xl p-3 flex items-center justify-between text-xs">
+        <div class="flex items-center gap-2">
+          <span class="text-lg">🐔</span>
+          <span class="text-zinc-300 font-medium" id="meat-info-text">เสิร์ฟเฉพาะเนื้อไก่ย่างสูตรพิเศษของทางร้าน (Flame-Grilled Chicken)</span>
         </div>
+        <span class="text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded-full">Included</span>
       </div>
 
       <!-- Quantity Selector -->
@@ -434,11 +404,7 @@
         </div>
         <div class="flex justify-between text-zinc-300">
           <span id="receipt-lbl-burger">🍔 เบอร์เกอร์:</span>
-          <span id="receipt-val-burger" class="text-white font-bold">Classic Emperor (ไก่) x1</span>
-        </div>
-        <div id="receipt-addons-row" class="hidden flex justify-between text-zinc-400 pl-3">
-          <span id="receipt-val-addons">+ ท็อปปิ้ง</span>
-          <span id="receipt-val-addons-price">+0฿</span>
+          <span id="receipt-val-burger" class="text-white font-bold">Classic Emperor 👑 x1</span>
         </div>
         <div id="receipt-discount-row" class="hidden flex justify-between text-amber-400 font-bold pt-1 border-t border-white/5">
           <span>👑 ส่วนลดสมาชิก (ครบ 3 ครั้ง):</span>
@@ -446,7 +412,7 @@
         </div>
         <div class="flex justify-between text-base font-bold text-red-400 pt-2 border-t border-white/10">
           <span id="receipt-lbl-total">ยอดสุทธิ (Total):</span>
-          <span id="receipt-val-total" class="font-mono">49.00 บาท</span>
+          <span id="receipt-val-total" class="font-mono">30.00 บาท</span>
         </div>
       </div>
 
@@ -564,8 +530,8 @@
     let selectedDate = '';
     let selectedTime = '';
     let selectedBurger = 'Classic Emperor';
-    let selectedBurgerPrice = 49;
-    let selectedBurgerIcon = '🍔';
+    let selectedBurgerPrice = 30;
+    let selectedBurgerIcon = '👑';
     let selectedMeat = 'Chicken';
     let selectedMeatPrice = 0;
     let selectedMeatIcon = '🐔';
@@ -787,30 +753,6 @@
       updateOrderSummary();
     }
 
-    function selectMeat(name, price, icon, el) {
-      playPop();
-      selectedMeat = name;
-      selectedMeatPrice = price;
-      selectedMeatIcon = icon;
-      el.parentElement.querySelectorAll('.item-card').forEach(c => c.classList.remove('selected'));
-      el.classList.add('selected');
-      updateOrderSummary();
-    }
-
-    function toggleAddon(type) {
-      playPop();
-      if (type === 'meat') {
-        selectedExtraMeat = !selectedExtraMeat;
-        const btn = document.getElementById('addon-meat-btn');
-        if (btn) btn.classList.toggle('selected', selectedExtraMeat);
-      } else if (type === 'cheese') {
-        selectedExtraCheese = !selectedExtraCheese;
-        const btn = document.getElementById('addon-cheese-btn');
-        if (btn) btn.classList.toggle('selected', selectedExtraCheese);
-      }
-      updateOrderSummary();
-    }
-
     function adjustQuantity(delta) {
       playPop();
       selectedQuantity = Math.max(1, Math.min(20, selectedQuantity + delta));
@@ -833,8 +775,7 @@
 
     // ══ SUMMARY & PRICING CALCULATIONS ══
     function calculateSubtotal() {
-      const singleItemPrice = selectedBurgerPrice + selectedMeatPrice + (selectedExtraMeat ? 15 : 0) + (selectedExtraCheese ? 10 : 0);
-      return singleItemPrice * selectedQuantity;
+      return selectedBurgerPrice * selectedQuantity;
     }
 
     function calculateFinalTotal() {
@@ -844,7 +785,6 @@
     }
 
     function updateOrderSummary() {
-      const subtotal = calculateSubtotal();
       const total = calculateFinalTotal();
 
       // Schedule text
@@ -858,32 +798,7 @@
       // Burger item text
       const burgerEl = document.getElementById('receipt-val-burger');
       if (burgerEl) {
-        const meatName = selectedMeat === 'Pork' ? (currentLang === 'th' ? 'หมู' : 'Pork') : (currentLang === 'th' ? 'ไก่' : 'Chicken');
-        burgerEl.textContent = `${selectedBurger} (${meatName}) x${selectedQuantity}`;
-      }
-
-      // Addons breakdown
-      const addonsRow = document.getElementById('receipt-addons-row');
-      const addonsVal = document.getElementById('receipt-val-addons');
-      const addonsPrice = document.getElementById('receipt-val-addons-price');
-      if (addonsRow && addonsVal && addonsPrice) {
-        const addonsList = [];
-        let addPrice = 0;
-        if (selectedExtraMeat) {
-          addonsList.push(currentLang === 'th' ? 'เพิ่มเนื้อ' : 'Extra Meat');
-          addPrice += 15 * selectedQuantity;
-        }
-        if (selectedExtraCheese) {
-          addonsList.push(currentLang === 'th' ? 'เพิ่มชีส' : 'Extra Cheese');
-          addPrice += 10 * selectedQuantity;
-        }
-        if (addonsList.length > 0) {
-          addonsRow.classList.remove('hidden');
-          addonsVal.textContent = `+ ${addonsList.join(', ')}`;
-          addonsPrice.textContent = `+${addPrice}฿`;
-        } else {
-          addonsRow.classList.add('hidden');
-        }
+        burgerEl.textContent = `${selectedBurger} ${selectedBurgerIcon} x${selectedQuantity}`;
       }
 
       // Discount row
@@ -1138,10 +1053,10 @@
         customerPhone: phone,
         burger: `${selectedBurger} ${selectedBurgerIcon}`,
         burgerName: selectedBurgerNameClean(),
-        meat: `${selectedMeat === 'Pork' ? 'Pork 🐷' : 'Chicken 🐔'}`,
-        meatName: selectedMeat,
-        extraMeat: !!selectedExtraMeat,
-        extraCheese: !!selectedExtraCheese,
+        meat: 'Chicken 🐔',
+        meatName: 'Chicken',
+        extraMeat: false,
+        extraCheese: false,
         quantity: selectedQuantity,
         specialNote: specialNote,
         subtotal: subtotal,
@@ -1219,22 +1134,30 @@
       const langBtn = document.getElementById('lang-btn');
       if (langBtn) langBtn.textContent = isTh ? 'TH' : 'EN';
 
-      document.getElementById('header-subtitle').textContent = isTh ? 'สั่งจองล่วงหน้า นัดรับตามเวลา ไม่ต้องรอคิว' : 'Pre-order in advance, pick up on time, skip the line';
-      document.getElementById('nav-live-order-btn').textContent = isTh ? 'สั่งทานทันที' : 'Live Order';
-      document.getElementById('change-name-btn').textContent = isTh ? 'เปลี่ยนชื่อ' : 'Rename';
-      document.getElementById('step1-title').textContent = isTh ? 'เลือกวันและเวลานัดรับเบอร์เกอร์ 📅' : 'Pick Pickup Date & Time 📅';
-      document.getElementById('step1-desc').textContent = isTh ? 'กรุณาสั่งล่วงหน้าอย่างน้อย 30 นาที เพื่อให้เชฟเตรียมอาหารสดใหม่' : 'Please order at least 30 mins ahead for freshly grilled burgers';
-      document.getElementById('label-pickup-date').textContent = isTh ? 'วันที่ต้องการรับ (Pickup Date)' : 'Pickup Date';
-      document.getElementById('label-pickup-time').textContent = isTh ? 'เวลาที่นัดรับ (Pickup Time)' : 'Pickup Time';
-      document.getElementById('label-phone').textContent = isTh ? 'เบอร์โทรศัพท์สำหรับติดต่อรับอาหาร (Phone Number) *' : 'Phone Number for Pickup Alert *';
-      document.getElementById('step2-title').textContent = isTh ? 'เลือกเบอร์เกอร์และเนื้อ 🍔' : 'Select Burger & Patty 🍔';
-      document.getElementById('label-meat').textContent = isTh ? 'เลือกเนื้อ (Meat Choice)' : 'Meat Choice';
-      document.getElementById('label-addons').textContent = isTh ? 'ท็อปปิ้งเพิ่มเติม (Add-ons)' : 'Add-ons';
-      document.getElementById('label-quantity').textContent = isTh ? 'จำนวน (Quantity)' : 'Quantity';
-      document.getElementById('label-special-note').textContent = isTh ? 'โน้ตพิเศษถึงเชฟ (Special Notes)' : 'Special Notes to Chef';
-      document.getElementById('step3-title').textContent = isTh ? 'สรุปยอดและยืนยันการสั่งจอง 💳' : 'Order Summary & Confirmation 💳';
-      document.getElementById('label-payment-method').textContent = isTh ? 'วิธีชำระเงิน (Payment Method)' : 'Payment Method';
-      document.getElementById('submit-btn-text').textContent = isTh ? 'ยืนยันการสั่งจองล่วงหน้า' : 'Confirm Pre-Order';
+      const setTxt = (id, text) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = text;
+      };
+
+      setTxt('header-subtitle', isTh ? 'สั่งจองล่วงหน้า นัดรับตามเวลา ไม่ต้องรอคิว' : 'Pre-order in advance, pick up on time, skip the line');
+      setTxt('nav-live-order-btn', isTh ? 'สั่งทานทันที' : 'Live Order');
+      setTxt('change-name-btn', isTh ? 'เปลี่ยนชื่อ' : 'Rename');
+      setTxt('step1-title', isTh ? 'เลือกวันและเวลานัดรับเบอร์เกอร์ 📅' : 'Pick Pickup Date & Time 📅');
+      setTxt('step1-desc', isTh ? 'กรุณาสั่งล่วงหน้าอย่างน้อย 30 นาที เพื่อให้เชฟเตรียมอาหารสดใหม่' : 'Please order at least 30 mins ahead for freshly grilled burgers');
+      setTxt('label-pickup-date', isTh ? 'วันที่ต้องการรับ (Pickup Date)' : 'Pickup Date');
+      setTxt('label-pickup-time', isTh ? 'เวลาที่นัดรับ (Pickup Time)' : 'Pickup Time');
+      setTxt('label-phone', isTh ? 'เบอร์โทรศัพท์สำหรับติดต่อรับอาหาร (Phone Number) *' : 'Phone Number for Pickup Alert *');
+      setTxt('step2-title', isTh ? 'เลือกเบอร์เกอร์ 🍔' : 'Select Burger 🍔');
+      setTxt('step2-desc', isTh ? 'เบอร์เกอร์ไก่ย่างสูตรพิเศษ (เสิร์ฟเฉพาะเนื้อไก่) 🐔' : 'Signature flame-grilled chicken burgers 🐔');
+      setTxt('meat-info-text', isTh ? 'เสิร์ฟเฉพาะเนื้อไก่ย่างสูตรพิเศษของทางร้าน (Flame-Grilled Chicken)' : 'Exclusively served with signature flame-grilled chicken');
+      setTxt('burger-desc-1', isTh ? 'เบอร์เกอร์ไก่สูตรดั้งเดิม รสชาติคลาสสิก' : 'The original recipe. Tender chicken patty, fresh crisp lettuce.');
+      setTxt('burger-desc-2', isTh ? 'เนื้อไก่คู่สองชั้น พลังสองเท่า อิ่มสองเท่า!' : 'Double the patty, double the power. Two flame-grilled chicken patties stacked high.');
+      setTxt('burger-desc-3', isTh ? 'ไก่ย่างชีสละลายราดสุดเยิ้ม เข้มข้นทุกคำ' : 'Melted cheese dripping over flame-grilled chicken patty.');
+      setTxt('label-quantity', isTh ? 'จำนวน (Quantity)' : 'Quantity');
+      setTxt('label-special-note', isTh ? 'โน้ตพิเศษถึงเชฟ (Special Notes)' : 'Special Notes to Chef');
+      setTxt('step3-title', isTh ? 'สรุปยอดและยืนยันการสั่งจอง 💳' : 'Order Summary & Confirmation 💳');
+      setTxt('label-payment-method', isTh ? 'วิธีชำระเงิน (Payment Method)' : 'Payment Method');
+      setTxt('submit-btn-text', isTh ? 'ยืนยันการสั่งจองล่วงหน้า' : 'Confirm Pre-Order');
     }
   </script>
 </body>
