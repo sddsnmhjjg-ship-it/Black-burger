@@ -256,7 +256,60 @@
       </div>
     </section>
 
-    <!-- STEP 1: PRE-ORDER SCHEDULE (DATE & TIME) -->
+    <!-- ACTIVE PRE-ORDER & 20-MIN COOLDOWN CARD -->
+    <section id="active-preorder-container" class="hidden glass-panel p-4 sm:p-5 border-amber-500/40 bg-gradient-to-br from-amber-950/30 via-zinc-900/90 to-purple-950/30 flex flex-col gap-3 shadow-xl shadow-black/50">
+      <div class="flex items-center justify-between pb-2.5 border-b border-white/10">
+        <div class="flex items-center gap-2.5">
+          <span class="w-8 h-8 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 flex-shrink-0">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </span>
+          <div>
+            <div class="flex items-center gap-2">
+              <h3 class="text-xs sm:text-sm font-bold text-white uppercase tracking-wider" id="active-order-title">ออเดอร์ที่สั่งไว้ (Current Pre-Order)</h3>
+              <span id="active-order-badge" class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">#0000</span>
+            </div>
+            <p class="text-[11px] text-zinc-400" id="active-order-status-text">สถานะ: รอดำเนินการ (Pending)</p>
+          </div>
+        </div>
+        <!-- 20-min Cooldown Live Countdown Badge -->
+        <div id="cooldown-badge" class="flex flex-col items-end text-right bg-purple-950/50 border border-purple-500/30 px-2.5 py-1 rounded-xl">
+          <span class="text-[9px] uppercase tracking-wider text-purple-300 font-bold flex items-center gap-1">
+            <svg class="w-2.5 h-2.5 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            <span id="cooldown-label">Cooldown</span>
+          </span>
+          <span id="cooldown-timer-text" class="text-xs sm:text-sm font-mono font-extrabold text-purple-300">20:00</span>
+        </div>
+      </div>
+
+      <!-- Active Order Summary Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs font-mono bg-black/40 p-3 rounded-xl border border-white/5">
+        <div class="flex justify-between sm:justify-start sm:gap-2 text-zinc-300">
+          <span class="text-zinc-500" id="lbl-active-schedule">นัดรับ:</span>
+          <span id="active-order-schedule" class="text-purple-300 font-bold"></span>
+        </div>
+        <div class="flex justify-between sm:justify-start sm:gap-2 text-zinc-300">
+          <span class="text-zinc-500" id="lbl-active-item">รายการ:</span>
+          <span id="active-order-burger" class="text-white font-bold"></span>
+        </div>
+        <div class="flex justify-between sm:justify-start sm:gap-2 text-zinc-300">
+          <span class="text-zinc-500" id="lbl-active-total">ยอดรวม:</span>
+          <span id="active-order-total" class="text-amber-400 font-bold"></span>
+        </div>
+        <div class="flex justify-between sm:justify-start sm:gap-2 text-zinc-300">
+          <span class="text-zinc-500" id="lbl-active-payment">การชำระ:</span>
+          <span id="active-order-payment" class="text-emerald-400"></span>
+        </div>
+      </div>
+
+      <!-- Edit Action Button -->
+      <div class="flex items-center gap-2 pt-1">
+        <button type="button" id="edit-active-order-btn" onclick="startEditingActiveOrder()" class="btn-flame py-2.5 px-4 text-xs font-bold flex-1 flex items-center justify-center gap-2 shadow-md shadow-red-500/20">
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          <span id="active-btn-edit">แก้ไขเมนู / เปลี่ยนแปลงรายการออเดอร์</span>
+        </button>
+      </div>
+    </section>
+
     <!-- STEP 1: PRE-ORDER SCHEDULE (DATE & TIME) -->
     <section class="glass-panel p-5 flex flex-col gap-4 border-purple-500/30">
       <div class="flex items-center gap-2.5 pb-2 border-b border-white/10">
@@ -312,7 +365,7 @@
     </section>
 
     <!-- STEP 2: BURGER SELECTION -->
-    <section class="glass-panel p-5 flex flex-col gap-4 border-red-500/30">
+    <section id="step2-section" class="glass-panel p-5 flex flex-col gap-4 border-red-500/30">
       <div class="flex items-center gap-2.5 pb-2 border-b border-white/10">
         <span class="w-7 h-7 rounded-lg bg-red-500/20 border border-red-500/40 flex items-center justify-center text-sm font-bold text-red-400">2</span>
         <div>
@@ -389,11 +442,11 @@
         <span class="text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded-full">Included</span>
       </div>
 
-      <!-- Quantity Selector -->
+      <!-- Quantity Selector (Max 3) -->
       <div class="flex items-center justify-between pt-2 border-t border-white/10">
         <div>
           <label class="text-xs font-bold text-zinc-300 uppercase tracking-wider" id="label-quantity">จำนวน (Quantity)</label>
-          <p class="text-[11px] text-zinc-400">สั่งหลายชิ้นได้ในออเดอร์เดียว</p>
+          <p class="text-[11px] text-zinc-400" id="label-quantity-sub">สั่งได้สูงสุด 3 ชิ้นต่อครั้ง (Max 3)</p>
         </div>
         <div class="flex items-center gap-3 bg-zinc-900 border border-zinc-700 rounded-xl p-1.5">
           <button type="button" onclick="adjustQuantity(-1)" class="w-8 h-8 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-white font-bold flex items-center justify-center transition-all">-</button>
@@ -619,10 +672,15 @@
     let selectedQuantity = 1;
     let selectedPayment = 'PromptPay';
     let selectedPromptPayTiming = 'now';
-
     // Loyalty stats
     let loyaltyStamps = 0;
     let hasLoyaltyDiscount = false;
+
+    // Active Pre-Order & Cooldown
+    let activePreOrder = null;
+    let editingOrderId = null;
+    let cooldownTimerInterval = null;
+    const COOLDOWN_DURATION_MS = 20 * 60 * 1000; // 20 minutes
 
     // ══ AUDIO SYNTHESIS (iOS & MOBILE OPTIMIZED) ══
     let audioCtx = null;
@@ -853,7 +911,7 @@
 
     function adjustQuantity(delta) {
       playPop();
-      selectedQuantity = Math.max(1, Math.min(20, selectedQuantity + delta));
+      selectedQuantity = Math.max(1, Math.min(3, selectedQuantity + delta));
       const el = document.getElementById('burger-quantity-text');
       if (el) el.textContent = selectedQuantity;
       updateOrderSummary();
@@ -984,6 +1042,7 @@
         currentAuthUser = user;
         updateUserUi();
         fetchLoyaltyData();
+        checkActivePreOrderAndCooldown();
       });
     }
 
@@ -1149,6 +1208,216 @@
       }
     }
 
+    // ══ ACTIVE PRE-ORDER & 20-MIN COOLDOWN ══
+    async function checkActivePreOrderAndCooldown() {
+      if (!currentAuthUser) {
+        hideActivePreOrderCard();
+        return;
+      }
+
+      try {
+        const res = await fetch(`${FIREBASE_DATABASE_URL}/orders.json`);
+        if (!res.ok) return;
+        const allOrders = await res.json();
+        if (!allOrders) {
+          hideActivePreOrderCard();
+          return;
+        }
+
+        const savedOrderId = localStorage.getItem('bitty-active-preorder-id');
+
+        const userPreOrders = Object.values(allOrders).filter(o => {
+          if (!o || o.status === 'cancelled') return false;
+          if (!o.isPreOrder && o.orderType !== 'preorder') return false;
+          const matches = (o.customerUid && o.customerUid === currentAuthUser.uid) ||
+                          (o.customerEmail && currentAuthUser.email && o.customerEmail.toLowerCase() === currentAuthUser.email.toLowerCase()) ||
+                          (savedOrderId && String(o.orderId) === String(savedOrderId));
+          return matches && (o.status === 'pending' || o.status === 'cooking' || o.status === 'prepared');
+        });
+
+        userPreOrders.sort((a, b) => new Date(b.createdAt || b.time || 0) - new Date(a.createdAt || a.time || 0));
+
+        if (userPreOrders.length > 0) {
+          activePreOrder = userPreOrders[0];
+          renderActivePreOrderCard(activePreOrder);
+        } else {
+          activePreOrder = null;
+          hideActivePreOrderCard();
+        }
+      } catch (e) {
+        console.warn('Error checking active pre-order:', e);
+      }
+    }
+
+    function renderActivePreOrderCard(order) {
+      const container = document.getElementById('active-preorder-container');
+      if (!container) return;
+
+      container.classList.remove('hidden');
+      const badge = document.getElementById('active-order-badge');
+      const schedule = document.getElementById('active-order-schedule');
+      const burger = document.getElementById('active-order-burger');
+      const total = document.getElementById('active-order-total');
+      const payment = document.getElementById('active-order-payment');
+
+      if (badge) badge.textContent = `#${order.orderId}`;
+      if (schedule) schedule.textContent = `${order.pickupDate || ''} ${order.pickupTime || ''} น.`;
+      if (burger) burger.textContent = `${order.burger || order.burgerName} x${order.quantity || 1}`;
+      if (total) total.textContent = `${Number(order.total || 0).toFixed(2)} บาท`;
+      if (payment) payment.textContent = order.paymentMethod || 'PromptPay';
+
+      if (cooldownTimerInterval) clearInterval(cooldownTimerInterval);
+
+      function updateTimer() {
+        const orderTime = new Date(order.createdAt || Date.now()).getTime();
+        const elapsed = Date.now() - orderTime;
+        const remainingMs = COOLDOWN_DURATION_MS - elapsed;
+
+        const timerText = document.getElementById('cooldown-timer-text');
+        const submitBtn = document.getElementById('submit-preorder-btn');
+        const btnText = document.getElementById('submit-btn-text');
+
+        if (remainingMs > 0) {
+          const totalSec = Math.floor(remainingMs / 1000);
+          const mins = Math.floor(totalSec / 60);
+          const secs = totalSec % 60;
+          if (timerText) timerText.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+
+          if (!editingOrderId && submitBtn && btnText) {
+            submitBtn.disabled = true;
+            submitBtn.classList.add('opacity-60', 'cursor-not-allowed');
+            btnText.textContent = currentLang === 'th' 
+              ? `อยู่ในช่วง Cooldown (รออีก ${mins + 1} นาที) — กด 'แก้ไขเมนู' ด้านบนได้` 
+              : `In Cooldown (${mins + 1}m remaining) — Click 'Edit Menu' above`;
+          }
+        } else {
+          if (timerText) timerText.textContent = currentLang === 'th' ? 'พร้อมสั่งใหม่ (Ready)' : 'Ready';
+          if (cooldownTimerInterval) {
+            clearInterval(cooldownTimerInterval);
+            cooldownTimerInterval = null;
+          }
+          if (!editingOrderId && submitBtn && btnText) {
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('opacity-60', 'cursor-not-allowed');
+            btnText.textContent = currentLang === 'th' ? 'ยืนยันการสั่งจองล่วงหน้า' : 'Confirm Pre-Order';
+          }
+        }
+      }
+
+      updateTimer();
+      cooldownTimerInterval = setInterval(updateTimer, 1000);
+    }
+
+    function hideActivePreOrderCard() {
+      const container = document.getElementById('active-preorder-container');
+      if (container) container.classList.add('hidden');
+      if (cooldownTimerInterval) {
+        clearInterval(cooldownTimerInterval);
+        cooldownTimerInterval = null;
+      }
+      const submitBtn = document.getElementById('submit-preorder-btn');
+      const btnText = document.getElementById('submit-btn-text');
+      if (submitBtn && btnText && !editingOrderId) {
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('opacity-60', 'cursor-not-allowed');
+        btnText.textContent = currentLang === 'th' ? 'ยืนยันการสั่งจองล่วงหน้า' : 'Confirm Pre-Order';
+      }
+    }
+
+    function startEditingActiveOrder() {
+      playPop();
+      if (!activePreOrder) return;
+      editingOrderId = activePreOrder.orderId;
+
+      // 1. Restore Date
+      if (activePreOrder.pickupDate) {
+        selectedDate = activePreOrder.pickupDate;
+        const dateChips = document.querySelectorAll('#date-chips-container button');
+        dateChips.forEach(b => {
+          if (b.dataset.date === selectedDate) {
+            b.classList.add('border-purple-500', 'bg-purple-500/20', 'text-purple-300', 'font-bold');
+          } else {
+            b.classList.remove('border-purple-500', 'bg-purple-500/20', 'text-purple-300', 'font-bold');
+          }
+        });
+        renderTimeSlots();
+      }
+
+      // 2. Restore Time Slot
+      if (activePreOrder.pickupTime) {
+        selectedTime = activePreOrder.pickupTime;
+        const timeChips = document.querySelectorAll('#time-slots-container .time-chip');
+        timeChips.forEach(c => {
+          if (c.textContent.trim() === selectedTime.trim()) {
+            c.classList.add('selected');
+          } else {
+            c.classList.remove('selected');
+          }
+        });
+      }
+
+      // 3. Restore Burger Type
+      const bName = activePreOrder.burgerName || activePreOrder.burger || 'Classic Emperor';
+      selectedBurger = bName;
+      let price = 30;
+      if (bName === 'Double Emperor') price = 40;
+      else if (bName === 'Emperor Cheese') price = 35;
+      selectedBurgerPrice = price;
+
+      const burgerCards = document.querySelectorAll('#burger-list-container .item-card');
+      burgerCards.forEach(c => {
+        if (c.textContent.includes(bName)) {
+          c.classList.add('selected');
+        } else {
+          c.classList.remove('selected');
+        }
+      });
+
+      // 4. Restore Quantity (capped at 3)
+      selectedQuantity = Math.max(1, Math.min(3, Number(activePreOrder.quantity || 1)));
+      const qtyEl = document.getElementById('burger-quantity-text');
+      if (qtyEl) qtyEl.textContent = selectedQuantity;
+
+      // 5. Restore Note & Phone
+      const noteInput = document.getElementById('preorder-note-input');
+      if (noteInput) noteInput.value = activePreOrder.specialNote || '';
+      const phoneInput = document.getElementById('customer-phone-input');
+      if (phoneInput) phoneInput.value = activePreOrder.customerPhone || '';
+
+      // 6. Restore Payment Method
+      if (activePreOrder.paymentMethod && activePreOrder.paymentMethod.includes('Cash')) {
+        selectPaymentMethod('Cash');
+      } else {
+        selectPaymentMethod('PromptPay');
+        if (activePreOrder.paymentTiming === 'pickup' || (activePreOrder.paymentMethod && activePreOrder.paymentMethod.includes('ตอนรับ'))) {
+          selectPromptPayTiming('pickup');
+        } else {
+          selectPromptPayTiming('now');
+        }
+      }
+
+      // 7. Update UI to Edit Mode
+      updateOrderSummary();
+      const submitBtn = document.getElementById('submit-preorder-btn');
+      const btnText = document.getElementById('submit-btn-text');
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('opacity-60', 'cursor-not-allowed');
+      }
+      if (btnText) {
+        btnText.textContent = currentLang === 'th' 
+          ? `บันทึกการแก้ไขออเดอร์ #${editingOrderId}` 
+          : `Save Changes to Order #${editingOrderId}`;
+      }
+
+      const step2 = document.getElementById('step2-section');
+      if (step2) step2.scrollIntoView({ behavior: 'smooth' });
+
+      alert(currentLang === 'th'
+        ? `เข้าสู่โหมดแก้ไขออเดอร์ #${editingOrderId} เรียบร้อยแล้วครับ!\nคุณสามารถเลือกเปลี่ยนเมนู วันเวลา หรือโน้ตพิเศษ แล้วกดปุ่มบันทึกด้านล่างได้เลย`
+        : `Editing Order #${editingOrderId}!\nYou can modify your menu, pickup time, or notes, then click Save below.`);
+    }
+
     // ══ SUBMIT PRE-ORDER ══
     async function submitPreOrder() {
       playPop();
@@ -1189,12 +1458,25 @@
         localStorage.setItem('bitty-burger-phone', phone);
       }
 
+      // 5. Check 20-minute Cooldown if placing a NEW order
+      if (!editingOrderId && activePreOrder) {
+        const orderTime = new Date(activePreOrder.createdAt || Date.now()).getTime();
+        const elapsed = Date.now() - orderTime;
+        if (elapsed < COOLDOWN_DURATION_MS) {
+          const remainingMins = Math.ceil((COOLDOWN_DURATION_MS - elapsed) / 60000);
+          alert(currentLang === 'th'
+            ? `คุณมีออเดอร์ #${activePreOrder.orderId} ที่กำลังรอดำเนินการอยู่ (Cooldown อีก ${remainingMins} นาที)\n\nหากต้องการเปลี่ยนเมนูหรือเวลา กรุณากดปุ่ม 'แก้ไขเมนู' ด้านบนครับ`
+            : `You have an active order #${activePreOrder.orderId} in cooldown (${remainingMins}m remaining).\nClick 'Edit Menu' above to change your order.`);
+          return;
+        }
+      }
+
       const submitBtn = document.getElementById('submit-preorder-btn');
       const btnText = document.getElementById('submit-btn-text');
       if (submitBtn) submitBtn.disabled = true;
       if (btnText) btnText.textContent = currentLang === 'th' ? 'กำลังส่งข้อมูลการจอง...' : 'Submitting pre-order...';
 
-      const orderId = Math.floor(1000 + Math.random() * 9000);
+      const targetOrderId = editingOrderId || Math.floor(1000 + Math.random() * 9000);
       const subtotal = calculateSubtotal();
       const finalTotal = calculateFinalTotal();
       const noteInput = document.getElementById('preorder-note-input');
@@ -1216,7 +1498,8 @@
       }
 
       const orderPayload = {
-        orderId: orderId,
+        ...(editingOrderId && activePreOrder ? activePreOrder : {}),
+        orderId: targetOrderId,
         isPreOrder: true,
         orderType: 'preorder',
         pickupDate: selectedDate,
@@ -1242,13 +1525,14 @@
         paymentMethod: methodText,
         paymentTiming: selectedPayment === 'PromptPay' ? selectedPromptPayTiming : 'pickup',
         paymentStatus: payStatus,
-        status: 'pending',
-        time: new Date().toLocaleString('th-TH', { timeZone: 'Asia/Bangkok' }),
-        createdAt: new Date().toISOString()
+        status: (editingOrderId && activePreOrder) ? activePreOrder.status : 'pending',
+        time: (editingOrderId && activePreOrder) ? activePreOrder.time : new Date().toLocaleString('th-TH', { timeZone: 'Asia/Bangkok' }),
+        createdAt: (editingOrderId && activePreOrder) ? activePreOrder.createdAt : new Date().toISOString(),
+        updatedAt: new Date().toISOString()
       };
 
       try {
-        const res = await fetch(`${FIREBASE_DATABASE_URL}/orders/${orderId}.json`, {
+        const res = await fetch(`${FIREBASE_DATABASE_URL}/orders/${targetOrderId}.json`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(orderPayload)
@@ -1256,7 +1540,10 @@
 
         if (!res.ok) throw new Error('Firebase save failed');
 
+        localStorage.setItem('bitty-active-preorder-id', String(targetOrderId));
+        editingOrderId = null;
         playSuccessChime();
+        checkActivePreOrderAndCooldown();
         openConfirmationModal(orderPayload);
       } catch (err) {
         console.error('Pre-order submission failed:', err);
@@ -1344,6 +1631,13 @@
       setTxt('submit-btn-text', isTh ? 'ยืนยันการสั่งจองล่วงหน้า' : 'Confirm Pre-Order');
       setTxt('modal-btn-back', isTh ? 'กลับหน้าหลัก (Back)' : 'Back to Home');
       setTxt('modal-btn-order-more', isTh ? 'สั่งจองเพิ่มอีกรายการ' : 'Order Another Item');
+      setTxt('label-quantity-sub', isTh ? 'สั่งได้สูงสุด 3 ชิ้นต่อครั้ง (Max 3)' : 'Maximum 3 items per order');
+      setTxt('active-order-title', isTh ? 'ออเดอร์ที่สั่งไว้ (Current Pre-Order)' : 'Current Pre-Order');
+      setTxt('lbl-active-schedule', isTh ? 'นัดรับ:' : 'Pickup:');
+      setTxt('lbl-active-item', isTh ? 'รายการ:' : 'Item:');
+      setTxt('lbl-active-total', isTh ? 'ยอดรวม:' : 'Total:');
+      setTxt('lbl-active-payment', isTh ? 'การชำระ:' : 'Payment:');
+      setTxt('active-btn-edit', isTh ? 'แก้ไขเมนู / เปลี่ยนแปลงรายการออเดอร์' : 'Edit Menu / Change Order Details');
     }
   </script>
 </body>
