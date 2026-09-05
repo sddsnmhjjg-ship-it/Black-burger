@@ -1453,6 +1453,25 @@
         ? `<div style="margin-top:3px;"><span style="display:inline-flex;align-items:center;gap:4px;background:rgba(245,158,11,0.2);color:#fbbf24;border:1px solid rgba(245,158,11,0.5);border-radius:99px;padding:2px 8px;font-size:0.68rem;font-weight:700;">👑 ส่วนลดสะสม 3 ครั้ง (-10฿)</span></div>`
         : '';
 
+      const preOrderBadge = (o.isPreOrder || o.pickupSchedule || o.pickupDate)
+        ? `<div style="margin-top:3px;"><span style="display:inline-flex;align-items:center;gap:4px;background:rgba(139,92,246,0.25);color:#c084fc;border:1px solid rgba(139,92,246,0.5);border-radius:99px;padding:2px 8px;font-size:0.68rem;font-weight:700;">📅 พรีออเดอร์: นัดรับ ${escHtml(o.pickupDate || '')} ${escHtml(o.pickupTime || '')} น.</span></div>`
+        : '';
+
+      const phoneDisplay = o.customerPhone
+        ? `<div style="display:flex;align-items:center;gap:5px;font-size:0.68rem;color:#34d399;margin-top:2px;font-family:monospace;">
+             <span>📞</span>
+             <span>${escHtml(o.customerPhone)}</span>
+           </div>`
+        : '';
+
+      const scheduleRow = (o.isPreOrder || o.pickupSchedule || o.pickupDate)
+        ? `<div class="info-row" style="background:rgba(139,92,246,0.12);padding:6px 10px;border-radius:10px;border:1px solid rgba(139,92,246,0.35);margin-bottom:6px;">
+             <span class="info-icon">📅</span>
+             <span class="info-lbl" style="color:#c084fc;font-weight:bold;">เวลานัดรับ</span>
+             <span class="info-val" style="color:#ffffff;font-weight:bold;font-family:monospace;">${escHtml(o.pickupDate || '')} เวลา ${escHtml(o.pickupTime || '')} น.</span>
+           </div>`
+        : '';
+
       return `
         <div class="order-card" data-status="${status}" data-id="${fbKey}">
           <div class="card-head">
@@ -1460,7 +1479,9 @@
               <div class="queue-num">${queueDisplay}</div>
               <div class="customer-name">คุณ ${escHtml(o.customerName || 'Guest')}</div>
               ${googleBadge}
+              ${phoneDisplay}
               ${vipBadge}
+              ${preOrderBadge}
               <span class="order-id-tag">Order #${escHtml(String(orderNum))}</span>
             </div>
             <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
@@ -1470,6 +1491,7 @@
           </div>
 
           <div class="card-body">
+            ${scheduleRow}
             <div class="info-row">
               <span class="info-icon">🍔</span>
               <span class="info-lbl">เบอร์เกอร์</span>
