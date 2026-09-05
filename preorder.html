@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-select=no">
-  <title>📅 Emperor Burger — Pre-Order Online 🍔</title>
+  <title>Emperor Burger — Pre-Order Online</title>
   
   <!-- SEO Meta Tags -->
   <meta name="description" content="Pre-order your flame-grilled Emperor Burgers in advance! Pick your pickup date and time, customize your burger, and skip the line.">
@@ -176,8 +176,8 @@
     <!-- TOP NAVIGATION BAR -->
     <header class="glass-panel p-4 flex items-center justify-between gap-3">
       <div class="flex items-center gap-3">
-        <a href="index.html" class="w-10 h-10 rounded-2xl bg-zinc-800 border border-white/10 flex items-center justify-center text-xl hover:scale-105 transition-all" title="กลับไปหน้าหลัก">
-          🍔
+        <a href="index.html" class="w-10 h-10 rounded-2xl bg-zinc-800 border border-white/10 flex items-center justify-center text-amber-400 hover:scale-105 transition-all shadow-md" title="กลับไปหน้าหลัก">
+          <svg class="w-5 h-5 text-amber-400" viewBox="0 0 24 24" fill="currentColor"><path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"/></svg>
         </a>
         <div>
           <div class="flex items-center gap-2">
@@ -191,13 +191,13 @@
       <div class="flex items-center gap-2">
         <!-- Switch to Live Ordering -->
         <a href="index.html" class="btn-glass px-3 py-1.5 text-xs font-bold flex items-center gap-1.5 text-amber-400 border-amber-500/30 hover:border-amber-400">
-          <span>⚡</span>
+          <svg class="w-3.5 h-3.5 text-amber-400" viewBox="0 0 24 24" fill="currentColor"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
           <span id="nav-live-order-btn">สั่งทานทันที</span>
         </a>
         
         <!-- Sound Test Button -->
         <button type="button" onclick="testSoundWithFeedback()" class="btn-glass p-2 text-xs font-bold text-zinc-300 hover:text-amber-400" title="ทดสอบเสียง">
-          🔊
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
         </button>
 
         <!-- Language Switcher -->
@@ -210,8 +210,8 @@
     <!-- CUSTOMER GREETING & AUTH PANEL -->
     <section class="glass-panel p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
       <div class="flex items-center gap-3.5">
-        <div id="customer-avatar-badge" class="w-12 h-12 rounded-2xl bg-zinc-800 border border-white/10 flex items-center justify-center text-2xl shadow-inner">
-          👤
+        <div id="customer-avatar-badge" class="w-12 h-12 rounded-2xl bg-zinc-800 border border-white/10 flex items-center justify-center text-zinc-400 shadow-inner">
+          <svg class="w-6 h-6 text-zinc-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
         </div>
         <div>
           <p class="text-[11px] font-mono uppercase tracking-wider text-purple-400 font-bold" id="customer-welcome-sub">ลูกค้าคนสำคัญ</p>
@@ -229,7 +229,7 @@
           เปลี่ยนชื่อ
         </button>
         <button type="button" id="google-logout-btn" onclick="signOutFromGoogle()" class="btn-glass px-3 py-2 text-xs font-bold text-zinc-400 hover:text-red-400 hidden" title="ออกจากระบบ">
-          🚪
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
         </button>
       </div>
     </section>
@@ -237,8 +237,10 @@
     <!-- EMPEROR LOYALTY CARD (BUY 3 GET -10฿) -->
     <section id="loyalty-card" class="glass-panel p-4 flex flex-col gap-3 border-amber-500/30 bg-gradient-to-r from-amber-950/20 via-zinc-900/60 to-purple-950/20">
       <div class="flex items-center justify-between">
-        <div class="flex items-center gap-2">
-          <span class="text-lg">👑</span>
+        <div class="flex items-center gap-2.5">
+          <span class="w-7 h-7 rounded-lg bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 flex-shrink-0">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"/></svg>
+          </span>
           <div>
             <h3 class="text-xs sm:text-sm font-bold text-white uppercase tracking-wider">Emperor VIP Club</h3>
             <p class="text-[10px] text-zinc-400 font-mono" id="loyalty-month-label">สะสม 3 ครั้ง รับส่วนลด 10฿</p>
@@ -255,18 +257,25 @@
     </section>
 
     <!-- STEP 1: PRE-ORDER SCHEDULE (DATE & TIME) -->
+    <!-- STEP 1: PRE-ORDER SCHEDULE (DATE & TIME) -->
     <section class="glass-panel p-5 flex flex-col gap-4 border-purple-500/30">
       <div class="flex items-center gap-2.5 pb-2 border-b border-white/10">
         <span class="w-7 h-7 rounded-lg bg-purple-500/20 border border-purple-500/40 flex items-center justify-center text-sm font-bold text-purple-300">1</span>
         <div>
-          <h2 class="text-sm sm:text-base font-bold text-white" id="step1-title">เลือกวันศุกร์และเวลานัดรับเบอร์เกอร์ 📅</h2>
+          <h2 class="text-sm sm:text-base font-bold text-white flex items-center gap-2" id="step1-title">
+            <span>เลือกวันศุกร์และเวลานัดรับเบอร์เกอร์</span>
+            <svg class="w-4 h-4 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </h2>
           <p class="text-xs text-zinc-400" id="step1-desc">ร้านเปิดรับออเดอร์นัดรับเฉพาะวันศุกร์ เวลา 10:00 - 11:00 น. ย่างสดใหม่พร้อมเสิร์ฟ</p>
         </div>
       </div>
 
       <!-- Date Selection -->
       <div class="flex flex-col gap-2">
-        <label class="text-xs font-bold text-zinc-300 uppercase tracking-wider" id="label-pickup-date">วันศุกร์ที่ต้องการรับ (Pickup Friday)</label>
+        <label class="text-xs font-bold text-zinc-300 uppercase tracking-wider flex items-center gap-1.5" id="label-pickup-date">
+          <svg class="w-3.5 h-3.5 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <span>วันศุกร์ที่ต้องการรับ (Pickup Friday)</span>
+        </label>
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-2" id="date-chips-container">
           <!-- Populated by JS: Upcoming Fridays -->
         </div>
@@ -275,7 +284,10 @@
       <!-- Time Slot Selection -->
       <div class="flex flex-col gap-2 pt-2">
         <div class="flex items-center justify-between">
-          <label class="text-xs font-bold text-zinc-300 uppercase tracking-wider" id="label-pickup-time">เวลาที่นัดรับ (Pickup Time)</label>
+          <label class="text-xs font-bold text-zinc-300 uppercase tracking-wider flex items-center gap-1.5" id="label-pickup-time">
+            <svg class="w-3.5 h-3.5 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <span>เวลาที่นัดรับ (Pickup Time)</span>
+          </label>
           <span class="text-[11px] font-mono font-bold text-purple-400" id="selected-time-notice">ร้านเปิดเฉพาะวันศุกร์ 10:00 - 11:00 น.</span>
         </div>
         <div class="grid grid-cols-5 gap-2" id="time-slots-container">
@@ -286,8 +298,14 @@
       <!-- Customer Contact Phone Number (Required for Pre-Orders) -->
       <div class="flex flex-col gap-2 pt-2 border-t border-white/10">
         <label for="customer-phone-input" class="text-xs font-bold text-zinc-300 flex items-center justify-between">
-          <span id="label-phone">เบอร์โทรศัพท์สำหรับติดต่อรับอาหาร (Phone Number)</span>
-          <span id="label-notify-badge" class="text-[10px] text-amber-400 font-mono font-normal">📧 เชฟจะส่งอีเมลแจ้งเตือนอัตโนมัติเมื่อเสร็จ</span>
+          <span id="label-phone" class="flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5 text-zinc-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            <span>เบอร์โทรศัพท์สำหรับติดต่อรับอาหาร (Phone Number)</span>
+          </span>
+          <span id="label-notify-badge" class="text-[10px] text-amber-400 font-mono font-normal flex items-center gap-1">
+            <svg class="w-3 h-3 text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            <span>เชฟจะส่งอีเมลแจ้งเตือนอัตโนมัติเมื่อเสร็จ</span>
+          </span>
         </label>
         <input type="tel" id="customer-phone-input" placeholder="081-234-5678 (ไม่บังคับ / Optional)" maxlength="15" class="w-full p-3 bg-zinc-900 border border-zinc-700 rounded-xl text-white text-sm outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all font-mono">
       </div>
@@ -298,18 +316,21 @@
       <div class="flex items-center gap-2.5 pb-2 border-b border-white/10">
         <span class="w-7 h-7 rounded-lg bg-red-500/20 border border-red-500/40 flex items-center justify-center text-sm font-bold text-red-400">2</span>
         <div>
-          <h2 class="text-sm sm:text-base font-bold text-white" id="step2-title">เลือกเบอร์เกอร์ 🍔</h2>
-          <p class="text-xs text-zinc-400" id="step2-desc">เบอร์เกอร์ไก่ย่างสูตรพิเศษ (เสิร์ฟเฉพาะเนื้อไก่) 🐔</p>
+          <h2 class="text-sm sm:text-base font-bold text-white flex items-center gap-2" id="step2-title">
+            <span>เลือกเบอร์เกอร์</span>
+            <svg class="w-4 h-4 text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11c0-4.4 3.6-8 8-8s8 3.6 8 8"/><path d="M3 15h18"/><path d="M4 19c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2"/></svg>
+          </h2>
+          <p class="text-xs text-zinc-400" id="step2-desc">เบอร์เกอร์ไก่ย่างสูตรพิเศษ (เสิร์ฟเฉพาะเนื้อไก่)</p>
         </div>
       </div>
 
       <!-- Burger Types (Exactly matching index.html) -->
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-3" id="burger-list-container">
         <!-- 1. Classic Emperor -->
-        <div class="item-card p-4 flex flex-col justify-between gap-3 selected" onclick="selectBurger('Classic Emperor', 30, '👑', this)">
+        <div class="item-card p-4 flex flex-col justify-between gap-3 selected" onclick="selectBurger('Classic Emperor', 30, '', this)">
           <div class="flex items-start gap-3">
-            <span class="w-10 h-10 rounded-xl bg-red-950/60 border border-red-500/30 flex items-center justify-center text-xl text-amber-400 flex-shrink-0">
-              👑
+            <span class="w-10 h-10 rounded-xl bg-red-950/60 border border-red-500/30 flex items-center justify-center text-amber-400 flex-shrink-0">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"/></svg>
             </span>
             <div>
               <h3 class="text-sm font-bold text-white" id="burger-title-1">1. Classic Emperor</h3>
@@ -317,16 +338,16 @@
             </div>
           </div>
           <div class="flex items-center justify-between pt-2 border-t border-white/5">
-            <span class="text-[11px] text-zinc-400">ไก่ย่าง 🐔</span>
+            <span class="text-[11px] text-zinc-400">ไก่ย่างสูตรคลาสสิก</span>
             <span class="text-base font-bold font-mono text-red-400">30 ฿</span>
           </div>
         </div>
 
         <!-- 2. Double Emperor -->
-        <div class="item-card p-4 flex flex-col justify-between gap-3" onclick="selectBurger('Double Emperor', 40, '🔥', this)">
+        <div class="item-card p-4 flex flex-col justify-between gap-3" onclick="selectBurger('Double Emperor', 40, '', this)">
           <div class="flex items-start gap-3">
-            <span class="w-10 h-10 rounded-xl bg-red-950/60 border border-red-500/30 flex items-center justify-center text-xl text-red-400 flex-shrink-0">
-              🔥
+            <span class="w-10 h-10 rounded-xl bg-red-950/60 border border-red-500/30 flex items-center justify-center flex-shrink-0 p-1">
+              <img src="extra_meat.png" alt="Double Patty" class="w-8 h-8 object-contain">
             </span>
             <div>
               <h3 class="text-sm font-bold text-white" id="burger-title-2">2. Double Emperor</h3>
@@ -334,16 +355,16 @@
             </div>
           </div>
           <div class="flex items-center justify-between pt-2 border-t border-white/5">
-            <span class="text-[11px] text-zinc-400">เนื้อไก่ x2 🐔</span>
+            <span class="text-[11px] text-zinc-400">เนื้อไก่คู่ 2 ชั้น</span>
             <span class="text-base font-bold font-mono text-red-400">40 ฿</span>
           </div>
         </div>
 
         <!-- 3. Emperor Cheese -->
-        <div class="item-card p-4 flex flex-col justify-between gap-3" onclick="selectBurger('Emperor Cheese', 35, '🧀', this)">
+        <div class="item-card p-4 flex flex-col justify-between gap-3" onclick="selectBurger('Emperor Cheese', 35, '', this)">
           <div class="flex items-start gap-3">
-            <span class="w-10 h-10 rounded-xl bg-amber-950/60 border border-amber-500/30 flex items-center justify-center text-xl text-amber-400 flex-shrink-0">
-              🧀
+            <span class="w-10 h-10 rounded-xl bg-amber-950/60 border border-amber-500/30 flex items-center justify-center flex-shrink-0 p-1">
+              <img src="extra_cheese.png" alt="Emperor Cheese" class="w-8 h-8 object-contain">
             </span>
             <div>
               <h3 class="text-sm font-bold text-white" id="burger-title-3">3. Emperor Cheese</h3>
@@ -351,7 +372,7 @@
             </div>
           </div>
           <div class="flex items-center justify-between pt-2 border-t border-white/5">
-            <span class="text-[11px] text-zinc-400">ชีสเยิ้ม 🧀</span>
+            <span class="text-[11px] text-zinc-400">ชีสเยิ้มลาวา</span>
             <span class="text-base font-bold font-mono text-amber-400">35 ฿</span>
           </div>
         </div>
@@ -359,8 +380,10 @@
 
       <!-- Meat Note Pill (Index.html serves exclusive flame-grilled chicken) -->
       <div class="bg-zinc-900/60 border border-white/5 rounded-xl p-3 flex items-center justify-between text-xs">
-        <div class="flex items-center gap-2">
-          <span class="text-lg">🐔</span>
+        <div class="flex items-center gap-2.5">
+          <span class="w-7 h-7 rounded-lg bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 flex-shrink-0">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a5 5 0 0 1 5 5v3a5 5 0 0 1-10 0V7a5 5 0 0 1 5-5z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+          </span>
           <span class="text-zinc-300 font-medium" id="meat-info-text">เสิร์ฟเฉพาะเนื้อไก่ย่างสูตรพิเศษของทางร้าน (Flame-Grilled Chicken)</span>
         </div>
         <span class="text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded-full">Included</span>
@@ -391,7 +414,10 @@
       <div class="flex items-center gap-2.5 pb-2 border-b border-white/10">
         <span class="w-7 h-7 rounded-lg bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-sm font-bold text-amber-400">3</span>
         <div>
-          <h2 class="text-sm sm:text-base font-bold text-white" id="step3-title">สรุปยอดและยืนยันการสั่งจอง 💳</h2>
+          <h2 class="text-sm sm:text-base font-bold text-white flex items-center gap-2" id="step3-title">
+            <span>สรุปยอดและยืนยันการสั่งจอง</span>
+            <svg class="w-4 h-4 text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+          </h2>
           <p class="text-xs text-zinc-400" id="step3-desc">ตรวจสอบรายละเอียดการนัดรับและเลือกวิธีชำระเงิน</p>
         </div>
       </div>
@@ -399,15 +425,31 @@
       <!-- Order Receipt Breakdown -->
       <div class="bg-black/50 border border-white/10 rounded-2xl p-4 flex flex-col gap-2.5 text-xs font-mono">
         <div class="flex justify-between text-zinc-300">
-          <span id="receipt-lbl-schedule">📅 นัดรับเวลา:</span>
+          <span id="receipt-lbl-schedule" class="flex items-center gap-1.5 text-zinc-400">
+            <svg class="w-3.5 h-3.5 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            <span>นัดรับเวลา:</span>
+          </span>
           <span id="receipt-val-schedule" class="text-purple-300 font-bold">ยังไม่ได้เลือก</span>
         </div>
         <div class="flex justify-between text-zinc-300">
-          <span id="receipt-lbl-burger">🍔 เบอร์เกอร์:</span>
-          <span id="receipt-val-burger" class="text-white font-bold">Classic Emperor 👑 x1</span>
+          <span id="receipt-lbl-burger" class="flex items-center gap-1.5 text-zinc-400">
+            <svg class="w-3.5 h-3.5 text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11c0-4.4 3.6-8 8-8s8 3.6 8 8"/><path d="M3 15h18"/><path d="M4 19c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2"/></svg>
+            <span>เบอร์เกอร์:</span>
+          </span>
+          <span id="receipt-val-burger" class="text-white font-bold">Classic Emperor x1</span>
+        </div>
+        <div class="flex justify-between text-zinc-300">
+          <span id="receipt-lbl-payment" class="flex items-center gap-1.5 text-zinc-400">
+            <svg class="w-3.5 h-3.5 text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+            <span>วิธีชำระ:</span>
+          </span>
+          <span id="receipt-val-payment" class="text-white font-bold">QR พร้อมเพย์ (จ่ายทันที)</span>
         </div>
         <div id="receipt-discount-row" class="hidden flex justify-between text-amber-400 font-bold pt-1 border-t border-white/5">
-          <span>👑 ส่วนลดสมาชิก (ครบ 3 ครั้ง):</span>
+          <span class="flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5 text-amber-400" viewBox="0 0 24 24" fill="currentColor"><path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"/></svg>
+            <span>ส่วนลดสมาชิก (ครบ 3 ครั้ง):</span>
+          </span>
           <span>-10.00 บาท</span>
         </div>
         <div class="flex justify-between text-base font-bold text-red-400 pt-2 border-t border-white/10">
@@ -417,44 +459,82 @@
       </div>
 
       <!-- Payment Method Selection -->
-      <div class="flex flex-col gap-2">
-        <label class="text-xs font-bold text-zinc-300 uppercase tracking-wider" id="label-payment-method">วิธีชำระเงิน (Payment Method)</label>
+      <div class="flex flex-col gap-2.5">
+        <label class="text-xs font-bold text-zinc-300 uppercase tracking-wider flex items-center gap-1.5" id="label-payment-method">
+          <svg class="w-4 h-4 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+          <span>วิธีชำระเงิน (Payment Method)</span>
+        </label>
         <div class="grid grid-cols-2 gap-3">
-          <button type="button" id="pay-qr-btn" onclick="selectPaymentMethod('PromptPay')" class="item-card p-3 flex flex-col items-center gap-1.5 selected">
-            <span class="text-2xl">📱</span>
-            <span class="text-xs font-bold">QR พร้อมเพย์</span>
-            <span class="text-[10px] text-zinc-400">สแกนจ่ายทันที</span>
+          <button type="button" id="pay-qr-btn" onclick="selectPaymentMethod('PromptPay')" class="item-card p-3.5 flex flex-col items-center gap-2 selected transition-all">
+            <div class="w-10 h-10 rounded-xl bg-purple-500/20 border border-purple-500/40 flex items-center justify-center text-purple-300">
+              <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+            </div>
+            <div class="text-center">
+              <div class="text-xs font-bold text-white">QR พร้อมเพย์</div>
+              <div class="text-[10px] text-purple-300 font-medium" id="qr-btn-sub">สแกนจ่ายทันที หรือตอนรับ</div>
+            </div>
           </button>
-          <button type="button" id="pay-cash-btn" onclick="selectPaymentMethod('Cash')" class="item-card p-3 flex flex-col items-center gap-1.5">
-            <span class="text-2xl">💵</span>
-            <span class="text-xs font-bold">เงินสดตอนรับ</span>
-            <span class="text-[10px] text-zinc-400">ชำระหน้าร้าน</span>
+          <button type="button" id="pay-cash-btn" onclick="selectPaymentMethod('Cash')" class="item-card p-3.5 flex flex-col items-center gap-2 transition-all">
+            <div class="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400">
+              <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg>
+            </div>
+            <div class="text-center">
+              <div class="text-xs font-bold text-white">เงินสดตอนรับ</div>
+              <div class="text-[10px] text-zinc-400">ชำระหน้าร้าน</div>
+            </div>
           </button>
+        </div>
+
+        <!-- PromptPay Options: Pay Now vs Pay When Pick Up (Shown when PromptPay is selected) -->
+        <div id="promptpay-timing-container" class="flex flex-col gap-2 bg-purple-950/25 border border-purple-500/30 rounded-2xl p-3 mt-1">
+          <span class="text-[11px] font-bold text-purple-300 uppercase tracking-wider flex items-center gap-1.5" id="label-qr-timing">
+            <svg class="w-3.5 h-3.5 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <span>ต้องการชำระเงินเวลาใด? (Payment Timing)</span>
+          </span>
+          <div class="grid grid-cols-2 gap-2">
+            <button type="button" id="qr-timing-now-btn" onclick="selectPromptPayTiming('now')" class="p-2.5 rounded-xl border text-xs font-bold flex flex-col items-center gap-1 transition-all bg-purple-600 text-white border-purple-400 shadow-md shadow-purple-600/30">
+              <span class="flex items-center gap-1.5">
+                <svg class="w-3.5 h-3.5 text-amber-300" viewBox="0 0 24 24" fill="currentColor"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                <span id="timing-now-text">จ่ายทันที (Pay Now)</span>
+              </span>
+              <span class="text-[10px] font-normal opacity-85" id="timing-now-sub">สแกนจ่ายตอนนี้</span>
+            </button>
+            <button type="button" id="qr-timing-pickup-btn" onclick="selectPromptPayTiming('pickup')" class="p-2.5 rounded-xl border text-xs font-bold flex flex-col items-center gap-1 transition-all bg-zinc-900/80 text-zinc-400 border-white/10 hover:border-purple-400/50 hover:text-white">
+              <span class="flex items-center gap-1.5">
+                <svg class="w-3.5 h-3.5 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                <span id="timing-pickup-text">จ่ายตอนรับ (Pay at Pickup)</span>
+              </span>
+              <span class="text-[10px] font-normal opacity-75" id="timing-pickup-sub">สแกนที่ร้านตอนมารับ</span>
+            </button>
+          </div>
         </div>
       </div>
 
       <!-- PromptPay QR Box (Shown if PromptPay selected) -->
       <div id="promptpay-box" class="bg-zinc-900/90 border border-purple-500/30 rounded-2xl p-4 flex flex-col items-center gap-3">
-        <p class="text-xs text-center text-zinc-300" id="qr-instruction">สแกน QR Code นี้เพื่อชำระเงิน ยอดจะถูกล็อคตามจำนวน</p>
+        <p class="text-xs text-center text-zinc-300" id="qr-instruction">สแกน QR Code นี้เพื่อชำระเงินทันที ยอดจะถูกล็อคตามจำนวน</p>
         <div class="bg-white p-3 rounded-2xl shadow-lg shadow-black/50">
           <img id="promptpay-qr-img" src="" alt="PromptPay QR" class="w-48 h-48 object-contain">
         </div>
         <a id="download-qr-btn" href="" download="emperor-preorder-qr.png" class="btn-glass px-4 py-2 text-xs font-bold flex items-center gap-2 text-zinc-300 hover:text-white">
-          <span>📥</span>
+          <svg class="w-3.5 h-3.5 text-zinc-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
           <span id="download-qr-text">บันทึกรูป QR Code</span>
         </a>
       </div>
 
       <!-- SUBMIT PRE-ORDER BUTTON -->
-      <button type="button" id="submit-preorder-btn" onclick="submitPreOrder()" class="btn-purple py-4 px-6 text-base font-extrabold flex items-center justify-center gap-2 tracking-wider uppercase mt-2">
-        <span>📅</span>
+      <button type="button" id="submit-preorder-btn" onclick="submitPreOrder()" class="btn-purple py-4 px-6 text-base font-extrabold flex items-center justify-center gap-2 tracking-wider uppercase mt-2 shadow-lg shadow-purple-600/30">
+        <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
         <span id="submit-btn-text">ยืนยันการสั่งจองล่วงหน้า</span>
       </button>
     </section>
 
     <!-- FOOTER -->
     <footer class="text-center py-6 text-xs text-zinc-500 flex flex-col gap-1.5">
-      <p>👑 EMPEROR BURGER — LUXURY GOURMET PRE-ORDER</p>
+      <p class="flex items-center justify-center gap-1.5 font-bold tracking-wider text-zinc-400">
+        <svg class="w-3.5 h-3.5 text-amber-400" viewBox="0 0 24 24" fill="currentColor"><path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"/></svg>
+        <span>EMPEROR BURGER — LUXURY GOURMET PRE-ORDER</span>
+      </p>
       <div class="flex justify-center gap-4 text-[11px] text-zinc-400">
         <a href="index.html" class="hover:text-amber-400 underline">สั่งทานทันที (Live Order)</a>
         <span>•</span>
@@ -467,8 +547,8 @@
   <!-- SUCCESS CONFIRMATION MODAL -->
   <div id="confirmation-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 hidden">
     <div class="glass-panel p-6 sm:p-8 max-w-md w-full flex flex-col items-center gap-4 text-center border-purple-500/40 relative">
-      <div class="w-16 h-16 rounded-full bg-purple-500/20 border border-purple-500/50 flex items-center justify-center text-3xl shadow-lg shadow-purple-500/30 animate-bounce">
-        🎉
+      <div class="w-16 h-16 rounded-full bg-purple-500/20 border border-purple-500/50 flex items-center justify-center shadow-lg shadow-purple-500/30 animate-bounce text-purple-400">
+        <svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
       </div>
       <div>
         <span class="text-xs font-mono font-bold uppercase tracking-widest text-purple-400">Pre-Order Confirmed!</span>
@@ -486,7 +566,8 @@
 
       <div class="flex flex-col w-full gap-2 mt-2">
         <a href="queue.html" class="btn-purple py-3 text-xs font-bold flex items-center justify-center gap-2">
-          <span>📋</span> ดูสถานะในห้องครัว (Kitchen Queue)
+          <svg class="w-4 h-4 text-purple-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
+          <span>ดูสถานะในห้องครัว (Kitchen Queue)</span>
         </a>
         <button type="button" onclick="closeConfirmationModal()" class="btn-glass py-2.5 text-xs font-bold text-zinc-400 hover:text-white">
           สั่งจองเพิ่มอีกรายการ
@@ -531,14 +612,15 @@
     let selectedTime = '';
     let selectedBurger = 'Classic Emperor';
     let selectedBurgerPrice = 30;
-    let selectedBurgerIcon = '👑';
+    let selectedBurgerIcon = '';
     let selectedMeat = 'Chicken';
     let selectedMeatPrice = 0;
-    let selectedMeatIcon = '🐔';
+    let selectedMeatIcon = '';
     let selectedExtraMeat = false;
     let selectedExtraCheese = false;
     let selectedQuantity = 1;
     let selectedPayment = 'PromptPay';
+    let selectedPromptPayTiming = 'now';
 
     // Loyalty stats
     let loyaltyStamps = 0;
@@ -611,8 +693,8 @@
       unlockAudio();
       playSuccessChime();
       alert(currentLang === 'th' 
-        ? '🔊 เล่นเสียงทดสอบเรียบร้อย!\n(หากใช้ iPhone และไม่ได้ยินเสียง ให้ตรวจสอบสวิตช์ Silent Mode 🔕 และเร่งระดับเสียง Media Volume ครับ)'
-        : '🔊 Test sound played!\n(If on iPhone and no sound, make sure Silent Mode is off and Media Volume is up!)');
+        ? 'เล่นเสียงทดสอบเรียบร้อย!\n(หากใช้ iPhone และไม่ได้ยินเสียง ให้ตรวจสอบสวิตช์ Silent Mode และเร่งระดับเสียง Media Volume ครับ)'
+        : 'Test sound played!\n(If on iPhone and no sound, make sure Silent Mode is off and Media Volume is up!)');
     }
 
     // ══ INITIALIZATION ══
@@ -785,10 +867,48 @@
       const qrBtn = document.getElementById('pay-qr-btn');
       const cashBtn = document.getElementById('pay-cash-btn');
       const qrBox = document.getElementById('promptpay-box');
+      const timingContainer = document.getElementById('promptpay-timing-container');
 
       if (qrBtn) qrBtn.classList.toggle('selected', method === 'PromptPay');
       if (cashBtn) cashBtn.classList.toggle('selected', method === 'Cash');
       if (qrBox) qrBox.classList.toggle('hidden', method !== 'PromptPay');
+      if (timingContainer) timingContainer.classList.toggle('hidden', method !== 'PromptPay');
+      updateOrderSummary();
+    }
+
+    function selectPromptPayTiming(timing) {
+      playPop();
+      selectedPromptPayTiming = timing;
+      const nowBtn = document.getElementById('qr-timing-now-btn');
+      const pickupBtn = document.getElementById('qr-timing-pickup-btn');
+      const qrInstruction = document.getElementById('qr-instruction');
+
+      if (timing === 'now') {
+        if (nowBtn) {
+          nowBtn.className = 'p-2.5 rounded-xl border text-xs font-bold flex flex-col items-center gap-1 transition-all bg-purple-600 text-white border-purple-400 shadow-md shadow-purple-600/30';
+        }
+        if (pickupBtn) {
+          pickupBtn.className = 'p-2.5 rounded-xl border text-xs font-bold flex flex-col items-center gap-1 transition-all bg-zinc-900/80 text-zinc-400 border-white/10 hover:border-purple-400/50 hover:text-white';
+        }
+        if (qrInstruction) {
+          qrInstruction.textContent = currentLang === 'th'
+            ? 'สแกน QR Code นี้เพื่อชำระเงินทันที ยอดจะถูกล็อคตามจำนวน'
+            : 'Scan this QR Code to pay immediately. Amount is locked.';
+        }
+      } else {
+        if (pickupBtn) {
+          pickupBtn.className = 'p-2.5 rounded-xl border text-xs font-bold flex flex-col items-center gap-1 transition-all bg-purple-600 text-white border-purple-400 shadow-md shadow-purple-600/30';
+        }
+        if (nowBtn) {
+          nowBtn.className = 'p-2.5 rounded-xl border text-xs font-bold flex flex-col items-center gap-1 transition-all bg-zinc-900/80 text-zinc-400 border-white/10 hover:border-purple-400/50 hover:text-white';
+        }
+        if (qrInstruction) {
+          qrInstruction.textContent = currentLang === 'th'
+            ? 'เลือกจ่ายตอนรับ: บันทึกรูป QR ไว้ หรือสแกนจ่ายที่หน้าร้านตอนมารับอาหาร'
+            : 'Pay at Pickup: Save this QR or scan to pay at the counter when picking up your burger.';
+        }
+      }
+      updateOrderSummary();
     }
 
     // ══ SUMMARY & PRICING CALCULATIONS ══
@@ -816,7 +936,21 @@
       // Burger item text
       const burgerEl = document.getElementById('receipt-val-burger');
       if (burgerEl) {
-        burgerEl.textContent = `${selectedBurger} ${selectedBurgerIcon} x${selectedQuantity}`;
+        burgerEl.textContent = `${selectedBurger} x${selectedQuantity}`;
+      }
+
+      // Payment text
+      const paymentEl = document.getElementById('receipt-val-payment');
+      if (paymentEl) {
+        if (selectedPayment === 'PromptPay') {
+          if (selectedPromptPayTiming === 'now') {
+            paymentEl.textContent = currentLang === 'th' ? 'QR พร้อมเพย์ (จ่ายทันที)' : 'PromptPay QR (Pay Now)';
+          } else {
+            paymentEl.textContent = currentLang === 'th' ? 'QR พร้อมเพย์ (จ่ายตอนรับ)' : 'PromptPay QR (Pay at Pickup)';
+          }
+        } else {
+          paymentEl.textContent = currentLang === 'th' ? 'เงินสดตอนรับ (หน้าร้าน)' : 'Cash at Pickup';
+        }
       }
 
       // Discount row
@@ -876,7 +1010,7 @@
       } else {
         if (nameEl) nameEl.textContent = customerName || (currentLang === 'th' ? 'ผู้สั่งซื้อ (Guest)' : 'Guest');
         if (emailEl) emailEl.classList.add('hidden');
-        if (avatarEl) avatarEl.innerHTML = '👤';
+        if (avatarEl) avatarEl.innerHTML = '<svg class="w-5 h-5 text-zinc-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>';
         if (loginBtn) loginBtn.classList.remove('hidden');
         if (logoutBtn) logoutBtn.classList.add('hidden');
       }
@@ -971,12 +1105,21 @@
         const isStamped = currentAuthUser && (i <= loyaltyStamps);
         const isReward = i === 3;
         const box = document.createElement('div');
-        box.className = `p-2.5 sm:p-3 rounded-2xl flex flex-col items-center justify-center gap-1 border transition-all ${
+        box.className = `p-2.5 sm:p-3 rounded-2xl flex flex-col items-center justify-center gap-1.5 border transition-all ${
           isStamped ? 'bg-amber-500/20 border-amber-500 shadow-md shadow-amber-500/20' : 'bg-zinc-900/60 border-white/10'
         } ${isReward && isStamped ? 'border-yellow-400 bg-gradient-to-tr from-amber-500/30 to-purple-500/20 shadow-yellow-500/25' : ''}`;
 
+        let iconSvg = '';
+        if (isStamped) {
+          iconSvg = `<svg class="w-6 h-6 text-amber-400" viewBox="0 0 24 24" fill="currentColor"><path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"/></svg>`;
+        } else if (isReward) {
+          iconSvg = `<svg class="w-6 h-6 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>`;
+        } else {
+          iconSvg = `<svg class="w-6 h-6 text-zinc-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/></svg>`;
+        }
+
         box.innerHTML = `
-          <span class="text-xl sm:text-2xl">${isStamped ? '🍔' : (isReward ? '🎁' : '⭕')}</span>
+          <div class="h-6 flex items-center justify-center">${iconSvg}</div>
           <span class="text-[10px] font-mono font-bold ${isStamped ? 'text-amber-400' : 'text-zinc-500'}">
             ${isReward ? (isStamped ? 'ลด 10฿!' : 'รับ -10฿') : '#' + i}
           </span>
@@ -986,19 +1129,19 @@
 
       if (badge) {
         badge.textContent = hasLoyaltyDiscount
-          ? (currentLang === 'th' ? '🎉 ลด 10฿ พร้อมใช้' : '🎉 -10฿ Ready')
+          ? (currentLang === 'th' ? 'ลด 10฿ พร้อมใช้' : '-10฿ Ready')
           : `${loyaltyStamps} / 3 ครั้ง`;
       }
 
       if (msg) {
         if (!currentAuthUser) {
           msg.innerHTML = currentLang === 'th'
-            ? '👉 <strong class="text-amber-400">เข้าสู่ระบบด้วย Google</strong> เพื่อสะสมแต้ม สั่งครบ 3 ครั้ง รับส่วนลด 10฿ ในออเดอร์ถัดไป!'
-            : '👉 <strong class="text-amber-400">Sign in with Google</strong> to collect stamps! Buy 3, get 10฿ off next order!';
+            ? '<strong class="text-amber-400">เข้าสู่ระบบด้วย Google</strong> เพื่อสะสมแต้ม สั่งครบ 3 ครั้ง รับส่วนลด 10฿ ในออเดอร์ถัดไป!'
+            : '<strong class="text-amber-400">Sign in with Google</strong> to collect stamps! Buy 3, get 10฿ off next order!';
         } else if (hasLoyaltyDiscount) {
           msg.innerHTML = currentLang === 'th'
-            ? '🎉 <strong class="text-amber-400">คุณมีส่วนลด 10 บาท!</strong> ใช้ได้กับออเดอร์นี้ทันที (เมื่อสั่งแล้วจะเริ่มนับ 1 ใหม่อีกครั้ง)'
-            : '🎉 <strong class="text-amber-400">10 Baht discount unlocked!</strong> Applied to this order!';
+            ? '<strong class="text-amber-400">คุณมีส่วนลด 10 บาท!</strong> ใช้ได้กับออเดอร์นี้ทันที (เมื่อสั่งแล้วจะเริ่มนับ 1 ใหม่อีกครั้ง)'
+            : '<strong class="text-amber-400">10 Baht discount unlocked!</strong> Applied to this order!';
         } else {
           const remaining = 3 - loyaltyStamps;
           msg.innerHTML = currentLang === 'th'
@@ -1016,8 +1159,8 @@
       if (!currentAuthUser) {
         signInWithGoogle();
         alert(currentLang === 'th' 
-          ? '🛡️ เพื่อยืนยันตัวตน กรุณาเข้าสู่ระบบด้วย Google ก่อนส่งออเดอร์ล่วงหน้าครับ' 
-          : '🛡️ Please sign in with Google before placing your pre-order.');
+          ? 'เพื่อยืนยันตัวตน กรุณาเข้าสู่ระบบด้วย Google ก่อนส่งออเดอร์ล่วงหน้าครับ' 
+          : 'Please sign in with Google before placing your pre-order.');
         return;
       }
 
@@ -1030,7 +1173,7 @@
 
       // 3. Date & Time Check
       if (!selectedDate || !selectedTime) {
-        alert(currentLang === 'th' ? '⚠️ กรุณาเลือกวันและเวลานัดรับอาหารครับ' : '⚠️ Please select a pickup date and time.');
+        alert(currentLang === 'th' ? 'กรุณาเลือกวันและเวลานัดรับอาหารครับ' : 'Please select a pickup date and time.');
         return;
       }
 
@@ -1040,8 +1183,8 @@
       if (phone && phone.length < 9) {
         if (phoneInput) phoneInput.focus();
         alert(currentLang === 'th' 
-          ? '📞 กรุณากรอกเบอร์โทรศัพท์ให้ถูกต้อง (อย่างน้อย 9-10 หลัก) หรือเว้นว่างหากต้องการรับการแจ้งเตือนทางอีเมลเท่านั้น' 
-          : '📞 Please enter a valid phone number (at least 9 digits) or leave blank for email-only notifications.');
+          ? 'กรุณากรอกเบอร์โทรศัพท์ให้ถูกต้อง (อย่างน้อย 9-10 หลัก) หรือเว้นว่างหากต้องการรับการแจ้งเตือนทางอีเมลเท่านั้น' 
+          : 'Please enter a valid phone number (at least 9 digits) or leave blank for email-only notifications.');
         return;
       }
       if (phone) {
@@ -1051,13 +1194,28 @@
       const submitBtn = document.getElementById('submit-preorder-btn');
       const btnText = document.getElementById('submit-btn-text');
       if (submitBtn) submitBtn.disabled = true;
-      if (btnText) btnText.textContent = currentLang === 'th' ? 'กำลังส่งข้อมูลการจอง... 🍳' : 'Submitting pre-order...';
+      if (btnText) btnText.textContent = currentLang === 'th' ? 'กำลังส่งข้อมูลการจอง...' : 'Submitting pre-order...';
 
       const orderId = Math.floor(1000 + Math.random() * 9000);
       const subtotal = calculateSubtotal();
       const finalTotal = calculateFinalTotal();
       const noteInput = document.getElementById('preorder-note-input');
       const specialNote = noteInput ? noteInput.value.trim() : '';
+
+      let methodText = '';
+      let payStatus = '';
+      if (selectedPayment === 'PromptPay') {
+        if (selectedPromptPayTiming === 'now') {
+          methodText = 'PromptPay (จ่ายทันที / Pay Now)';
+          payStatus = 'paid_or_pending_slip';
+        } else {
+          methodText = 'PromptPay (จ่ายตอนรับ / Pay at Pickup)';
+          payStatus = 'promptpay_at_pickup';
+        }
+      } else {
+        methodText = 'Cash (เงินสดตอนรับ)';
+        payStatus = 'awaiting_cash_verification';
+      }
 
       const orderPayload = {
         orderId: orderId,
@@ -1071,9 +1229,9 @@
         customerPhoto: currentAuthUser.photoURL || '',
         customerUid: currentAuthUser.uid || '',
         customerPhone: phone,
-        burger: `${selectedBurger} ${selectedBurgerIcon}`,
+        burger: selectedBurger,
         burgerName: selectedBurgerNameClean(),
-        meat: 'Chicken 🐔',
+        meat: 'Chicken',
         meatName: 'Chicken',
         extraMeat: false,
         extraCheese: false,
@@ -1083,8 +1241,9 @@
         memberDiscount: hasLoyaltyDiscount ? 10 : 0,
         isVipMember: hasLoyaltyDiscount,
         total: finalTotal,
-        paymentMethod: selectedPayment,
-        paymentStatus: selectedPayment === 'PromptPay' ? 'paid_or_pending_slip' : 'awaiting_cash_verification',
+        paymentMethod: methodText,
+        paymentTiming: selectedPayment === 'PromptPay' ? selectedPromptPayTiming : 'pickup',
+        paymentStatus: payStatus,
         status: 'pending',
         time: new Date().toLocaleString('th-TH', { timeZone: 'Asia/Bangkok' }),
         createdAt: new Date().toISOString()
@@ -1162,23 +1321,28 @@
       setTxt('header-subtitle', isTh ? 'สั่งจองล่วงหน้า นัดรับตามเวลา ไม่ต้องรอคิว' : 'Pre-order in advance, pick up on time, skip the line');
       setTxt('nav-live-order-btn', isTh ? 'สั่งทานทันที' : 'Live Order');
       setTxt('change-name-btn', isTh ? 'เปลี่ยนชื่อ' : 'Rename');
-      setTxt('step1-title', isTh ? 'เลือกวันศุกร์และเวลานัดรับเบอร์เกอร์ 📅' : 'Pick Friday & Pickup Time 📅');
+      setTxt('step1-title', isTh ? 'เลือกวันศุกร์และเวลานัดรับเบอร์เกอร์' : 'Pick Friday & Pickup Time');
       setTxt('step1-desc', isTh ? 'ร้านเปิดรับออเดอร์นัดรับเฉพาะวันศุกร์ เวลา 10:00 - 11:00 น. ย่างสดใหม่พร้อมเสิร์ฟ' : 'Open for pickup on Fridays only, 10:00 - 11:00 AM. Freshly flame-grilled.');
       setTxt('label-pickup-date', isTh ? 'วันศุกร์ที่ต้องการรับ (Pickup Friday)' : 'Pickup Friday');
       setTxt('label-pickup-time', isTh ? 'เวลาที่นัดรับ (Pickup Time)' : 'Pickup Time');
       setTxt('selected-time-notice', isTh ? 'ร้านเปิดเฉพาะวันศุกร์ 10:00 - 11:00 น.' : 'Open Friday only 10:00 - 11:00 AM');
       setTxt('label-phone', isTh ? 'เบอร์โทรศัพท์สำหรับติดต่อรับอาหาร (Phone Number)' : 'Phone Number (Optional)');
-      setTxt('label-notify-badge', isTh ? '📧 เชฟจะส่งอีเมลแจ้งเตือนอัตโนมัติเมื่อเสร็จ' : '📧 Chef will automatically notify via email when ready');
-      setTxt('step2-title', isTh ? 'เลือกเบอร์เกอร์ 🍔' : 'Select Burger 🍔');
-      setTxt('step2-desc', isTh ? 'เบอร์เกอร์ไก่ย่างสูตรพิเศษ (เสิร์ฟเฉพาะเนื้อไก่) 🐔' : 'Signature flame-grilled chicken burgers 🐔');
+      setTxt('label-notify-badge', isTh ? 'เชฟจะส่งอีเมลแจ้งเตือนอัตโนมัติเมื่อเสร็จ' : 'Chef will automatically notify via email when ready');
+      setTxt('step2-title', isTh ? 'เลือกเบอร์เกอร์' : 'Select Burger');
+      setTxt('step2-desc', isTh ? 'เบอร์เกอร์ไก่ย่างสูตรพิเศษ (เสิร์ฟเฉพาะเนื้อไก่)' : 'Signature flame-grilled chicken burgers');
       setTxt('meat-info-text', isTh ? 'เสิร์ฟเฉพาะเนื้อไก่ย่างสูตรพิเศษของทางร้าน (Flame-Grilled Chicken)' : 'Exclusively served with signature flame-grilled chicken');
       setTxt('burger-desc-1', isTh ? 'เบอร์เกอร์ไก่สูตรดั้งเดิม รสชาติคลาสสิก' : 'The original recipe. Tender chicken patty, fresh crisp lettuce.');
       setTxt('burger-desc-2', isTh ? 'เนื้อไก่คู่สองชั้น พลังสองเท่า อิ่มสองเท่า!' : 'Double the patty, double the power. Two flame-grilled chicken patties stacked high.');
       setTxt('burger-desc-3', isTh ? 'ไก่ย่างชีสละลายราดสุดเยิ้ม เข้มข้นทุกคำ' : 'Melted cheese dripping over flame-grilled chicken patty.');
       setTxt('label-quantity', isTh ? 'จำนวน (Quantity)' : 'Quantity');
       setTxt('label-special-note', isTh ? 'โน้ตพิเศษถึงเชฟ (Special Notes)' : 'Special Notes to Chef');
-      setTxt('step3-title', isTh ? 'สรุปยอดและยืนยันการสั่งจอง 💳' : 'Order Summary & Confirmation 💳');
+      setTxt('step3-title', isTh ? 'สรุปยอดและยืนยันการสั่งจอง' : 'Order Summary & Confirmation');
       setTxt('label-payment-method', isTh ? 'วิธีชำระเงิน (Payment Method)' : 'Payment Method');
+      setTxt('timing-now-text', isTh ? 'จ่ายทันที (Pay Now)' : 'Pay Now');
+      setTxt('timing-now-sub', isTh ? 'สแกนจ่ายตอนนี้' : 'Scan to pay now');
+      setTxt('timing-pickup-text', isTh ? 'จ่ายตอนรับ (Pay at Pickup)' : 'Pay at Pickup');
+      setTxt('timing-pickup-sub', isTh ? 'สแกนที่ร้านตอนมารับ' : 'Scan when picking up');
+      setTxt('download-qr-text', isTh ? 'บันทึกรูป QR Code' : 'Save QR Code');
       setTxt('submit-btn-text', isTh ? 'ยืนยันการสั่งจองล่วงหน้า' : 'Confirm Pre-Order');
     }
   </script>
