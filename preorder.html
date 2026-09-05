@@ -286,10 +286,10 @@
       <!-- Customer Contact Phone Number (Required for Pre-Orders) -->
       <div class="flex flex-col gap-2 pt-2 border-t border-white/10">
         <label for="customer-phone-input" class="text-xs font-bold text-zinc-300 flex items-center justify-between">
-          <span id="label-phone">เบอร์โทรศัพท์สำหรับติดต่อรับอาหาร (Phone Number) *</span>
-          <span class="text-[10px] text-amber-400 font-mono font-normal">เชฟจะโทรแจ้งเมื่อเสร็จ</span>
+          <span id="label-phone">เบอร์โทรศัพท์สำหรับติดต่อรับอาหาร (Phone Number)</span>
+          <span id="label-notify-badge" class="text-[10px] text-amber-400 font-mono font-normal">📧 เชฟจะส่งอีเมลแจ้งเตือนอัตโนมัติเมื่อเสร็จ</span>
         </label>
-        <input type="tel" id="customer-phone-input" placeholder="081-234-5678" maxlength="15" class="w-full p-3 bg-zinc-900 border border-zinc-700 rounded-xl text-white text-sm outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all font-mono">
+        <input type="tel" id="customer-phone-input" placeholder="081-234-5678 (ไม่บังคับ / Optional)" maxlength="15" class="w-full p-3 bg-zinc-900 border border-zinc-700 rounded-xl text-white text-sm outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all font-mono">
       </div>
     </section>
 
@@ -1034,17 +1034,19 @@
         return;
       }
 
-      // 4. Phone Number Check
+      // 4. Contact Phone Number (Optional - notifications are sent via email)
       const phoneInput = document.getElementById('customer-phone-input');
       const phone = phoneInput ? phoneInput.value.trim() : '';
-      if (!phone || phone.length < 9) {
+      if (phone && phone.length < 9) {
         if (phoneInput) phoneInput.focus();
         alert(currentLang === 'th' 
-          ? '📞 กรุณากรอกเบอร์โทรศัพท์สำหรับติดต่อรับอาหาร (อย่างน้อย 9-10 หลัก)' 
-          : '📞 Please enter a valid phone number for order updates.');
+          ? '📞 กรุณากรอกเบอร์โทรศัพท์ให้ถูกต้อง (อย่างน้อย 9-10 หลัก) หรือเว้นว่างหากต้องการรับการแจ้งเตือนทางอีเมลเท่านั้น' 
+          : '📞 Please enter a valid phone number (at least 9 digits) or leave blank for email-only notifications.');
         return;
       }
-      localStorage.setItem('bitty-burger-phone', phone);
+      if (phone) {
+        localStorage.setItem('bitty-burger-phone', phone);
+      }
 
       const submitBtn = document.getElementById('submit-preorder-btn');
       const btnText = document.getElementById('submit-btn-text');
@@ -1165,7 +1167,8 @@
       setTxt('label-pickup-date', isTh ? 'วันศุกร์ที่ต้องการรับ (Pickup Friday)' : 'Pickup Friday');
       setTxt('label-pickup-time', isTh ? 'เวลาที่นัดรับ (Pickup Time)' : 'Pickup Time');
       setTxt('selected-time-notice', isTh ? 'ร้านเปิดเฉพาะวันศุกร์ 10:00 - 11:00 น.' : 'Open Friday only 10:00 - 11:00 AM');
-      setTxt('label-phone', isTh ? 'เบอร์โทรศัพท์สำหรับติดต่อรับอาหาร (Phone Number) *' : 'Phone Number for Pickup Alert *');
+      setTxt('label-phone', isTh ? 'เบอร์โทรศัพท์สำหรับติดต่อรับอาหาร (Phone Number)' : 'Phone Number (Optional)');
+      setTxt('label-notify-badge', isTh ? '📧 เชฟจะส่งอีเมลแจ้งเตือนอัตโนมัติเมื่อเสร็จ' : '📧 Chef will automatically notify via email when ready');
       setTxt('step2-title', isTh ? 'เลือกเบอร์เกอร์ 🍔' : 'Select Burger 🍔');
       setTxt('step2-desc', isTh ? 'เบอร์เกอร์ไก่ย่างสูตรพิเศษ (เสิร์ฟเฉพาะเนื้อไก่) 🐔' : 'Signature flame-grilled chicken burgers 🐔');
       setTxt('meat-info-text', isTh ? 'เสิร์ฟเฉพาะเนื้อไก่ย่างสูตรพิเศษของทางร้าน (Flame-Grilled Chicken)' : 'Exclusively served with signature flame-grilled chicken');
